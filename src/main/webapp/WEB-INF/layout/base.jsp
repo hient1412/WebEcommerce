@@ -11,12 +11,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>
             <tiles:insertAttribute name="title" />
         </title>  
-        
+
         <link href="<c:url value="/css/style.css"/>" rel="stylesheet"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -27,14 +27,18 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        
+
     </head>
     <body>
         <!-- HEADER -->
         <tiles:insertAttribute name="header" />
         <!-- BODY -->
-        <tiles:insertAttribute name="content"/>
-        <!-- FOOTER -->
+        <div class="container">
+            <tiles:insertAttribute name="content"/>
+            <!-- FOOTER -->
+        </div>
         <tiles:insertAttribute name="footer"/>
+        
+        <script src="<c:url value="/js/cart.js"/>"></script>
     </body>
 </html>

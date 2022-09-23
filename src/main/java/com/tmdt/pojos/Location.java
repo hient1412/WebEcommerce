@@ -5,7 +5,7 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -47,9 +47,9 @@ public class Location implements Serializable {
     @Column(name = "name")
     private String name;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLocation")
-    private Set<Seller> sellerSet;
+    private Collection<Seller> sellerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
-    private Set<Customer> customerSet;
+    private Collection<Customer> customerCollection;
 
     public Location() {
     }
@@ -80,21 +80,21 @@ public class Location implements Serializable {
     }
 
     @XmlTransient
-    public Set<Seller> getSellerSet() {
-        return sellerSet;
+    public Collection<Seller> getSellerCollection() {
+        return sellerCollection;
     }
 
-    public void setSellerSet(Set<Seller> sellerSet) {
-        this.sellerSet = sellerSet;
+    public void setSellerCollection(Collection<Seller> sellerCollection) {
+        this.sellerCollection = sellerCollection;
     }
 
     @XmlTransient
-    public Set<Customer> getCustomerSet() {
-        return customerSet;
+    public Collection<Customer> getCustomerCollection() {
+        return customerCollection;
     }
 
-    public void setCustomerSet(Set<Customer> customerSet) {
-        this.customerSet = customerSet;
+    public void setCustomerCollection(Collection<Customer> customerCollection) {
+        this.customerCollection = customerCollection;
     }
 
     @Override

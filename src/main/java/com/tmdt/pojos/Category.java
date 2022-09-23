@@ -5,11 +5,12 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,8 +52,8 @@ public class Category implements Serializable {
     @Size(max = 65535)
     @Column(name = "description")
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCategory")
-    private Set<Product> productSet;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "idCategory")
+    private Collection<Product> productCollection;
 
     public Category() {
     }
@@ -91,12 +92,12 @@ public class Category implements Serializable {
     }
 
     @XmlTransient
-    public Set<Product> getProductSet() {
-        return productSet;
+    public Collection<Product> getProductCollection() {
+        return productCollection;
     }
 
-    public void setProductSet(Set<Product> productSet) {
-        this.productSet = productSet;
+    public void setProductCollection(Collection<Product> productCollection) {
+        this.productCollection = productCollection;
     }
 
     @Override

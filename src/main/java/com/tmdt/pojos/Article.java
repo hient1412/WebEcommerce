@@ -5,7 +5,7 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,9 +60,9 @@ public class Article implements Serializable {
     @ManyToOne(optional = false)
     private Seller idSeller;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArticle")
-    private Set<Comment> commentSet;
+    private Collection<Comment> commentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idArticle")
-    private Set<Likes> likesSet;
+    private Collection<Likes> likesCollection;
 
     public Article() {
     }
@@ -118,21 +118,21 @@ public class Article implements Serializable {
     }
 
     @XmlTransient
-    public Set<Comment> getCommentSet() {
-        return commentSet;
+    public Collection<Comment> getCommentCollection() {
+        return commentCollection;
     }
 
-    public void setCommentSet(Set<Comment> commentSet) {
-        this.commentSet = commentSet;
+    public void setCommentCollection(Collection<Comment> commentCollection) {
+        this.commentCollection = commentCollection;
     }
 
     @XmlTransient
-    public Set<Likes> getLikesSet() {
-        return likesSet;
+    public Collection<Likes> getLikesCollection() {
+        return likesCollection;
     }
 
-    public void setLikesSet(Set<Likes> likesSet) {
-        this.likesSet = likesSet;
+    public void setLikesCollection(Collection<Likes> likesCollection) {
+        this.likesCollection = likesCollection;
     }
 
     @Override

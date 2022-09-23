@@ -5,8 +5,8 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -77,9 +77,9 @@ public class Voucher implements Serializable {
     @ManyToOne(optional = false)
     private Admin idAdmin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idVoucher")
-    private Set<VoucherCustomer> voucherCustomerSet;
+    private Collection<VoucherCustomer> voucherCustomerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idVoucher")
-    private Set<Orders> ordersSet;
+    private Collection<Orders> ordersCollection;
 
     public Voucher() {
     }
@@ -169,21 +169,21 @@ public class Voucher implements Serializable {
     }
 
     @XmlTransient
-    public Set<VoucherCustomer> getVoucherCustomerSet() {
-        return voucherCustomerSet;
+    public Collection<VoucherCustomer> getVoucherCustomerCollection() {
+        return voucherCustomerCollection;
     }
 
-    public void setVoucherCustomerSet(Set<VoucherCustomer> voucherCustomerSet) {
-        this.voucherCustomerSet = voucherCustomerSet;
+    public void setVoucherCustomerCollection(Collection<VoucherCustomer> voucherCustomerCollection) {
+        this.voucherCustomerCollection = voucherCustomerCollection;
     }
 
     @XmlTransient
-    public Set<Orders> getOrdersSet() {
-        return ordersSet;
+    public Collection<Orders> getOrdersCollection() {
+        return ordersCollection;
     }
 
-    public void setOrdersSet(Set<Orders> ordersSet) {
-        this.ordersSet = ordersSet;
+    public void setOrdersCollection(Collection<Orders> ordersCollection) {
+        this.ordersCollection = ordersCollection;
     }
 
     @Override

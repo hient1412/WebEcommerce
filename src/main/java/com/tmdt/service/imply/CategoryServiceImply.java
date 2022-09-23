@@ -25,5 +25,10 @@ public class CategoryServiceImply implements CategoryService{
     public List<Category> getCates() {
         return this.categoryRepository.getCates();
     }
+
+    @Override
+    public Category getCateById(int cateId) {
+        return this.categoryRepository.getCateById(cateId);
+    }
     
 }

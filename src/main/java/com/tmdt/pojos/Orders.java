@@ -5,8 +5,8 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -82,7 +82,7 @@ public class Orders implements Serializable {
     @Column(name = "is_payment")
     private int isPayment;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOrder")
-    private Set<OrderDetail> orderDetailSet;
+    private Collection<OrderDetail> orderDetailCollection;
     @JoinColumn(name = "id_customer", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Customer idCustomer;
@@ -176,12 +176,12 @@ public class Orders implements Serializable {
     }
 
     @XmlTransient
-    public Set<OrderDetail> getOrderDetailSet() {
-        return orderDetailSet;
+    public Collection<OrderDetail> getOrderDetailCollection() {
+        return orderDetailCollection;
     }
 
-    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
-        this.orderDetailSet = orderDetailSet;
+    public void setOrderDetailCollection(Collection<OrderDetail> orderDetailCollection) {
+        this.orderDetailCollection = orderDetailCollection;
     }
 
     public Customer getIdCustomer() {

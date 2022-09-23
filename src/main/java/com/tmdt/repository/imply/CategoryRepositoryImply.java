@@ -34,11 +34,16 @@ public class CategoryRepositoryImply implements CategoryRepository{
         CriteriaQuery<Category> q = builder.createQuery(Category.class);
         Root root = q.from(Category.class);
         q.select(root);
-        
         Query query = session.createQuery(q);
 
 
         return query.getResultList();
+    }
+
+    @Override
+    public Category getCateById(int cateId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        return session.get(Category.class, cateId);
     }
     
 }

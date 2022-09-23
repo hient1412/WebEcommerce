@@ -4,14 +4,15 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Category;
+import com.tmdt.pojos.Product;
 import java.util.List;
 
 /**
  *
  * @author DELL
  */
-public interface CategoryService {
-     List<Category> getCates();
-     Category getCateById(int cateId);
+public interface ProductService {
+    List<Product> getProducts();
+    List<Object[]> getProducts(String kw,int page);
+    Product getProductById(int productId);
 }

@@ -5,7 +5,7 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,13 +33,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Admin.findAll", query = "SELECT a FROM Admin a"),
-    @NamedQuery(name = "Admin.findById", query = "SELECT a FROM Admin a WHERE a.id = :id")})
+    @NamedQuery(name = "Admin.findById", query = "SELECT a FROM Admin a WHERE a.id = :id"),
+    @NamedQuery(name = "Admin.findByIsDeleted", query = "SELECT a FROM Admin a WHERE a.isDeleted = :isDeleted")})
 public class Admin implements Serializable {
-
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "is_deleted")
-    private int isDeleted;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,10 +43,14 @@ public class Admin implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_deleted")
+    private int isDeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdmin")
-    private Set<Voucher> voucherSet;
+    private Collection<Voucher> voucherCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
-    @OneToOne
+    @OneToOne(optional = false)
     private Account idAccount;
 
     public Admin() {
@@ -58,6 +58,11 @@ public class Admin implements Serializable {
 
     public Admin(Integer id) {
         this.id = id;
+    }
+
+    public Admin(Integer id, int isDeleted) {
+        this.id = id;
+        this.isDeleted = isDeleted;
     }
 
     public Integer getId() {
@@ -68,13 +73,29 @@ public class Admin implements Serializable {
         this.id = id;
     }
 
-    @XmlTransient
-    public Set<Voucher> getVoucherSet() {
-        return voucherSet;
+    public int getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setVoucherSet(Set<Voucher> voucherSet) {
-        this.voucherSet = voucherSet;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    @XmlTransient
+    public Collection<Voucher> getVoucherCollection() {
+        return voucherCollection;
+    }
+
+    public void setVoucherCollection(Collection<Voucher> voucherCollection) {
+        this.voucherCollection = voucherCollection;
+    }
+
+    public Account getIdAccount() {
+        return idAccount;
+    }
+
+    public void setIdAccount(Account idAccount) {
+        this.idAccount = idAccount;
     }
 
     @Override
@@ -100,28 +121,6 @@ public class Admin implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.Admin[ id=" + id + " ]";
-    }
-
-    public int getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    /**
-     * @return the idAccount
-     */
-    public Account getIdAccount() {
-        return idAccount;
-    }
-
-    /**
-     * @param idAccount the idAccount to set
-     */
-    public void setIdAccount(Account idAccount) {
-        this.idAccount = idAccount;
     }
     
 }

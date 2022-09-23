@@ -5,8 +5,8 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,8 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
     @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id"),
     @NamedQuery(name = "Customer.findByDob", query = "SELECT c FROM Customer c WHERE c.dob = :dob"),
-    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender"),
-    @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected")})
+    @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected"),
+    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender")})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,25 +49,29 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "dob")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dob;
-    @Column(name = "gender")
-    private Boolean gender;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_delected")
     private int isDelected;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "gender")
+    private boolean gender;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<VoucherCustomer> voucherCustomerSet;
+    private Collection<VoucherCustomer> voucherCustomerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<ShipAdress> shipAdressSet;
+    private Collection<ShipAdress> shipAdressCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<Review> reviewSet;
+    private Collection<Review> reviewCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<Comment> commentSet;
+    private Collection<Comment> commentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<Orders> ordersSet;
+    private Collection<Orders> ordersCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     @OneToOne(optional = false)
     private Account idAccount;
@@ -75,7 +79,7 @@ public class Customer implements Serializable {
     @ManyToOne(optional = false)
     private Location location;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Set<Likes> likesSet;
+    private Collection<Likes> likesCollection;
 
     public Customer() {
     }
@@ -84,9 +88,11 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public Customer(Integer id, int isDelected) {
+    public Customer(Integer id, Date dob, int isDelected, boolean gender) {
         this.id = id;
+        this.dob = dob;
         this.isDelected = isDelected;
+        this.gender = gender;
     }
 
     public Integer getId() {
@@ -105,14 +111,6 @@ public class Customer implements Serializable {
         this.dob = dob;
     }
 
-    public Boolean getGender() {
-        return gender;
-    }
-
-    public void setGender(Boolean gender) {
-        this.gender = gender;
-    }
-
     public int getIsDelected() {
         return isDelected;
     }
@@ -121,49 +119,57 @@ public class Customer implements Serializable {
         this.isDelected = isDelected;
     }
 
-    @XmlTransient
-    public Set<VoucherCustomer> getVoucherCustomerSet() {
-        return voucherCustomerSet;
+    public boolean getGender() {
+        return gender;
     }
 
-    public void setVoucherCustomerSet(Set<VoucherCustomer> voucherCustomerSet) {
-        this.voucherCustomerSet = voucherCustomerSet;
-    }
-
-    @XmlTransient
-    public Set<ShipAdress> getShipAdressSet() {
-        return shipAdressSet;
-    }
-
-    public void setShipAdressSet(Set<ShipAdress> shipAdressSet) {
-        this.shipAdressSet = shipAdressSet;
+    public void setGender(boolean gender) {
+        this.gender = gender;
     }
 
     @XmlTransient
-    public Set<Review> getReviewSet() {
-        return reviewSet;
+    public Collection<VoucherCustomer> getVoucherCustomerCollection() {
+        return voucherCustomerCollection;
     }
 
-    public void setReviewSet(Set<Review> reviewSet) {
-        this.reviewSet = reviewSet;
-    }
-
-    @XmlTransient
-    public Set<Comment> getCommentSet() {
-        return commentSet;
-    }
-
-    public void setCommentSet(Set<Comment> commentSet) {
-        this.commentSet = commentSet;
+    public void setVoucherCustomerCollection(Collection<VoucherCustomer> voucherCustomerCollection) {
+        this.voucherCustomerCollection = voucherCustomerCollection;
     }
 
     @XmlTransient
-    public Set<Orders> getOrdersSet() {
-        return ordersSet;
+    public Collection<ShipAdress> getShipAdressCollection() {
+        return shipAdressCollection;
     }
 
-    public void setOrdersSet(Set<Orders> ordersSet) {
-        this.ordersSet = ordersSet;
+    public void setShipAdressCollection(Collection<ShipAdress> shipAdressCollection) {
+        this.shipAdressCollection = shipAdressCollection;
+    }
+
+    @XmlTransient
+    public Collection<Review> getReviewCollection() {
+        return reviewCollection;
+    }
+
+    public void setReviewCollection(Collection<Review> reviewCollection) {
+        this.reviewCollection = reviewCollection;
+    }
+
+    @XmlTransient
+    public Collection<Comment> getCommentCollection() {
+        return commentCollection;
+    }
+
+    public void setCommentCollection(Collection<Comment> commentCollection) {
+        this.commentCollection = commentCollection;
+    }
+
+    @XmlTransient
+    public Collection<Orders> getOrdersCollection() {
+        return ordersCollection;
+    }
+
+    public void setOrdersCollection(Collection<Orders> ordersCollection) {
+        this.ordersCollection = ordersCollection;
     }
 
     public Account getIdAccount() {
@@ -183,12 +189,12 @@ public class Customer implements Serializable {
     }
 
     @XmlTransient
-    public Set<Likes> getLikesSet() {
-        return likesSet;
+    public Collection<Likes> getLikesCollection() {
+        return likesCollection;
     }
 
-    public void setLikesSet(Set<Likes> likesSet) {
-        this.likesSet = likesSet;
+    public void setLikesCollection(Collection<Likes> likesCollection) {
+        this.likesCollection = likesCollection;
     }
 
     @Override

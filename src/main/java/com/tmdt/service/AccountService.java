@@ -4,14 +4,15 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Category;
+import com.tmdt.pojos.Account;
 import java.util.List;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *
  * @author DELL
  */
-public interface CategoryService {
-     List<Category> getCates();
-     Category getCateById(int cateId);
+public interface AccountService extends UserDetailsService {
+    boolean addAccount(Account ac);
+    List<Account> getAccount(String username);
 }

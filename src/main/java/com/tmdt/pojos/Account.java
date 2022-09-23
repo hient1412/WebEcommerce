@@ -5,7 +5,7 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -91,12 +91,13 @@ public class Account implements Serializable {
     private String role;
     @Column(name = "active")
     private Boolean active;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    @OneToOne(mappedBy = "idAccount")
     private Seller seller;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    @OneToOne(mappedBy = "idAccount")
     private Admin admin;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    @OneToOne(mappedBy = "idAccount")
     private Customer customer;
+
     public Account() {
     }
 
@@ -194,7 +195,6 @@ public class Account implements Serializable {
         this.active = active;
     }
 
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -221,20 +221,6 @@ public class Account implements Serializable {
     }
 
     /**
-     * @return the admin
-     */
-    public Admin getAdmin() {
-        return admin;
-    }
-
-    /**
-     * @param admin the admin to set
-     */
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
-    }
-
-    /**
      * @return the seller
      */
     public Seller getSeller() {
@@ -246,6 +232,20 @@ public class Account implements Serializable {
      */
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    /**
+     * @return the admin
+     */
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    /**
+     * @param admin the admin to set
+     */
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 
     /**

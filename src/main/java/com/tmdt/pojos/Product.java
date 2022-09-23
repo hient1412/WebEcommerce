@@ -5,12 +5,15 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,10 +26,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.GroupSequence;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 
 /**
  *
@@ -66,7 +71,7 @@ public class Product implements Serializable {
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "price")
-    private String price;
+    private BigDecimal price;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -81,19 +86,19 @@ public class Product implements Serializable {
     @NotNull
     @Column(name = "active")
     private int active;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Set<Image> imageSet;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idProduct")
+    private Collection<Image> imageCollection;
     @JoinColumn(name = "id_category", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category idCategory;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Set<OrderDetail> orderDetailSet;
+    private Collection<OrderDetail> orderDetailCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Set<Article> articleSet;
+    private Collection<Article> articleCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Set<DiscountProduct> discountProductSet;
+    private Collection<DiscountProduct> discountProductCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Set<Review> reviewSet;
+    private Collection<Review> reviewCollection;
 
     public Product() {
     }
@@ -102,7 +107,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public Product(Integer id, String name, String description, String price, String manufacturer, Date createdDate, int active) {
+    public Product(Integer id, String name, String description, BigDecimal price, String manufacturer, Date createdDate, int active) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -136,11 +141,11 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -169,12 +174,12 @@ public class Product implements Serializable {
     }
 
     @XmlTransient
-    public Set<Image> getImageSet() {
-        return imageSet;
+    public Collection<Image> getImageCollection() {
+        return imageCollection;
     }
 
-    public void setImageSet(Set<Image> imageSet) {
-        this.imageSet = imageSet;
+    public void setImageCollection(Collection<Image> imageCollection) {
+        this.imageCollection = imageCollection;
     }
 
     public Category getIdCategory() {
@@ -186,39 +191,39 @@ public class Product implements Serializable {
     }
 
     @XmlTransient
-    public Set<OrderDetail> getOrderDetailSet() {
-        return orderDetailSet;
+    public Collection<OrderDetail> getOrderDetailCollection() {
+        return orderDetailCollection;
     }
 
-    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
-        this.orderDetailSet = orderDetailSet;
-    }
-
-    @XmlTransient
-    public Set<Article> getArticleSet() {
-        return articleSet;
-    }
-
-    public void setArticleSet(Set<Article> articleSet) {
-        this.articleSet = articleSet;
+    public void setOrderDetailCollection(Collection<OrderDetail> orderDetailCollection) {
+        this.orderDetailCollection = orderDetailCollection;
     }
 
     @XmlTransient
-    public Set<DiscountProduct> getDiscountProductSet() {
-        return discountProductSet;
+    public Collection<Article> getArticleCollection() {
+        return articleCollection;
     }
 
-    public void setDiscountProductSet(Set<DiscountProduct> discountProductSet) {
-        this.discountProductSet = discountProductSet;
+    public void setArticleCollection(Collection<Article> articleCollection) {
+        this.articleCollection = articleCollection;
     }
 
     @XmlTransient
-    public Set<Review> getReviewSet() {
-        return reviewSet;
+    public Collection<DiscountProduct> getDiscountProductCollection() {
+        return discountProductCollection;
     }
 
-    public void setReviewSet(Set<Review> reviewSet) {
-        this.reviewSet = reviewSet;
+    public void setDiscountProductCollection(Collection<DiscountProduct> discountProductCollection) {
+        this.discountProductCollection = discountProductCollection;
+    }
+
+    @XmlTransient
+    public Collection<Review> getReviewCollection() {
+        return reviewCollection;
+    }
+
+    public void setReviewCollection(Collection<Review> reviewCollection) {
+        this.reviewCollection = reviewCollection;
     }
 
     @Override
@@ -245,5 +250,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.tmdt.pojos.Product[ id=" + id + " ]";
     }
-    
+
 }
