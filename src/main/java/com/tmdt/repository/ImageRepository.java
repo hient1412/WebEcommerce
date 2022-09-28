@@ -4,15 +4,13 @@
  */
 package com.tmdt.repository;
 
-import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Image;
 import java.util.List;
 
 /**
  *
  * @author DELL
  */
-public interface AccountRepository {
-    boolean addAccount(Account ac);
-    List<Account> getAccount(String username);
-    Account getAcById(int id);
+public interface ImageRepository {
+    List<Image> getImageByProductId(int productId);
 }

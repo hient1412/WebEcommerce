@@ -27,15 +27,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author DELL
  */
 @Entity
-@Table(name = "discount_product")
+@Table(name = "discount")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "DiscountProduct.findAll", query = "SELECT d FROM DiscountProduct d"),
-    @NamedQuery(name = "DiscountProduct.findById", query = "SELECT d FROM DiscountProduct d WHERE d.id = :id"),
-    @NamedQuery(name = "DiscountProduct.findByAmount", query = "SELECT d FROM DiscountProduct d WHERE d.amount = :amount"),
-    @NamedQuery(name = "DiscountProduct.findByStartDate", query = "SELECT d FROM DiscountProduct d WHERE d.startDate = :startDate"),
-    @NamedQuery(name = "DiscountProduct.findByEndDate", query = "SELECT d FROM DiscountProduct d WHERE d.endDate = :endDate")})
-public class DiscountProduct implements Serializable {
+    @NamedQuery(name = "Discount.findAll", query = "SELECT d FROM Discount d"),
+    @NamedQuery(name = "Discount.findById", query = "SELECT d FROM Discount d WHERE d.id = :id"),
+    @NamedQuery(name = "Discount.findByAmount", query = "SELECT d FROM Discount d WHERE d.amount = :amount"),
+    @NamedQuery(name = "Discount.findByStartDate", query = "SELECT d FROM Discount d WHERE d.startDate = :startDate"),
+    @NamedQuery(name = "Discount.findByEndDate", query = "SELECT d FROM Discount d WHERE d.endDate = :endDate")})
+public class Discount implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,14 +61,14 @@ public class DiscountProduct implements Serializable {
     @ManyToOne(optional = false)
     private Product idProduct;
 
-    public DiscountProduct() {
+    public Discount() {
     }
 
-    public DiscountProduct(Integer id) {
+    public Discount(Integer id) {
         this.id = id;
     }
 
-    public DiscountProduct(Integer id, long amount, Date startDate, Date endDate) {
+    public Discount(Integer id, long amount, Date startDate, Date endDate) {
         this.id = id;
         this.amount = amount;
         this.startDate = startDate;
@@ -125,10 +125,10 @@ public class DiscountProduct implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DiscountProduct)) {
+        if (!(object instanceof Discount)) {
             return false;
         }
-        DiscountProduct other = (DiscountProduct) object;
+        Discount other = (Discount) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -137,7 +137,7 @@ public class DiscountProduct implements Serializable {
 
     @Override
     public String toString() {
-        return "com.tmdt.pojos.DiscountProduct[ id=" + id + " ]";
+        return "com.tmdt.pojos.Discount[ id=" + id + " ]";
     }
     
 }

@@ -4,15 +4,12 @@
  */
 package com.tmdt.repository;
 
-import com.tmdt.pojos.Account;
-import java.util.List;
+import com.tmdt.pojos.Seller;
 
 /**
  *
  * @author DELL
  */
-public interface AccountRepository {
-    boolean addAccount(Account ac);
-    List<Account> getAccount(String username);
-    Account getAcById(int id);
+public interface SellerRepository {
+    boolean addSel(Seller sel);
 }

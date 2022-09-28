@@ -14,13 +14,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Admin.findAll", query = "SELECT a FROM Admin a"),
     @NamedQuery(name = "Admin.findById", query = "SELECT a FROM Admin a WHERE a.id = :id"),
+    @NamedQuery(name = "Admin.findByName", query = "SELECT a FROM Admin a WHERE a.name = :name"),
     @NamedQuery(name = "Admin.findByIsDeleted", query = "SELECT a FROM Admin a WHERE a.isDeleted = :isDeleted")})
 public class Admin implements Serializable {
 
@@ -45,12 +46,17 @@ public class Admin implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "name")
+    private String name;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "is_deleted")
     private int isDeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdmin")
     private Collection<Voucher> voucherCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
-    @OneToOne(optional = false)
+    @OneToOne
     private Account idAccount;
 
     public Admin() {
@@ -60,8 +66,9 @@ public class Admin implements Serializable {
         this.id = id;
     }
 
-    public Admin(Integer id, int isDeleted) {
+    public Admin(Integer id, String name, int isDeleted) {
         this.id = id;
+        this.name = name;
         this.isDeleted = isDeleted;
     }
 
@@ -71,6 +78,14 @@ public class Admin implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getIsDeleted() {

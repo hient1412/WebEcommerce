@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -81,16 +80,16 @@ public class Orders implements Serializable {
     @NotNull
     @Column(name = "is_payment")
     private int isPayment;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOrder")
+    @OneToMany(mappedBy = "idOrder")
     private Collection<OrderDetail> orderDetailCollection;
     @JoinColumn(name = "id_customer", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Customer idCustomer;
     @JoinColumn(name = "id_seller", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Seller idSeller;
     @JoinColumn(name = "id_voucher", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Voucher idVoucher;
 
     public Orders() {

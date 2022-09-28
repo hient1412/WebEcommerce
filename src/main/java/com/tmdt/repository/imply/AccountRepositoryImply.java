@@ -44,8 +44,8 @@ public class AccountRepositoryImply  implements AccountRepository{
 
     @Override
     public List<Account> getAccount(String username) {
-        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
         CriteriaQuery<Account> q = builder.createQuery(Account.class);
         Root root = q.from(Account.class);
         q = q.select(root);
@@ -55,7 +55,13 @@ public class AccountRepositoryImply  implements AccountRepository{
             q = q.where(p);
         }
        
-        Query query = session.createQuery(q);
+        Query query = s.createQuery(q);
         return query.getResultList();
+    }
+
+    @Override
+    public Account getAcById(int id) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        return s.get(Account.class, id);
     }
 }

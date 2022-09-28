@@ -4,6 +4,7 @@
  */
 package com.tmdt.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,9 +25,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -38,11 +43,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
     @NamedQuery(name = "Customer.findById", query = "SELECT c FROM Customer c WHERE c.id = :id"),
+    @NamedQuery(name = "Customer.findByFirstName", query = "SELECT c FROM Customer c WHERE c.firstName = :firstName"),
+    @NamedQuery(name = "Customer.findByLastName", query = "SELECT c FROM Customer c WHERE c.lastName = :lastName"),
     @NamedQuery(name = "Customer.findByDob", query = "SELECT c FROM Customer c WHERE c.dob = :dob"),
-    @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected"),
-    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender")})
+    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender"),
+    @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected")})
 public class Customer implements Serializable {
 
+    @Transient
+    private MultipartFile file;
+    
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,35 +62,46 @@ public class Customer implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 25)
+    @Column(name = "first_name")
+    private String firstName;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "last_name")
+    private String lastName;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "dob")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dob;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "gender")
+    private String gender;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "avatar")
+    private String avatar;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_delected")
     private int isDelected;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "gender")
-    private boolean gender;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<VoucherCustomer> voucherCustomerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<ShipAdress> shipAdressCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<Review> reviewCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Collection<Comment> commentCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
+    @OneToMany(mappedBy = "idCustomer")
     private Collection<Orders> ordersCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
-    @OneToOne(optional = false)
+    @OneToOne
     private Account idAccount;
     @JoinColumn(name = "id_hometown", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Location location;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Collection<Likes> likesCollection;
 
     public Customer() {
     }
@@ -88,11 +110,13 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public Customer(Integer id, Date dob, int isDelected, boolean gender) {
+    public Customer(Integer id, String firstName, String lastName, Date dob, String gender, int isDelected) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.dob = dob;
-        this.isDelected = isDelected;
         this.gender = gender;
+        this.isDelected = isDelected;
     }
 
     public Integer getId() {
@@ -103,6 +127,22 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public Date getDob() {
         return dob;
     }
@@ -111,20 +151,20 @@ public class Customer implements Serializable {
         this.dob = dob;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public int getIsDelected() {
         return isDelected;
     }
 
     public void setIsDelected(int isDelected) {
         this.isDelected = isDelected;
-    }
-
-    public boolean getGender() {
-        return gender;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
     }
 
     @XmlTransient
@@ -155,15 +195,6 @@ public class Customer implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Comment> getCommentCollection() {
-        return commentCollection;
-    }
-
-    public void setCommentCollection(Collection<Comment> commentCollection) {
-        this.commentCollection = commentCollection;
-    }
-
-    @XmlTransient
     public Collection<Orders> getOrdersCollection() {
         return ordersCollection;
     }
@@ -186,15 +217,6 @@ public class Customer implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    @XmlTransient
-    public Collection<Likes> getLikesCollection() {
-        return likesCollection;
-    }
-
-    public void setLikesCollection(Collection<Likes> likesCollection) {
-        this.likesCollection = likesCollection;
     }
 
     @Override
@@ -221,5 +243,33 @@ public class Customer implements Serializable {
     public String toString() {
         return "com.tmdt.pojos.Customer[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * @param avatar the avatar to set
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
 }

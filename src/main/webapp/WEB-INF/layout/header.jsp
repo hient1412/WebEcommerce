@@ -17,11 +17,18 @@
             <ul class="navbar-nav ml-auto">
                 <c:choose>
                     <c:when test="${pageContext.request.userPrincipal.name == null}">
-                        <li class="nav-item active"><a class="nav-link a-login" href="<c:url value="/login"/>">Đăng nhập</a></li>
-                        <li class="nav-item active"><a class="nav-link a-login" href="#">Đăng ký</a></li>
+                        <li class="nav-item active"><a class="nav-link a-login" href="<c:url value="/login"/>">Đăng nhập/Đăng ký</a></li>
                         </c:when>
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
-                        <li class="nav-item active"><a class="nav-link a-login" href="#">${pageContext.request.userPrincipal.name}</a></li>
+                        <li class="dropdown nav-item active">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link">${pageContext.request.userPrincipal.name}</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/personal-info"/>"><i class="fa fa-user-o"></i>Thông tin cá nhân</a></li>                            
+                                    <li><a href="<c:url value="/company/edit"/>"><i class="fa fa-pencil-square-o"></i>Cập nhật thông tin</a></li>
+                                    <li><a href="<c:url value="/company/edit"/>"><i class="fa fa-wrench"></i></i>Đổi mật khẩu</a></li>
+                                    <li><a href="<c:url value="/logout"/>"><i class="material-icons">&#xE8AC;</i>Đăng xuất</a></li>
+                                </ul>
+                        </li>
                         </c:when>
                     </c:choose>
             </ul>
@@ -34,18 +41,18 @@
         <div class="container">
             <div class="row row2">
                 <div class="col-md-3">
-                    <a class="navbar-brand" style="font-size: 30px; color: white;" href="<c:url value="/" />">&copy; WebEcommerce &copy;</a>
+                    <a class="navbar-brand" style="font-size: 25px; color: white;" href="<c:url value="/" />">&copy; WebEcommerce &copy;</a>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-7">
                     <form action="<c:url value="/search" />">
-                        <input class="flipkart-navbar-input col-md-10" autocomplete="off" name="kw" type="text" placeholder="Tìm sản phẩm hoặc cửa hàng phù hợp">
+                        <input class="flipkart-navbar-input col-md-10" id="kw" autocomplete="off" name="kw"type="text" placeholder="Tìm sản phẩm phù hợp">
                         <button class="flipkart-navbar-button col-md-1"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
                 <div class="col-sm-1">
-                    <a class="cart-button">
+                    <a class="cart-button" href="<c:url value="/cart"/>">
                         <i class="fa fa-shopping-cart i-cart" aria-hidden="true"></i>
-                        <span class="item-number ">0</span>
+                        <div class="badge badge-danger" id="cartCounter">${cartCounter}</div>
                     </a>
                 </div>
             </div>

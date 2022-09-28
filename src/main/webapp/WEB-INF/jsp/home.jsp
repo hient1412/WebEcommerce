@@ -23,18 +23,29 @@
                             <div class="product-bottom">
                                 <div class="product-name">${p.name}</div>
                                 <div class="price">
-                                    <span class="rupee-icon"><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/> VND</span>
+                                    <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
                                 </div>
-                                <a href="#" class="blue-btn">Thêm vào giỏ</a>
+                                <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
+                <br>
+                <div class="col-md-12">
+                    <div class="pagination justify-content-center mt-4">
+                        <ul class="pagination">
+                            <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
+                                <li onclick="paginationClick('page', ${i})" class="page-item"><a class="page-link">${i}</a></li>
+                                </c:forEach>
+                        </ul>
+                    </div>
+                </div>           
             </c:when>
             <c:when test="${product.size() == 0}">
-                <h3 class="center"><i>Không có sản phẩm phù hợp</i><h3>
+                <h3 class="center">
+                    <i>Không có sản phẩm nào thuộc loại này </i>
+                </h3>
             </c:when>
         </c:choose>
-
     </div>
 </div>

@@ -4,6 +4,8 @@
  */
 package com.tmdt.configs;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,16 +41,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public Cloudinary cloudinary() {
-//        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-//                "cloud_name", "dxs9d8uua",
-//                "api_key", "362753783447161",
-//                "api_secret", "FWBi92rPwtgzDDHEovKyseQZZUo",
-//                "secure", true
-//        ));
-//        return cloudinary;
-//    }
+    @Bean
+    public Cloudinary cloudinary() {
+        Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", "dxs9d8uua",
+                "api_key", "362753783447161",
+                "api_secret", "FWBi92rPwtgzDDHEovKyseQZZUo",
+                "secure", true
+        ));
+        return cloudinary;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -60,7 +62,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password");
 
         http.formLogin().defaultSuccessUrl("/").failureUrl("/login?error");
-
+        http.exceptionHandling().accessDeniedPage("/login?accessDenied");
+        http.logout().logoutSuccessUrl("/login");
 //        http.logout().logoutSuccessUrl("/login");
 //        http.exceptionHandling().accessDeniedPage("/login?accessDenied");
 //        http.authorizeRequests().antMatchers("/").permitAll()

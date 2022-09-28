@@ -22,8 +22,8 @@
             </div>
             <div class="m-3">
                 <div class="form-group">
-                    <label for="inputUsernameEmail">Tên đăng nhập hoặc email</label>
-                    <input type="text" autocomplete="off" class="form-control" id="inputUsernameEmail" name="username">
+                    <label for="inputUsername">Tên đăng nhập</label>
+                    <input type="text" autocomplete="off" class="form-control" id="inputUsername" name="username">
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Mật khẩu</label>
@@ -35,6 +35,7 @@
                     </label>
                 </div>
                 <input type="submit" class="btn btn-primary btn-lg btn-block login-btn" value="Đăng nhập"/>
+
         </form>
         <div class="text-center p-2">
             <p>Bạn chưa có tài khoản? <a href="${registry}">Đăng ký ngay</a></p>
@@ -42,9 +43,13 @@
         </div>
         <c:if test="${param.error != null}">
             <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                Có lỗi xảy ra!!
+                Username hoặc password KHÔNG chính xác!
+            </div>
+        </c:if>
+        <c:if test="${param.accessDenied != null}">
+            <div class="alert alert-danger">
+                KHÔNG có quyền truy cập!
             </div>
         </c:if>
     </div>
-</div>
 </body>

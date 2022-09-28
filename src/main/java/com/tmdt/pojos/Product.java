@@ -5,9 +5,7 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -26,12 +24,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.GroupSequence;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 /**
  *
@@ -47,7 +43,8 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
     @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
     @NamedQuery(name = "Product.findByManufacturer", query = "SELECT p FROM Product p WHERE p.manufacturer = :manufacturer"),
     @NamedQuery(name = "Product.findByCreatedDate", query = "SELECT p FROM Product p WHERE p.createdDate = :createdDate"),
-    @NamedQuery(name = "Product.findByActive", query = "SELECT p FROM Product p WHERE p.active = :active")})
+    @NamedQuery(name = "Product.findByActive", query = "SELECT p FROM Product p WHERE p.active = :active"),
+    @NamedQuery(name = "Product.findByQuantity", query = "SELECT p FROM Product p WHERE p.quantity = :quantity")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,7 +68,7 @@ public class Product implements Serializable {
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "price")
-    private BigDecimal price;
+    private String price;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -86,17 +83,22 @@ public class Product implements Serializable {
     @NotNull
     @Column(name = "active")
     private int active;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idProduct")
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "quantity")
+    private int quantity;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "idProduct")
     private Collection<Image> imageCollection;
     @JoinColumn(name = "id_category", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category idCategory;
+    @JoinColumn(name = "id_seller", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Seller idSeller;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
+    private Collection<Discount> discountCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
     private Collection<OrderDetail> orderDetailCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Collection<Article> articleCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Collection<DiscountProduct> discountProductCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
     private Collection<Review> reviewCollection;
 
@@ -107,7 +109,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public Product(Integer id, String name, String description, BigDecimal price, String manufacturer, Date createdDate, int active) {
+    public Product(Integer id, String name, String description, String price, String manufacturer, Date createdDate, int active, int quantity) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -115,6 +117,7 @@ public class Product implements Serializable {
         this.manufacturer = manufacturer;
         this.createdDate = createdDate;
         this.active = active;
+        this.quantity = quantity;
     }
 
     public Integer getId() {
@@ -141,11 +144,11 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -173,6 +176,14 @@ public class Product implements Serializable {
         this.active = active;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @XmlTransient
     public Collection<Image> getImageCollection() {
         return imageCollection;
@@ -190,6 +201,23 @@ public class Product implements Serializable {
         this.idCategory = idCategory;
     }
 
+    public Seller getIdSeller() {
+        return idSeller;
+    }
+
+    public void setIdSeller(Seller idSeller) {
+        this.idSeller = idSeller;
+    }
+
+    @XmlTransient
+    public Collection<Discount> getDiscountCollection() {
+        return discountCollection;
+    }
+
+    public void setDiscountCollection(Collection<Discount> discountCollection) {
+        this.discountCollection = discountCollection;
+    }
+
     @XmlTransient
     public Collection<OrderDetail> getOrderDetailCollection() {
         return orderDetailCollection;
@@ -197,24 +225,6 @@ public class Product implements Serializable {
 
     public void setOrderDetailCollection(Collection<OrderDetail> orderDetailCollection) {
         this.orderDetailCollection = orderDetailCollection;
-    }
-
-    @XmlTransient
-    public Collection<Article> getArticleCollection() {
-        return articleCollection;
-    }
-
-    public void setArticleCollection(Collection<Article> articleCollection) {
-        this.articleCollection = articleCollection;
-    }
-
-    @XmlTransient
-    public Collection<DiscountProduct> getDiscountProductCollection() {
-        return discountProductCollection;
-    }
-
-    public void setDiscountProductCollection(Collection<DiscountProduct> discountProductCollection) {
-        this.discountProductCollection = discountProductCollection;
     }
 
     @XmlTransient
@@ -250,5 +260,5 @@ public class Product implements Serializable {
     public String toString() {
         return "com.tmdt.pojos.Product[ id=" + id + " ]";
     }
-
+    
 }

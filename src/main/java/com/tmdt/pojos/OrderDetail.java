@@ -48,10 +48,12 @@ public class OrderDetail implements Serializable {
     @NotNull
     @Column(name = "quantity")
     private int quantity;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "discount")
-    private Long discount;
+    private double discount;
     @JoinColumn(name = "id_order", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Orders idOrder;
     @JoinColumn(name = "id_product", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -64,10 +66,11 @@ public class OrderDetail implements Serializable {
         this.id = id;
     }
 
-    public OrderDetail(Integer id, long unitPrice, int quantity) {
+    public OrderDetail(Integer id, long unitPrice, int quantity, double discount) {
         this.id = id;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
+        this.discount = discount;
     }
 
     public Integer getId() {
@@ -94,11 +97,11 @@ public class OrderDetail implements Serializable {
         this.quantity = quantity;
     }
 
-    public Long getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Long discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

@@ -26,8 +26,34 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="header" value="" />
         <put-attribute name="footer" value="" />
     </definition>
+    <definition name="registry" extends="baseLayout">
+        <put-attribute name="title" value="Đăng ký" />
+        <put-attribute name="content" value="/WEB-INF/jsp/registry.jsp" />
+        <put-attribute name="header" value="" />
+        <put-attribute name="footer" value="" />
+    </definition>
+    <definition name="registry-cus" extends="baseLayout">
+        <put-attribute name="title" value="Thêm thông tin khách hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/registry-cus.jsp" />
+        <put-attribute name="header" value="" />
+        <put-attribute name="footer" value="" />
+    </definition>
+    <definition name="registry-sel" extends="baseLayout">
+        <put-attribute name="title" value="Thêm thông tin người bán" />
+        <put-attribute name="content" value="/WEB-INF/jsp/registry-sel.jsp" />
+        <put-attribute name="header" value="" />
+        <put-attribute name="footer" value="" />
+    </definition>
     <definition name="search" extends="baseLayout">
         <put-attribute name="title" value="Tìm kiếm sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/search.jsp" />
+    </definition>
+    <definition name="product-detail" extends="baseLayout">
+        <put-attribute name="title" value="Chi tiết sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-detail.jsp" />
+    </definition>
+    <definition name="cart" extends="baseLayout">
+        <put-attribute name="title" value="Giỏ hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/cart.jsp" />
     </definition>
 </tiles-definitions>

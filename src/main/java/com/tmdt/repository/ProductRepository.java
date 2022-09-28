@@ -6,6 +6,7 @@ package com.tmdt.repository;
 
 import com.tmdt.pojos.Product;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public interface ProductRepository {
     List<Product> getProducts();
-    List<Object[]> getProducts(String kw,int page);
+    List<Product> getProducts(Map<String,String> params,int page);
     Product getProductById(int productId);
+    List<Product> getProductByCateId(int cateId,int page);
 }

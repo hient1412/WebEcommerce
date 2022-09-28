@@ -8,6 +8,7 @@ import com.tmdt.pojos.Product;
 import com.tmdt.repository.ProductRepository;
 import com.tmdt.service.ProductService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,8 @@ public class ProductServiceImply implements ProductService{
     private ProductRepository productRepository;
     
     @Override
-    public List<Object[]> getProducts(String kw,int page) {
-        return this.productRepository.getProducts(kw,page);
+    public List<Product> getProducts(Map<String,String> params,int page) {
+        return this.productRepository.getProducts(params,page);
     }
 
     @Override
@@ -34,6 +35,11 @@ public class ProductServiceImply implements ProductService{
     @Override
     public List<Product> getProducts() {
         return this.productRepository.getProducts();
+    }
+
+    @Override
+    public List<Product> getProductByCateId(int cateId, int page) {
+        return this.productRepository.getProductByCateId(cateId,page);
     }
     
 }

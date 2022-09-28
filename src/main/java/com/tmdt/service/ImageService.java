@@ -4,16 +4,13 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Image;
 import java.util.List;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *
  * @author DELL
  */
-public interface AccountService extends UserDetailsService {
-    boolean addAccount(Account ac);
-    List<Account> getAccount(String username);
-    Account getAcById(int id);
+public interface ImageService {
+    List<Image> getImageByProductId(int productId);
 }

@@ -78,7 +78,7 @@ public class Voucher implements Serializable {
     private Admin idAdmin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idVoucher")
     private Collection<VoucherCustomer> voucherCustomerCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idVoucher")
+    @OneToMany(mappedBy = "idVoucher")
     private Collection<Orders> ordersCollection;
 
     public Voucher() {
