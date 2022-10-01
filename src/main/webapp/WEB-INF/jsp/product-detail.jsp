@@ -53,52 +53,84 @@
                     </div>
                 </div>
             </div>
-            <div class="row center p-4 m-4">
-                <h1>Xem thêm sản phẩm khác</h1>
-            </div>
+
+            <c:if test="${buyALotSeller.size() != 0}">
+                <div class="row center p-4 m-4">
+                    <h1>Top sản phẩm bán chạy</h1>
+                </div>
+                <c:forEach items="${buyALotSeller}" var="p">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="white-box mt-3">
+                            <div class="wishlist-icon">
+                                <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
+                            </div>
+                            <div class="product-img">
+                                <img src="${p[3].imageCollection.get(0).image}">
+                            </div>
+                            <div class="product-bottom">
+                                <div class="product-name">${p[1]}</div>
+                                <div class="price">
+                                    <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                </div>
+                                <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>">Xem chi tiết</a>
+                                <div class="pt-4"><span class="text-danger">Số lượt bán: ${p[4]}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:if>
         </div>
     </div>
     <div>
         <ul>
             <c:forEach begin="1" end="5" var="i">
                 <li  title="Đánh giá" id="rating" class="d-inline rating" style="cursor: pointer; color: #ccc; font-size: 30px">&#9733;</li>
-            </c:forEach>
+                </c:forEach>
         </ul>
     </div>
-    <c:url value="/api/product/${product.id}/comment" var="endpoint"/>
+    <c:url value="/api/product/${product.id}/review" var="endpoint"/>
     <!--    <sec:authorize access="isAuthenticated()">
-            <div>
-                <div class="d-flex flex-row add-comment-section mt-4 mb-4">
-                    <textarea type="text" id="binhLuan" class="form-control mr-3" placeholder="Nhập bình luận"></textarea>
-                    <input onclick="addBinhLuan('${endpoint}',${product.id})" class="btn btn-primary" type="submit" value="Gửi bình luận"/>
-                </div>
-            </div>
-        </sec:authorize>     
-        <sec:authorize access="!isAuthenticated()">
-            <div>
-                <h4 class="center">VUI LÒNG <a href="<c:url value="/login"/>">ĐĂNG NHẬP</a> ĐỂ CÓ THỂ BÌNH LUẬN!!! </h4>
-            </div>
-        </sec:authorize>     
-    
-        <div id="comments">
-    
-        </div>-->
+    -->           
+    <div>
+        <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+            <textarea type="text" id="inputReview" class="form-control mr-3" placeholder="Nhập bình luận"></textarea>
+            <input onclick="addReview('${endpoint}',${product.id})" class="btn btn-primary" type="submit" value="Gửi bình luận"/>
+        </div>
+    </div>
+    <!--
+</sec:authorize>     
+<sec:authorize access="!isAuthenticated()">
+<div>
+    <h4 class="center">VUI LÒNG <a href="<c:url value="/login"/>">ĐĂNG NHẬP</a> ĐỂ CÓ THỂ BÌNH LUẬN!!! </h4>
 </div>
+</sec:authorize>     
+
+    -->
+    <div id="review">
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
 <script>
-    $(".qtyminus").on("click", function () {
-        var now = $(".qty").val();
-        if ($.isNumeric(now)) {
-            if (parseInt(now) - 1 > 0)
-            {
-                now--;
-            }
-            $(".qty").val(now);
-        }
-    });
-    $(".qtyplus").on("click", function () {
-        var now = $(".qty").val();
-        if ($.isNumeric(now)) {
-            $(".qty").val(parseInt(now) + 1);
-        }
-    });
+                $(".qtyminus").on("click", function () {
+                    var now = $(".qty").val();
+                    if ($.isNumeric(now)) {
+                        if (parseInt(now) - 1 > 0)
+                        {
+                            now--;
+                        }
+                        $(".qty").val(now);
+                    }
+                });
+                $(".qtyplus").on("click", function () {
+                    var now = $(".qty").val();
+                    if ($.isNumeric(now)) {
+                        $(".qty").val(parseInt(now) + 1);
+                    }
+                });
+                window.onload = function () {
+                    loadReview('${endpoint}');
+                };
+
 </script>

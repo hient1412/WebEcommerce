@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface ImageRepository {
     List<Image> getImageByProductId(int productId);
+    boolean addImage(Image i);
+    boolean updateImage(Image i);
 }

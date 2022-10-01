@@ -8,10 +8,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +32,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,8 +56,7 @@ public class Customer implements Serializable {
 
     @Transient
     private MultipartFile file;
-    
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,8 +95,6 @@ public class Customer implements Serializable {
     private Collection<VoucherCustomer> voucherCustomerCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<ShipAdress> shipAdressCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
-    private Collection<Review> reviewCollection;
     @OneToMany(mappedBy = "idCustomer")
     private Collection<Orders> ordersCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
@@ -184,16 +185,6 @@ public class Customer implements Serializable {
     public void setShipAdressCollection(Collection<ShipAdress> shipAdressCollection) {
         this.shipAdressCollection = shipAdressCollection;
     }
-
-    @XmlTransient
-    public Collection<Review> getReviewCollection() {
-        return reviewCollection;
-    }
-
-    public void setReviewCollection(Collection<Review> reviewCollection) {
-        this.reviewCollection = reviewCollection;
-    }
-
     @XmlTransient
     public Collection<Orders> getOrdersCollection() {
         return ordersCollection;

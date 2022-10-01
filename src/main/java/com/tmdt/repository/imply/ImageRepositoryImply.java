@@ -42,4 +42,28 @@ public class ImageRepositoryImply implements ImageRepository{
         Query query = session.createQuery(q);
         return query.getResultList();
     }
+
+    @Override
+    public boolean addImage(Image i) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(i);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateImage(Image i) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.update(i);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

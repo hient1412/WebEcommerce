@@ -76,15 +76,16 @@ public class HomeController {
         pre.put("cat", params.getOrDefault("cat",""));
         pre.put("location", params.getOrDefault("location",""));
         String cateId = params.get("cateId");
+        model.addAttribute("cateId",cateId);
         if(cateId == null){
             model.addAttribute("product",this.productService.getProducts(pre, page));
+            model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
+            model.addAttribute("buyALot", this.productService.getProductBuyALot(Integer.parseInt(env.getProperty("buyALot.size"))));
         } else {
             model.addAttribute("product",this.productService.getProductByCateId(Integer.parseInt(cateId), page));
+            model.addAttribute("counterS", this.productService.getProductByCateId(Integer.parseInt(cateId), 0).size());
         }
         model.addAttribute("count",env.getProperty("page.size"));
-        model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
-        
-        
         return "home";
     }
     
@@ -119,6 +120,8 @@ public class HomeController {
     public String productDetail(Model model,@PathVariable(value = "productId") int productId){
         model.addAttribute("product",this.productService.getProductById(productId));
         model.addAttribute("image",this.imageService.getImageByProductId(productId));
+        model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")),
+                this.productService.getProductById(productId).getIdSeller().getId()));
         
         return "product-detail";
     }

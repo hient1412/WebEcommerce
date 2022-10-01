@@ -58,9 +58,9 @@ public class Review implements Serializable {
     @Column(name = "review_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date reviewDate;
-    @JoinColumn(name = "id_customer", referencedColumnName = "id")
+    @JoinColumn(name = "id_account", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Customer idCustomer;
+    private Account idAccount;
     @JoinColumn(name = "id_product", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Product idProduct;
@@ -111,14 +111,6 @@ public class Review implements Serializable {
         this.reviewDate = reviewDate;
     }
 
-    public Customer getIdCustomer() {
-        return idCustomer;
-    }
-
-    public void setIdCustomer(Customer idCustomer) {
-        this.idCustomer = idCustomer;
-    }
-
     public Product getIdProduct() {
         return idProduct;
     }
@@ -150,6 +142,20 @@ public class Review implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.Review[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the idAccount
+     */
+    public Account getIdAccount() {
+        return idAccount;
+    }
+
+    /**
+     * @param idAccount the idAccount to set
+     */
+    public void setIdAccount(Account idAccount) {
+        this.idAccount = idAccount;
     }
     
 }

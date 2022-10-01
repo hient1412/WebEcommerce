@@ -4,16 +4,21 @@
  */
 package com.tmdt.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -39,6 +44,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
 
+    
+    public static final String ADMIN = "ROLE_ADMIN";
+    public static final String CUSTOMER = "ROLE_CUSTOMER";
+    public static final String SELLER = "ROLE_SELLER";
+    
     @Transient
     private String confirmPassword;
     
@@ -48,16 +58,19 @@ public class Account implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "email")
     private String email;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "phone")
     private String phone;
+    @JsonIgnore
     @Lob
     @Size(max = 65535)
     @Column(name = "description")
@@ -67,11 +80,13 @@ public class Account implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "username")
     private String username;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "password")
     private String password;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
@@ -79,12 +94,18 @@ public class Account implements Serializable {
     private String role;
     @Column(name = "active")
     private Integer active;
+    @JsonIgnore
     @OneToOne(mappedBy = "idAccount")
     private Seller seller;
+    @JsonIgnore
     @OneToOne(mappedBy = "idAccount")
     private Admin admin;
+    @JsonIgnore
     @OneToOne(mappedBy = "idAccount")
     private Customer customer;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "idAccount")
+    private Set<Review> reviewSet;
 
     public Account() {
     }
@@ -245,6 +266,20 @@ public class Account implements Serializable {
      */
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    /**
+     * @return the reviewSet
+     */
+    public Set<Review> getReviewSet() {
+        return reviewSet;
+    }
+
+    /**
+     * @param reviewSet the reviewSet to set
+     */
+    public void setReviewSet(Set<Review> reviewSet) {
+        this.reviewSet = reviewSet;
     }
     
 }

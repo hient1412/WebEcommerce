@@ -5,25 +5,36 @@
 package com.tmdt.repository.imply;
 
 
+import com.tmdt.pojos.Image;
 import com.tmdt.pojos.Location;
+import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
+import com.tmdt.repository.AccountRepository;
+import com.tmdt.repository.CustomerRepository;
 import com.tmdt.repository.ProductRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Spliterator;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.hibernate.HibernateException;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,7 +50,11 @@ public class ProductRepositoryImply implements ProductRepository {
     private LocalSessionFactoryBean sessionFactoryBean;
     @Autowired
     private Environment env;
-
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    
     @Override
     public List<Product> getProducts() {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
@@ -103,9 +118,7 @@ public class ProductRepositoryImply implements ProductRepository {
         }
         String seller = params.get("seller");
         if (!seller.isEmpty()) {
-            Root roots = q.from(Seller.class);
-            q.where(builder.equal(root.get("idSeller"), roots.get("id")));
-            Predicate p = builder.like(roots.get("name").as(String.class), String.format("%%%s%%", seller));
+            Predicate p = builder.equal(root.join("idSeller").get("name").as(String.class), String.format("%s", seller));
             predicates.add(p);
         }
         String cat = params.get("cat");
@@ -124,8 +137,10 @@ public class ProductRepositoryImply implements ProductRepository {
 //            Predicate p = builder.equal(rootl.get("id").as(Integer.class), location);
             predicates.add(p);
         }
+        Predicate p1 = builder.equal(root.get("active"), 1);
+        predicates.add(p1);
         q = q.where(predicates.toArray(new Predicate[]{}));
-
+        q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q.distinct(true));
         if (page > 0) {
             int size = Integer.parseInt(env.getProperty("page.size").toString());
@@ -160,5 +175,123 @@ public class ProductRepositoryImply implements ProductRepository {
             query.setFirstResult((page - 1) * size);
         }
         return query.getResultList();
+    }
+
+    @Override
+    public boolean addProduct(Product p) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(p);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public List<Product> getProductBySellerId(int sellerId, int page) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> q = builder.createQuery(Product.class);
+        Root root = q.from(Product.class);
+        q.select(root);
+
+        q.where(builder.equal(root.get("idSeller"), sellerId));
+        
+        q.orderBy(builder.desc(root.get("id")));
+        
+        Query query = session.createQuery(q);
+        if (page > 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            query.setMaxResults(size);
+            query.setFirstResult((page - 1) * size);
+        }
+        return query.getResultList();
+
+    }
+
+    @Override
+    public boolean updateProduct(Product p) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            session.update(p);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public List<Object[]> getProductBuyALot(int num) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        Root root = q.from(Product.class);
+        Root rootOD = q.from(OrderDetail.class);
+     
+        q = q.where(builder.equal(rootOD.get("idProduct"), root.get("id")));
+        q.multiselect(root.get("id"),root.get("name"),
+                root.get("price"),root,builder.count(root.get("id")));
+
+        q = q.groupBy(root.get("id"));
+        q = q.orderBy(builder.desc(builder.count(root.get("id"))));
+        
+        Query query = session.createQuery(q);
+       
+        query.setMaxResults(num);
+
+        return query.getResultList();
+    }
+    @Override
+    public List<Object[]> getProductBuyALotInSeller(int num,int sellerId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        Root root = q.from(Product.class);
+        Root rootOD = q.from(OrderDetail.class);
+     
+        q = q.where(builder.and(builder.equal(rootOD.get("idProduct"), root.get("id"))),builder.equal(root.join("idSeller").get("id"), sellerId));
+        q.multiselect(root.get("id"),root.get("name"),
+                root.get("price"),root,builder.count(root.get("id")));
+
+        q = q.groupBy(root.get("id"));
+        q = q.orderBy(builder.desc(builder.count(root.get("id"))));
+        
+        Query query = session.createQuery(q);
+       
+        query.setMaxResults(num);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Review> getReview(int productId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Review> query = builder.createQuery(Review.class);
+        Root root = query.from(Review.class);
+        query.select(root);
+
+        query.where(builder.equal(root.get("idProduct"), productId));
+
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
+
+    @Override
+    public Review addReview(String review, int ProductId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        Review r = new Review();
+        r.setContent(review);
+        r.setIdProduct(this.getProductById(ProductId));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        r.setIdAccount(this.accountRepository.getAcByUsername(auth.getName()));
+        r.setReviewDate(new Date());
+
+        session.save(r);
+
+        return r;
     }
 }

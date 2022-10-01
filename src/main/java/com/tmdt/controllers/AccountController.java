@@ -18,4 +18,9 @@ public class AccountController {
 
         return "login";
     }
+    @GetMapping("/chat")
+    public String chat() {
+
+        return "chat";
+    }
 }

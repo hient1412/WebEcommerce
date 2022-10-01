@@ -1,0 +1,79 @@
+<%-- 
+    Document   : list-product-upload
+    Created on : Sep 29, 2022, 4:26:19 PM
+    Author     : DELL
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<h1 class="center p-4">QUẢN LÝ SẢN PHẨM</h1>
+<c:choose>
+    <c:when test="${product.size() != 0}">
+        <div>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
+            <div class="product-list">
+                <div class="row">
+                    <c:forEach items="${product}" var="p">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="white-box mt-3">
+                                <div class="wishlist-icon">
+                                    <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
+                                </div>
+                                <div class="product-img">
+                                    <img src="${p.imageCollection.get(0).image}">
+                                </div>
+                                <div class="product-bottom">
+                                    <div class="product-name">${p.name}
+                                    <c:if test="${p.active == 0}">
+                                        <div class="text-primary" ><h6>Trạng thái: Đã ẩn </h6></div>
+                                    </c:if></div>
+                                    <div><h6>Loại sản phẩm: ${p.idCategory.name}</h6></div>
+                                    <div class="price">
+                                        <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                    </div>
+                                    <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>">Xem trước</a>
+                                </div>
+                                <div class="row mt-3 center">
+                                    <div class="col">
+                                        <a title="Sửa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</a>
+                                    </div>
+                                    <div class="col">
+                                        <c:if test="${p.active == '1'}">
+                                        <a title="Ẩn" href="<c:url value="/seller/product-hide"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye-slash" aria-hidden="true"></i>Ẩn</a>
+                                        </c:if>
+                                        <c:if test="${p.active == '0'}">
+                                        <a title="Hiện" href="<c:url value="/seller/product-show"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye" aria-hidden="true"></i>Hiện</a>
+                                        </c:if>
+                                        </div>
+                                    <div class="col">
+                                        <a title="Xóa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-trash" aria-hidden="true"></i>Xóa</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="pagination justify-content-center mt-4">
+                <ul class="pagination">
+                    <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
+                        <li onclick="paginationClick('page', ${i})" class="page-item"><a class="page-link">${i}</a></li>
+                        </c:forEach>
+                </ul>
+            </div>
+        </div>    
+    </c:when>
+    <c:when test="${product.size() == 0}">
+        <h3 class="center p-3">
+            <i class="text-danger">Bạn chưa đăng sản phẩm nào</i>
+        </h3>
+    </c:when>
+</c:choose>

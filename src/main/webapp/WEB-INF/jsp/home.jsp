@@ -13,7 +13,7 @@
             <c:when test="${product.size() != 0}">
                 <c:forEach items="${product}" var="p">
                     <div class="col-md-3 col-sm-6">
-                        <div class="white-box">
+                        <div class="white-box mt-3">
                             <div class="wishlist-icon">
                                 <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
                             </div>
@@ -39,7 +39,32 @@
                                 </c:forEach>
                         </ul>
                     </div>
-                </div>           
+                </div> 
+                <c:if test="${cateId == null}">
+                    <c:if test="${buyALot.size() != 0}">
+                        <h1 class="center"> SẢN PHẨM ĐƯỢC KHÁCH HÀNG ƯA CHUỘNG </h1>
+                        <c:forEach items="${buyALot}" var="p">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="white-box mt-3">
+                                    <div class="wishlist-icon">
+                                        <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
+                                    </div>
+                                    <div class="product-img">
+                                        <img src="${p[3].imageCollection.get(0).image}">
+                                    </div>
+                                    <div class="product-bottom">
+                                        <div class="product-name">${p[1]}</div>
+                                        <div class="price">
+                                            <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                        </div>
+                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>">Xem chi tiết</a>
+                                        <div class="pt-4"><span class="text-danger">Số lượt bán: ${p[4]}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:if>
+                </c:if>          
             </c:when>
             <c:when test="${product.size() == 0}">
                 <h3 class="center">

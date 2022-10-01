@@ -126,7 +126,8 @@ nav li a{
 }
 
 .product-list {
-    padding: 20px 10px 20px;
+    margin: 10px;
+    padding-bottom: 10px;
     font-family: 'Nunito Sans', sans-serif;
 }
 .product-list>ul {
@@ -304,4 +305,20 @@ input:checked+span{
     line-height: 16px;
     vertical-align: middle;
     margin-top: -2px;
+}
+.navbar img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+.dot {
+    height: 6px;
+    width: 6px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 2px;
+    background-color: rgb(91,92,91);
+    border-radius: 50%;
+    display: inline-block;
 }

@@ -16,4 +16,7 @@ public interface AccountService extends UserDetailsService {
     boolean addAccount(Account ac);
     List<Account> getAccount(String username);
     Account getAcById(int id);
+    List<Account> getRole(String role, int page, int active);
+    boolean updateAc(Account ac);
+    Account getAcByUsername(String username);
 }

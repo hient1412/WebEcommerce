@@ -5,8 +5,10 @@
 package com.tmdt.configs;
 
 import com.tmdt.formatters.AccountFormatter;
+import com.tmdt.formatters.CategoryFormatter;
 import com.tmdt.formatters.CustomerFormatter;
 import com.tmdt.formatters.LocationFormatter;
+import com.tmdt.formatters.ProductFormatter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -71,6 +73,8 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new AccountFormatter());
         registry.addFormatter(new CustomerFormatter());
         registry.addFormatter(new LocationFormatter());
+        registry.addFormatter(new CategoryFormatter());
+        registry.addFormatter(new ProductFormatter());
 
     }
     public MessageSource messageSource() {

@@ -61,5 +61,18 @@ public class AccountServiceImply implements AccountService{
     public Account getAcById(int id) {
         return this.accountRepository.getAcById(id);
     }
-    
+
+    @Override
+    public List<Account> getRole(String role, int page, int active) {
+        return this.accountRepository.getRole(role,page,active);
+    }
+
+    @Override
+    public boolean updateAc(Account ac) {
+        return this.accountRepository.updateAc(ac);
+    }
+    @Override
+    public Account getAcByUsername(String username) {
+        return this.accountRepository.getAcByUsername(username);
+    }
 }

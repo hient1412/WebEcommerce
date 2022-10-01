@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Repository;
 @Transactional
 public class AccountRepositoryImply  implements AccountRepository{
 
+    @Autowired
+    private Environment env;
     @Autowired
     private LocalSessionFactoryBean sessionFactoryBean;
     
@@ -49,7 +52,6 @@ public class AccountRepositoryImply  implements AccountRepository{
         CriteriaQuery<Account> q = builder.createQuery(Account.class);
         Root root = q.from(Account.class);
         q = q.select(root);
-        
         if(!username.isEmpty()){
             Predicate p = builder.equal(root.get("username").as(String.class), username.trim());
             q = q.where(p);
@@ -63,5 +65,54 @@ public class AccountRepositoryImply  implements AccountRepository{
     public Account getAcById(int id) {
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
         return s.get(Account.class, id);
+    }
+
+    @Override
+    public List<Account> getRole(String role, int page, int active) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
+        CriteriaQuery<Account> query = builder.createQuery(Account.class);
+        Root root = query.from(Account.class);
+        query = query.select(root);
+
+        query = query.where(builder.equal(root.get("role").as(String.class), role),
+                builder.equal(root.get("active").as(Integer.class), active));
+
+        query = query.orderBy(builder.desc(root.get("id")));
+
+        Query q = s.createQuery(query);
+
+        if (page != 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            q.setMaxResults(size);
+            q.setFirstResult((page - 1) * size);
+        }
+        return q.getResultList();
+    }
+
+    @Override
+    public boolean updateAc(Account ac) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.update(ac);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+    @Override
+    public Account getAcByUsername(String username) {
+        
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
+        CriteriaQuery<Account> query = builder.createQuery(Account.class);
+        Root root = query.from(Account.class);
+        query = query.select(root);
+
+        query = query.where(builder.equal(root.get("username").as(String.class), username));
+
+        Query q = s.createQuery(query);
+        return (Account) q.getSingleResult();
     }
 }

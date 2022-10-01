@@ -4,7 +4,9 @@
  */
 package com.tmdt.service.imply;
 
+import com.tmdt.pojos.Image;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Review;
 import com.tmdt.repository.ProductRepository;
 import com.tmdt.service.ProductService;
 import java.util.List;
@@ -40,6 +42,40 @@ public class ProductServiceImply implements ProductService{
     @Override
     public List<Product> getProductByCateId(int cateId, int page) {
         return this.productRepository.getProductByCateId(cateId,page);
+    }
+
+    @Override
+    public boolean addProduct(Product p) {
+        return this.productRepository.addProduct(p);
+    }
+
+    @Override
+    public List<Product> getProductBySellerId(int sellerId, int page) {
+        return this.productRepository.getProductBySellerId(sellerId,page);
+    }
+
+    @Override
+    public boolean updateProduct(Product p) {
+        return this.productRepository.updateProduct(p);
+    }
+
+    @Override
+    public List<Object[]> getProductBuyALot(int num) {
+        return this.productRepository.getProductBuyALot(num);
+    }
+     @Override
+    public List<Object[]> getProductBuyALotInSeller(int num,int sellerId) {
+        return this.productRepository.getProductBuyALotInSeller(num,sellerId);
+    }
+
+    @Override
+    public List<Review> getReview(int productId) {
+        return this.productRepository.getReview(productId);
+    }
+
+    @Override
+    public Review addReview(String review, int productId) {
+        return this.productRepository.addReview(review,productId);
     }
     
 }

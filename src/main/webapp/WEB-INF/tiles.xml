@@ -56,4 +56,28 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Giỏ hàng" />
         <put-attribute name="content" value="/WEB-INF/jsp/cart.jsp" />
     </definition>
+    <definition name="seller-confirm" extends="baseLayout">
+        <put-attribute name="title" value="Xác nhận người bán" />
+        <put-attribute name="content" value="/WEB-INF/jsp/seller-confirm.jsp" />
+    </definition>
+    <definition name="product-upload" extends="baseLayout">
+        <put-attribute name="title" value="Đăng sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-upload.jsp" />
+    </definition>
+    <definition name="list-product-upload" extends="baseLayout">
+        <put-attribute name="title" value="Danh sách sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/list-product-upload.jsp" />
+    </definition>
+    <definition name="seller-view" extends="baseLayout">
+        <put-attribute name="title" value="Kênh người bán" />
+        <put-attribute name="content" value="/WEB-INF/jsp/seller-view.jsp" />
+    </definition>
+    <definition name="product-edit" extends="baseLayout">
+        <put-attribute name="title" value="Chỉnh sửa sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-edit.jsp" />
+    </definition>
+    <definition name="chat" extends="baseLayout">
+        <put-attribute name="title" value="Nhắn tin" />
+        <put-attribute name="content" value="/WEB-INF/jsp/chat.jsp" />
+    </definition>
 </tiles-definitions>

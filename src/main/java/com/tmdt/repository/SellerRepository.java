@@ -4,7 +4,10 @@
  */
 package com.tmdt.repository;
 
+import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
+import java.util.List;
 
 /**
  *

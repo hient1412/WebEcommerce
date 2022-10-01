@@ -21,20 +21,46 @@
                         </c:when>
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                         <li class="dropdown nav-item active">
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link">${pageContext.request.userPrincipal.name}</a>
+                            <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_SELLER')}">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link"><img src="${pageContext.session.getAttribute('currentSeller').getAvatar()}">${pageContext.request.userPrincipal.name}</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="<c:url value="/personal-info"/>"><i class="fa fa-user-o"></i>Thông tin cá nhân</a></li>                            
                                     <li><a href="<c:url value="/company/edit"/>"><i class="fa fa-pencil-square-o"></i>Cập nhật thông tin</a></li>
-                                    <li><a href="<c:url value="/company/edit"/>"><i class="fa fa-wrench"></i></i>Đổi mật khẩu</a></li>
+                                        <c:if test="${pageContext.session.getAttribute('current').active == 1}">
+                                        <li><a href="<c:url value="/seller/view"/>"><i class="fa fa-briefcase"></i>Quản lý</a></li>
+                                        </c:if>
+                                        <c:if test="${pageContext.session.getAttribute('current').active == 0}">
+                                        <li style="margin-left: 15px; color: red"><i class="fa fa-briefcase"></i>(Chưa kích hoạt)</li>
+                                        </c:if>
                                     <li><a href="<c:url value="/logout"/>"><i class="material-icons">&#xE8AC;</i>Đăng xuất</a></li>
                                 </ul>
+                            </c:if>
+                            <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_CUSTOMER')}">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link"><img src="${pageContext.session.getAttribute('currentCustomer').getAvatar()}">${pageContext.request.userPrincipal.name}</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/personal-info"/>"><i class="fa fa-user-o"></i>Thông tin cá nhân</a></li>
+                                    <li><a href="<c:url value="/candidate/edit"/>"><i class="fa fa-pencil-square-o"></i>Cập nhật thông tin</a></li>
+                                    <li><a href="<c:url value="/candidate/list-apply"/>?id=${pageContext.session.getAttribute('current').ungVien.maUV}"><i class="fa fa-briefcase"></i>Ds đã ứng tuyển</a></li>
+                                    <li><a href="<c:url value="/logout"/>"><i class="material-icons">&#xE8AC;</i>Đăng xuất</a></li>
+                                </ul>
+
+                            </c:if>
+                            <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_ADMIN')}">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link"><span>${pageContext.request.userPrincipal.name}</span>(${pageContext.session.getAttribute('current').role})</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/personal-info"/>"><i class="fa fa-user-o"></i>Thông tin cá nhân</a></li>
+                                    <li><a href="<c:url value="/admin/edit"/>"><i class="fa fa-pencil-square-o"></i>Cập nhật thông tin</a></li>
+                                    <li><a href="<c:url value="/admin/view"/>"><i class="fa fa-briefcase"></i>Quản lý</a></li>
+                                    <li><a href="<c:url value="/logout"/>"><i class="material-icons">&#xE8AC;</i>Đăng xuất</a></li>
+                                </ul>
+
+                            </c:if>
                         </li>
-                        </c:when>
-                    </c:choose>
+                    </c:when>
+                </c:choose>
             </ul>
         </div>
     </div>
-
 </nav>
 <nav>
     <div id="flipkart-navbar">

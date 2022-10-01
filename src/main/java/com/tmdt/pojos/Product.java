@@ -4,9 +4,11 @@
  */
 package com.tmdt.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,10 +26,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -47,6 +53,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Product.findByQuantity", query = "SELECT p FROM Product p WHERE p.quantity = :quantity")})
 public class Product implements Serializable {
 
+    @Transient
+    private MultipartFile[] file;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,7 +87,7 @@ public class Product implements Serializable {
     @NotNull
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Date createdDate = new Date();
     @Basic(optional = false)
     @NotNull
     @Column(name = "active")
@@ -87,20 +96,26 @@ public class Product implements Serializable {
     @NotNull
     @Column(name = "quantity")
     private int quantity;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "idProduct")
     private Collection<Image> imageCollection;
+    @JsonIgnore
     @JoinColumn(name = "id_category", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category idCategory;
+    @JsonIgnore
     @JoinColumn(name = "id_seller", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Seller idSeller;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
     private Collection<Discount> discountCollection;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
     private Collection<OrderDetail> orderDetailCollection;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
-    private Collection<Review> reviewCollection;
+    private Set<Review> reviewSet;
 
     public Product() {
     }
@@ -227,15 +242,6 @@ public class Product implements Serializable {
         this.orderDetailCollection = orderDetailCollection;
     }
 
-    @XmlTransient
-    public Collection<Review> getReviewCollection() {
-        return reviewCollection;
-    }
-
-    public void setReviewCollection(Collection<Review> reviewCollection) {
-        this.reviewCollection = reviewCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -260,5 +266,33 @@ public class Product implements Serializable {
     public String toString() {
         return "com.tmdt.pojos.Product[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the file
+     */
+    public MultipartFile[] getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile[] file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the reviewSet
+     */
+    public Set<Review> getReviewSet() {
+        return reviewSet;
+    }
+
+    /**
+     * @param reviewSet the reviewSet to set
+     */
+    public void setReviewSet(Set<Review> reviewSet) {
+        this.reviewSet = reviewSet;
+    }
+
 }

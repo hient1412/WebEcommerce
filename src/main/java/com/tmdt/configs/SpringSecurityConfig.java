@@ -6,6 +6,8 @@ package com.tmdt.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.tmdt.handler.LoginHandler;
+import com.tmdt.handler.LogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,6 +36,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
+    private LoginHandler loginHandler;
+
+    @Autowired
+    private LogoutHandler logoutHandler;
+    @Autowired
     private UserDetailsService userDetailsService;
     
     @Bean
@@ -61,18 +68,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin().loginPage("/login").usernameParameter("username").passwordParameter("password");
 
-        http.formLogin().defaultSuccessUrl("/").failureUrl("/login?error");
+        http.formLogin().successHandler(loginHandler);
+
+        http.logout().logoutSuccessHandler(logoutHandler);
         http.exceptionHandling().accessDeniedPage("/login?accessDenied");
-        http.logout().logoutSuccessUrl("/login");
-//        http.logout().logoutSuccessUrl("/login");
-//        http.exceptionHandling().accessDeniedPage("/login?accessDenied");
-//        http.authorizeRequests().antMatchers("/").permitAll()
+        http.authorizeRequests().antMatchers("/").permitAll()
 //                .antMatchers("/personal-info").authenticated()
 //                .antMatchers("/**/comment").authenticated()
-//                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-//                .antMatchers("/candidate/**").access("hasRole('ROLE_UV')")
-//                .antMatchers("/company/**").access("hasRole('ROLE_NTD')");
+                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/customer/**").access("hasRole('ROLE_CUSTOMER')")
+                .antMatchers("/seller/**").access("hasRole('ROLE_SELLER')");
         http.csrf().disable();
     }
-
 }
