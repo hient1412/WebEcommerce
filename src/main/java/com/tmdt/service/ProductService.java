@@ -24,5 +24,5 @@ public interface ProductService {
     List<Object[]> getProductBuyALot(int num);
     List<Object[]> getProductBuyALotInSeller(int num,int sellerId);
     List<Review> getReview(int productId);
-    Review addReview(String review, int productId);
+    Review addReview(String review, int productId, int rating);
 }

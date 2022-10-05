@@ -6,6 +6,7 @@ package com.tmdt.controllers;
 
 import com.tmdt.pojos.Account;
 import com.tmdt.service.AccountService;
+import com.tmdt.service.StatsService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    
+    @Autowired
+    private StatsService statsService;
     @Autowired
     private Environment env;
     @Autowired
     private AccountService userDetailsService;
+    
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard-admin";
+    }
     
     @GetMapping("/seller-confirm")
     public String sellerConfirm(Model model,
@@ -80,5 +87,10 @@ public class AdminController {
 
         r.addFlashAttribute("errMessage", errMessage);
         return "redirect:/admin/seller-confirm";
+    }
+    @GetMapping("/stats/role")
+    public String statsRole(Model model) {
+        model.addAttribute("countRole",this.statsService.countRole());
+        return "stats-role";
     }
 }

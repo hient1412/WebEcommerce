@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : seller-view
     Created on : Sep 29, 2022, 9:26:05 PM
     Author     : DELL
@@ -8,30 +8,42 @@
 
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix = "fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="row">
-    <div class="col-sm-2 col-md-2">
-        <ul class="list-unstyled ps-0">
-            <li class="mb-1">
-                <button class="btn btn-toggle align-items-center rounded collapsed p-2 mt-3" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+<div class="row bg-light">
+    <ul class="list-unstyled ps-0">
+        <li class="mb-1">
+            <div class="center pl-2 m-4">
+                <button class="btn btn-toggle rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
                     <h2>QUẢN LÝ</h2>
                 </button>
-                <div class="collapse show center" id="home-collapse">
-                    <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
-                        <li class="nav-item p-1"><a href="<c:url value="/seller/list-product-upload"/>" class="link-dark">Tất cả sản phẩm</a></li>
-                        <li class="nav-item p-1"><a href="#" class="link-dark" >Doanh Thu</a></li>
-                        <li class="nav-item p-1"><a href="#" class="link-dark" >Mã giảm cửa hàng</a></li>
-                        <li class="nav-item p-1"><a href="#" class="link-dark" >Đánh giá</a></li>
-                        <li class="nav-item p-1"><a href="#" class="link-dark" >Hồ sơ cửa hàng</a></li>
-                        <li class="nav-item p-1"><a href="#" class="link-dark" >Thống kê</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <hr class="d-sm-none">
-    </div>
-    <div class="col-sm-10">
-        
-    </div>
+            </div>
+            <div class="collapse show center" id="home-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
+                    <li class="nav-item p-1"><a href="<c:url value="/seller/dashboard"/>" class="link-dark"><strong><i class="fa fa-tachometer" aria-hidden="true"></i> Tổng quan</strong></a></li>
+                    <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#product-collapse" aria-expanded="false">
+                        <li class="nav-item p-1"><strong><i class="fa fa-shopping-bag" aria-hidden="true"></i> Quản lý sản phẩm</strong></li>
+                    </button>
+                    <div class="center collapse" id="product-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
+                            <li class="nav-item p-1"><a href="<c:url value="/seller/list-product-upload"/>" class="link-dark">Tất cả sản phẩm</a></li>
+                            <li class="nav-item p-1"><a href="<c:url value="/seller/product"/>" class="link-dark">Thêm sản phẩm</a></li>
+                        </ul>
+                    </div>
+                    <li class="nav-item p-1"><a href="#" class="link-dark" ><strong><i class="fa fa-credit-card" aria-hidden="true"></i> Doanh Thu</strong></a></li>
+                    <li class="nav-item p-1"><a href="#" class="link-dark" >Mã giảm cửa hàng</a></li>
+                    <li class="nav-item p-1"><a href="#" class="link-dark" >Đánh giá</a></li>
+                    <li class="nav-item p-1"><a href="#" class="link-dark" >Hồ sơ cửa hàng</a></li>
+                    <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#stats-collapse" aria-expanded="false">
+                        <li class="nav-item p-1"><strong><i class="fa fa-line-chart" aria-hidden="true"></i> Thống kê</strong></li>
+                    </button>
+                    <div class="center collapse" id="stats-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
+                            <li class="nav-item p-1"><a href="<c:url value="/seller/stats/categories"/>" class="link-dark">Theo danh mục</a></li>
+                            <li class="nav-item p-1"><a href="<c:url value="/seller/stats/turnover/product"/>" class="link-dark">Theo doanh thu từng sản phẩm</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+        </li>
+    </ul>
 </div>

@@ -39,8 +39,9 @@ public class ApiReviewController {
     public ResponseEntity<Review> addReview(@RequestBody Map<String, String> params) {
         try {
             String content = params.get("content");
-            int id = Integer.parseInt(params.get("idProduct"));
-            Review rv = this.productService.addReview(content, id);
+            int idProduct = Integer.parseInt(params.get("idProduct"));
+            int rating = Integer.parseInt(params.get("rating"));
+            Review rv = this.productService.addReview(content, idProduct,rating);
             return new ResponseEntity<>(rv, HttpStatus.CREATED);
         } catch (Exception ex) {
             ex.printStackTrace();

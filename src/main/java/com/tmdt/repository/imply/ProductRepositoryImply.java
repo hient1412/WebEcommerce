@@ -5,6 +5,7 @@
 package com.tmdt.repository.imply;
 
 
+import com.tmdt.pojos.Category;
 import com.tmdt.pojos.Image;
 import com.tmdt.pojos.Location;
 import com.tmdt.pojos.OrderDetail;
@@ -281,11 +282,12 @@ public class ProductRepositoryImply implements ProductRepository {
     }
 
     @Override
-    public Review addReview(String review, int ProductId) {
+    public Review addReview(String review, int productId, int rating) {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
         Review r = new Review();
         r.setContent(review);
-        r.setIdProduct(this.getProductById(ProductId));
+        r.setRating(rating);
+        r.setIdProduct(this.getProductById(productId));
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         r.setIdAccount(this.accountRepository.getAcByUsername(auth.getName()));
         r.setReviewDate(new Date());

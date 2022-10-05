@@ -52,14 +52,13 @@ public class HomeController {
     private LocationService locationService;
     @Autowired
     private ProductService productService;
-    
     @Autowired
     private ImageService imageService;
     @Autowired
     private Environment env;
     
     @ModelAttribute
-    public void common(Model model, HttpSession session){
+    public void common(Model model){
         model.addAttribute("categories", this.categoryService.getCates());
     }
     

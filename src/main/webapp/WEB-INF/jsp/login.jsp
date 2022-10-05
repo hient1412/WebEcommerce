@@ -47,8 +47,8 @@
             </div>
         </c:if>
         <c:if test="${param.accessDenied != null}">
-            <div class="alert alert-danger">
-                KHÔNG có quyền truy cập!
+            <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                Không có quyền truy cập!
             </div>
         </c:if>
     </div>

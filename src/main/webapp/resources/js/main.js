@@ -27,7 +27,8 @@ function loadReview(endpoint) {
         let review = document.getElementById("review");
         let h = '';
         for (let d of data)
-            h += `   
+            
+        h += `   
                 <div style="background-color: grey; margin: 10px; padding: 2px">
                     <div class="coment-bottom bg-white p-2 px-4">
                         <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="https://res.cloudinary.com/dxs9d8uua/image/upload/v1661453159/urh0kmsgkxktheudu9m3.jpg" width="40">
@@ -35,7 +36,9 @@ function loadReview(endpoint) {
                                 <div class="d-flex flex-row align-items-center"><span class="name font-weight-bold">${d.idAccount.username}</span>
                                     <span class="dot"></span>
                                     <span class="my-date">${moment(d.reviewDate).locale("vi").fromNow()}</span>
+                                    
                                 </div>
+                                <span>${d.rating}</span>
                             </div>
                         </div>
                         <div class="mt-2">
@@ -48,11 +51,20 @@ function loadReview(endpoint) {
 }
 
 function addReview(endpoint, productId) {
+    var rates = document.getElementsByName("rating");
+    var rate = 5;
+    for (var i = 0; i < rates.length; i++) {
+        if (rates[i].checked) {
+            rate = i + 1;
+        }
+    }
+    ;
     fetch(endpoint, {
         method: "post",
         body: JSON.stringify({
             "content": document.getElementById("inputReview").value,
-            "idProduct": productId
+            "idProduct": productId,
+            "rating": rate
         }),
         headers: {
             "Content-Type": "application/json"
@@ -70,6 +82,7 @@ function addReview(endpoint, productId) {
                                     <span class="dot"></span>
                                     <span class="my-date">${moment(data.reviewDate).locale("vi").fromNow()}</span>
                                 </div>
+                                <span>${data.rating}</span>
                             </div>
                         </div>
                         <div class="mt-2">
@@ -80,6 +93,5 @@ function addReview(endpoint, productId) {
                 `;
 
         d.insertAdjacentHTML("beforebegin", h);
-        
     });
 }

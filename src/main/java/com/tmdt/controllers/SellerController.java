@@ -9,17 +9,22 @@ import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Image;
 import com.tmdt.pojos.Product;
-import com.tmdt.repository.CategoryRepository;
 import com.tmdt.service.AccountService;
+import com.tmdt.service.CategoryService;
 import com.tmdt.service.ImageService;
 import com.tmdt.service.ProductService;
+import com.tmdt.service.StatsService;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +41,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SellerController {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private StatsService statsService;
+    @Autowired
+    private CategoryService categoryService;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -48,13 +55,13 @@ public class SellerController {
     @Autowired
     private Cloudinary cloudinary;
 
-    @GetMapping("/view")
-    public String sellerView(Model model) {
-        return "seller-view";
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard-seller";
     }
-    
+
     @GetMapping("/list-product-upload")
-    public String sellerListProduct(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a ) {
+    public String sellerListProduct(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
@@ -66,7 +73,7 @@ public class SellerController {
 
     @GetMapping("/product")
     public String productView(Model model) {
-        model.addAttribute("categories", this.categoryRepository.getCates());
+        model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("product", new Product());
         return "product-upload";
     }
@@ -103,7 +110,7 @@ public class SellerController {
 
     @GetMapping("/product-edit")
     public String productEditView(Model model, @RequestParam(name = "id") int id) {
-        model.addAttribute("categories", this.categoryRepository.getCates());
+        model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("product", this.productService.getProductById(id));
         return "product-edit";
     }
@@ -135,8 +142,9 @@ public class SellerController {
         model.addAttribute("errMessage", errMessage);
         return "product-edit";
     }
+
     @GetMapping("/product-hide")
-    public String productHide(Model model,RedirectAttributes r,
+    public String productHide(Model model, RedirectAttributes r,
             @RequestParam(name = "id") int id) {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
@@ -149,11 +157,11 @@ public class SellerController {
             }
         }
         r.addFlashAttribute("errMessage", errMessage);
-        return "redirect:/seller/list-product-upload?id="+ pd.getId();
+        return "redirect:/seller/list-product-upload?id=" + pd.getId();
     }
-    
+
     @GetMapping("/product-show")
-    public String productShow(Model model,RedirectAttributes r,
+    public String productShow(Model model, RedirectAttributes r,
             @RequestParam(name = "id") int id) {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
@@ -166,6 +174,34 @@ public class SellerController {
             }
         }
         r.addFlashAttribute("errMessage", errMessage);
-        return "redirect:/seller/list-product-upload?id="+ pd.getId();
+        return "redirect:/seller/list-product-upload?id=" + pd.getId();
+    }
+
+    @GetMapping("/stats/categories")
+    public String statsCategories(Model model) {
+        model.addAttribute("countcate", this.statsService.countCategories());
+        return "stats-categories";
+    }
+
+    @GetMapping("/stats/turnover/product")
+    public String turnoverProduct(Model model, @RequestParam(required = false) Map<String, String> params) throws ParseException {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String kw = params.getOrDefault("kw", null);
+        Date fromDate = null;
+        Date toDate = null;
+        try {
+            String from = params.getOrDefault("fromDate", null);
+            if (from != null) {
+                fromDate = f.parse(from);
+            }
+            String to = params.getOrDefault("toDate", null);
+            if (to != null) {
+                toDate = f.parse(to);
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        model.addAttribute("statsProduct", this.statsService.statsProduct(kw, fromDate, toDate));
+        return "stats-turnover";
     }
 }

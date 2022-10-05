@@ -74,8 +74,8 @@ public class ProductServiceImply implements ProductService{
     }
 
     @Override
-    public Review addReview(String review, int productId) {
-        return this.productRepository.addReview(review,productId);
+    public Review addReview(String review, int productId,int rating) {
+        return this.productRepository.addReview(review,productId, rating);
     }
     
 }

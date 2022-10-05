@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="p-4">
 <c:choose>
     <c:when test="${listAc.size() > 0}">
         <div class="center">
@@ -62,3 +63,4 @@
         </div>
     </c:otherwise>
 </c:choose>
+</div>

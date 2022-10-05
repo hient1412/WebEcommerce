@@ -81,34 +81,50 @@
             </c:if>
         </div>
     </div>
-    <div>
-        <ul>
-            <c:forEach begin="1" end="5" var="i">
-                <li  title="Đánh giá" id="rating" class="d-inline rating" style="cursor: pointer; color: #ccc; font-size: 30px">&#9733;</li>
-                </c:forEach>
-        </ul>
-    </div>
     <c:url value="/api/product/${product.id}/review" var="endpoint"/>
-    <!--    <sec:authorize access="isAuthenticated()">
-    -->           
-    <div>
-        <div class="d-flex flex-row add-comment-section mt-4 mb-4">
-            <textarea type="text" id="inputReview" class="form-control mr-3" placeholder="Nhập bình luận"></textarea>
-            <input onclick="addReview('${endpoint}',${product.id})" class="btn btn-primary" type="submit" value="Gửi bình luận"/>
+    <div class="row mt-4 mb-4">
+        <h4>Viết đánh giá của bạn</h4>
+        <div class="row mt-4"> 
+            <div class="user d-flex">
+                <img class="rounded-circle img-fluid" src="${pageContext.session.getAttribute('currentCustomer').getAvatar()}"><h6 class="mx-2">${pageContext.request.userPrincipal.name}</h6>
+                <span class="mx-2"><i class="fa fa-clock-o" aria-hidden="true"></i><span class="mx-2" id="clock"></span></span>
+                <span class="mx-2"><i class="fa fa-calendar-o" aria-hidden="true"></i><span class="mx-2" id="calendar"></span></span>
+            </div>
+        </div>
+        <div id="rating">
+            <input type="radio" id="rate1" name="rating" value="1" />
+            <label for="rate1" >&#9733;</label>
+
+            <input type="radio" id="rate2" name="rating" value="2" />
+            <label for="rate2" >&#9733;</label>
+
+            <input type="radio" id="rate3" name="rating" value="3" />
+            <label for="rate3" >&#9733;</label>
+
+            <input type="radio" id="rate4" name="rating" value="4" />
+            <label for="rate4" >&#9733;</label>
+
+            <input type="radio" id="rate5" name="rating" value="5" />
+            <label for="rate5" >&#9733;</label>
+
+        </div>
+<!--        <div id="rating">
+            <ul class="list-inline d-flex">
+                <c:forEach begin="1" end="5">
+                    <li>&#9733;</li>
+                    </c:forEach>
+            </ul>
+        </div>-->
+        <div class="d-flex flex-row">
+            <textarea type="text" id="inputReview" class="form-control mr-3" placeholder="Nhập đánh giá"></textarea>
+            <input onclick="addReview('${endpoint}',${product.id})" class="btn btn-primary text-light" type="submit" value="Gửi đánh giá"/>
         </div>
     </div>
-    <!--
-</sec:authorize>     
-<sec:authorize access="!isAuthenticated()">
-<div>
-    <h4 class="center">VUI LÒNG <a href="<c:url value="/login"/>">ĐĂNG NHẬP</a> ĐỂ CÓ THỂ BÌNH LUẬN!!! </h4>
+
 </div>
-</sec:authorize>     
+<div id="review">
 
-    -->
-    <div id="review">
-
-    </div>
+</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
@@ -132,5 +148,11 @@
                 window.onload = function () {
                     loadReview('${endpoint}');
                 };
+                var today = new Date();
+                var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+                var time = today.getHours() + ":" + today.getMinutes();
+
+                document.getElementById("clock").innerHTML = time;
+                document.getElementById("calendar").innerHTML = date;
 
 </script>

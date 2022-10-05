@@ -5,6 +5,7 @@
 package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Review;
 import com.tmdt.repository.AccountRepository;
 import java.util.List;
 import javax.persistence.Query;
@@ -115,4 +116,5 @@ public class AccountRepositoryImply  implements AccountRepository{
         Query q = s.createQuery(query);
         return (Account) q.getSingleResult();
     }
+
 }
