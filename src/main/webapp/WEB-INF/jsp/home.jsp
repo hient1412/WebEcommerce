@@ -25,7 +25,7 @@
                                 <div class="price">
                                     <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
                                 </div>
-                                <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>">Xem chi tiết</a>
+                                <a class="blue-btn" href="<c:url value="/product-detail/${p.id}"/>">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>

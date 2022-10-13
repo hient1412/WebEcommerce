@@ -11,6 +11,7 @@ import com.tmdt.pojos.Seller;
 import com.tmdt.repository.SellerRepository;
 import com.tmdt.service.SellerService;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,20 @@ public class SellerServiceImply implements SellerService{
             sel.setAvatar("https://png.pngtree.com/element_our/png_detail/20181229/vector-shop-icon-png_302739.jpg");
         }
         return this.sellerRepository.addSel(sel);
+    }
+
+    @Override
+    public Seller getSellerById(int sellerId) {
+        return this.sellerRepository.getSellerById(sellerId);
+    }
+
+    @Override
+    public Object[] getgeneral(int sellerId) {
+        return this.sellerRepository.getgeneral(sellerId);
+    }
+
+    @Override
+    public List<Object[]> getSellers(String kw,int page) {
+        return this.sellerRepository.getSellers(kw,page);
     }
 }

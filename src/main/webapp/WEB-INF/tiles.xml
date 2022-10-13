@@ -49,6 +49,14 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="header2" value="" />
         <put-attribute name="footer" value="" />
     </definition>
+    <definition name="seller-detail" extends="baseLayout">
+        <put-attribute name="title" value="Chi tiết cửa hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/seller-detail.jsp" />
+    </definition>
+    <definition name="sellers" extends="baseLayout">
+        <put-attribute name="title" value="Tìm kiếm cửa hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/sellers.jsp" />
+    </definition>
     <definition name="search" extends="baseLayout">
         <put-attribute name="title" value="Tìm kiếm sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/search.jsp" />
@@ -74,6 +82,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
     <definition name="list-product-upload" extends="base2">
         <put-attribute name="title" value="Danh sách sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/list-product-upload.jsp" />
+    </definition>
+    <definition name="list-order" extends="base2">
+        <put-attribute name="title" value="Danh sách đơn hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/list-order.jsp" />
     </definition>
     <definition name="product-upload" extends="base2">
         <put-attribute name="title" value="Đăng sản phẩm" />

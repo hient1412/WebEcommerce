@@ -50,8 +50,8 @@
                 </select>
             </div>
             </div>
-            <input type="button" onclick="clearFilter()" value="Xóa lọc"/>
-            <input type="submit" class="mt-4" value="Lọc"/>
+            <input type="submit" class="mt-4 p-1" value="Lọc"/>
+                <input type="button" class="p-1" onclick="clearFilter()" value="Xóa lọc"/>
         </form>
     </div>
     <div class="col-md-9">

@@ -11,60 +11,98 @@
 
 <div>
     <h1 class="center p-4">TÌM KIẾM</h1>
+    <div class="p-4" style="background-color: #ccc">
+        <form action="" >
+            <div class="row">
+                <div class="col">
+                    <label>Từ khóa</label>
+                    <input type="text" name="kw"/>
+                    <div class="row">
+                        <div class="col">
+                            <label>Số lượng</label>
+                            <input style="width: 70px "type="number" name="quantityMin" placeholder="Min"/>
+                            <label>-</label>
+                            <input style="width: 70px" type="number" name="quantityMax" placeholder="Max"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="cat">Danh mục</label>
+                    <select id="cat"name="cat">
+                        <option value="" selected>Không chọn</option>
+                        <c:forEach items="${cateBySeller}" var="c">
+                            <option value="${c.id}">${c.name}</option>
+                        </c:forEach>
+                    </select>
+                    <div class="row">
+                        <div class="col">
+                            <label for="active">Trạng thái</label>
+                            <select id="active"name="active">
+                                <option value="" selected>Tất cả</option>
+                                <option value="1">Đang hoạt động</option>
+                                <option value="0">Đã ẩn</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="center"> 
+                <input type="submit" class="mt-4 p-1" value="Tìm kiếm"/>
+                <input type="button" class="p-1" onclick="clearFilter()" value="Nhập lại"/>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div>
-    <h1 class="center p-4">TẤT CẢ SẢN PHẨM</h1>
     <c:choose>
         <c:when test="${product.size() != 0}">
-            <div>
-                <c:if test="${errMessage != null}">
-                    <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                        ${errMessage}
-                    </div>
-                </c:if>
-                <div class="product-list">
-                    <div class="row">
-                        <c:forEach items="${product}" var="p">
-                            <div class="col-md-3 col-sm-6">
-                                <div class="white-box mt-3">
-                                    <div class="wishlist-icon">
-                                        <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
+            <div class="product-list">
+                <div class="row">
+                    <c:forEach items="${product}" var="p">
+                        <div class="col-md-4">
+                            <div class="white-box mt-3">
+                                <div class="wishlist-icon">
+                                    <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
+                                </div>
+                                <div class="product-img">
+                                    <img src="${p.imageCollection.get(0).image}">
+                                </div>
+                                <div class="product-bottom">
+                                    <div class="product-name">${p.name}
+                                        <c:if test="${p.active == 0}">
+                                            <div class="text-primary" ><h6>Trạng thái: Đã ẩn </h6></div>
+                                        </c:if></div>
+                                    <div><h6>Loại sản phẩm: ${p.idCategory.name}</h6></div>
+                                    <div class="price">
+                                        <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
                                     </div>
-                                    <div class="product-img">
-                                        <img src="${p.imageCollection.get(0).image}">
+                                    <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>">Xem trước</a>
+                                </div>
+                                <div class="row mt-3 center">
+                                    <div class="col">
+                                        <a title="Sửa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</a>
                                     </div>
-                                    <div class="product-bottom">
-                                        <div class="product-name">${p.name}
-                                            <c:if test="${p.active == 0}">
-                                                <div class="text-primary" ><h6>Trạng thái: Đã ẩn </h6></div>
-                                            </c:if></div>
-                                        <div><h6>Loại sản phẩm: ${p.idCategory.name}</h6></div>
-                                        <div class="price">
-                                            <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
-                                        </div>
-                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>">Xem trước</a>
+                                    <div class="col">
+                                        <c:if test="${p.active == '1'}">
+                                            <a title="Ẩn" href="<c:url value="/seller/product-hide"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye-slash" aria-hidden="true"></i>Ẩn</a>
+                                        </c:if>
+                                        <c:if test="${p.active == '0'}">
+                                            <a title="Hiện" href="<c:url value="/seller/product-show"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye" aria-hidden="true"></i>Hiện</a>
+                                        </c:if>
                                     </div>
-                                    <div class="row mt-3 center">
-                                        <div class="col">
-                                            <a title="Sửa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</a>
-                                        </div>
-                                        <div class="col">
-                                            <c:if test="${p.active == '1'}">
-                                                <a title="Ẩn" href="<c:url value="/seller/product-hide"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye-slash" aria-hidden="true"></i>Ẩn</a>
-                                            </c:if>
-                                            <c:if test="${p.active == '0'}">
-                                                <a title="Hiện" href="<c:url value="/seller/product-show"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-eye" aria-hidden="true"></i>Hiện</a>
-                                            </c:if>
-                                        </div>
-                                        <div class="col">
-                                            <a title="Xóa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-trash" aria-hidden="true"></i>Xóa</a>
-                                        </div>
+                                    <div class="col">
+                                        <a title="Xóa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-trash" aria-hidden="true"></i>Xóa</a>
                                     </div>
                                 </div>
-                            </div> 
-                        </c:forEach>
-                    </div>
+                            </div>
+                        </div> 
+                    </c:forEach>
                 </div>
             </div>
             <div class="col-md-12">
@@ -79,8 +117,19 @@
         </c:when>
         <c:when test="${product.size() == 0}">
             <h3 class="center p-3">
-                <i class="text-danger">Bạn chưa đăng sản phẩm nào</i>
+                <i class="text-danger">Không có sản phẩm</i>
             </h3>
         </c:when>
     </c:choose>
 </div>
+<script>
+    $(document).ready(function () {
+        $("form").submit(function () {
+            $("input, select").each(function (index, obj) {
+                if ($(obj).val() === "") {
+                    $(obj).removeAttr("name");
+                }
+            });
+        });
+    });
+</script>

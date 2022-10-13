@@ -20,9 +20,10 @@ public interface ProductService {
     List<Product> getProductByCateId(int cateId,int page);
     boolean addProduct(Product p);
     boolean updateProduct(Product p);
-    List<Product> getProductBySellerId(int sellerId, int page);
+    List<Product> getProductBySellerId(Map<String,String> params,int sellerId, int page);
     List<Object[]> getProductBuyALot(int num);
     List<Object[]> getProductBuyALotInSeller(int num,int sellerId);
     List<Review> getReview(int productId);
     Review addReview(String review, int productId, int rating);
+    List<Product> getProductBySeller(Map<String,String> params,int sellerId,int page);
 }

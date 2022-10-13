@@ -56,79 +56,110 @@ public class HomeController {
     private ImageService imageService;
     @Autowired
     private Environment env;
-    
+
     @ModelAttribute
-    public void common(Model model){
+    public void common(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
     }
-    
+
+    @GetMapping("/seller-detail/{sellerId}")
+    public String sellerDetail(Model model, @PathVariable(value = "sellerId") int sellerId,
+            @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        Map<String, String> pre = new HashMap<>();
+        pre.put("sort", params.getOrDefault("sort", ""));
+        pre.put("cateId", params.getOrDefault("cateId", ""));
+        pre.put("kw", params.getOrDefault("kw", ""));
+        model.addAttribute("general", this.sellerService.getgeneral(sellerId));
+        model.addAttribute("seller", this.sellerService.getSellerById(sellerId));
+        model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(sellerId));
+        model.addAttribute("productBySeller", this.productService.getProductBySeller(pre, sellerId, page));
+        model.addAttribute("counterS", this.productService.getProductBySeller(pre, sellerId, 0).size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "seller-detail";
+    }
+
     @GetMapping("/")
-    public String home(Model model,@RequestParam(required = false) Map<String,String> params) {
-        int page = Integer.parseInt(params.getOrDefault("page","1"));
-        Map<String,String> pre = new HashMap<>();
-        pre.put("kw", params.getOrDefault("kw",""));
-        pre.put("fp", params.getOrDefault("fp",""));
-        pre.put("tp", params.getOrDefault("tp",""));
-        pre.put("id", params.getOrDefault("id",""));
-        pre.put("sort", params.getOrDefault("sort",""));
-        pre.put("seller", params.getOrDefault("seller",""));
-        pre.put("cat", params.getOrDefault("cat",""));
-        pre.put("location", params.getOrDefault("location",""));
+    public String home(Model model, @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        Map<String, String> pre = new HashMap<>();
+        pre.put("kw", params.getOrDefault("kw", ""));
+        pre.put("fp", params.getOrDefault("fp", ""));
+        pre.put("tp", params.getOrDefault("tp", ""));
+        pre.put("id", params.getOrDefault("id", ""));
+        pre.put("sort", params.getOrDefault("sort", ""));
+        pre.put("seller", params.getOrDefault("seller", ""));
+        pre.put("cat", params.getOrDefault("cat", ""));
+        pre.put("location", params.getOrDefault("location", ""));
         String cateId = params.get("cateId");
-        model.addAttribute("cateId",cateId);
-        if(cateId == null){
-            model.addAttribute("product",this.productService.getProducts(pre, page));
+        model.addAttribute("cateId", cateId);
+        if (cateId == null) {
+            model.addAttribute("product", this.productService.getProducts(pre, page));
             model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
             model.addAttribute("buyALot", this.productService.getProductBuyALot(Integer.parseInt(env.getProperty("buyALot.size"))));
         } else {
-            model.addAttribute("product",this.productService.getProductByCateId(Integer.parseInt(cateId), page));
+            model.addAttribute("product", this.productService.getProductByCateId(Integer.parseInt(cateId), page));
             model.addAttribute("counterS", this.productService.getProductByCateId(Integer.parseInt(cateId), 0).size());
         }
-        model.addAttribute("count",env.getProperty("page.size"));
+        model.addAttribute("count", env.getProperty("page.size"));
         return "home";
     }
-    
+
     @GetMapping("/search")
     public String search(Model model,
             @RequestParam(required = false) Map<String, String> params) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         model.addAttribute("categories", this.categoryService.getCates());
-        
-        Map<String,String> pre = new HashMap<>();
-        
-        pre.put("kw", params.getOrDefault("kw",""));
-        pre.put("fp", params.getOrDefault("fp",""));
-        pre.put("tp", params.getOrDefault("tp",""));
-        pre.put("id", params.getOrDefault("id",""));
-        pre.put("sort", params.getOrDefault("sort",""));
-        pre.put("seller", params.getOrDefault("seller",""));
-        pre.put("cat", params.getOrDefault("cat",""));
-        pre.put("location", params.getOrDefault("location",""));
+
+        Map<String, String> pre = new HashMap<>();
+
+        pre.put("kw", params.getOrDefault("kw", ""));
+        pre.put("fp", params.getOrDefault("fp", ""));
+        pre.put("tp", params.getOrDefault("tp", ""));
+        pre.put("id", params.getOrDefault("id", ""));
+        pre.put("sort", params.getOrDefault("sort", ""));
+        pre.put("seller", params.getOrDefault("seller", ""));
+        pre.put("cat", params.getOrDefault("cat", ""));
+        pre.put("location", params.getOrDefault("location", ""));
 
         List<Product> lp = this.productService.getProducts(pre, page);
         model.addAttribute("listProduct", lp);
         model.addAttribute("currentPage", page);
         model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
-        model.addAttribute("kw", params.getOrDefault("kw",""));
-        model.addAttribute("count",env.getProperty("page.size"));
+        model.addAttribute("kw", params.getOrDefault("kw", ""));
+        model.addAttribute("count", env.getProperty("page.size"));
         model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("locations", this.locationService.getLos());
         return "search";
     }
+
     @GetMapping("/product-detail/{productId}")
-    public String productDetail(Model model,@PathVariable(value = "productId") int productId){
-        model.addAttribute("product",this.productService.getProductById(productId));
-        model.addAttribute("image",this.imageService.getImageByProductId(productId));
+    public String productDetail(Model model, @PathVariable(value = "productId") int productId) {
+        model.addAttribute("product", this.productService.getProductById(productId));
+        model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
+        model.addAttribute("image", this.imageService.getImageByProductId(productId));
         model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")),
                 this.productService.getProductById(productId).getIdSeller().getId()));
-        
+
         return "product-detail";
     }
+
+    @GetMapping("/sellers")
+    public String sellers(Model model, @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        String kw = params.getOrDefault("kw", "");
+        model.addAttribute("sellers", this.sellerService.getSellers(kw, page));
+        model.addAttribute("counterS", this.sellerService.getSellers(kw, 0).size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "sellers";
+    }
+
     @GetMapping("/registry")
-    public String registry(Model model){
-        model.addAttribute("account",new Account());
+    public String registry(Model model) {
+        model.addAttribute("account", new Account());
         return "registry";
     }
+
     @PostMapping("/registry")
     public ModelAndView registry(Model model, @ModelAttribute(value = "account") Account ac) {
         String errMessage = "";
@@ -153,6 +184,7 @@ public class HomeController {
         model.addAttribute("errMessage", errMessage);
         return new ModelAndView("registry");
     }
+
     @GetMapping("/registry/cus")
     public String cusView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("customer", new Customer());
@@ -169,6 +201,7 @@ public class HomeController {
         }
         return "registry-cus";
     }
+
     @GetMapping("/registry/sel")
     public String selView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("seller", new Seller());

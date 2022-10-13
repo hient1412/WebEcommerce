@@ -4,8 +4,8 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Seller;
+import java.util.List;
 
 /**
  *
@@ -13,4 +13,7 @@ import com.tmdt.pojos.Seller;
  */
 public interface SellerService {
     boolean addSel(Seller sel);
+    Seller getSellerById(int sellerId);
+    Object[] getgeneral(int sellerId);
+    List<Object[]> getSellers(String kw,int page);
 }

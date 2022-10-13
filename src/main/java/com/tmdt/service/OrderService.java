@@ -4,15 +4,14 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Category;
+import com.tmdt.pojos.Orders;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author DELL
  */
-public interface CategoryService {
-     List<Category> getCates();
-     Category getCateById(int cateId);
-     List<Category> getCateBySellerId(int sellerId);
+public interface OrderService {
+    List<Object[]> getOrderBySellerId(Map<String,String> params,int sellerId, int page);
 }

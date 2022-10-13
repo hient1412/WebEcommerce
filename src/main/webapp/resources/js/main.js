@@ -31,7 +31,7 @@ function loadReview(endpoint) {
         h += `   
                 <div style="background-color: grey; margin: 10px; padding: 2px">
                     <div class="coment-bottom bg-white p-2 px-4">
-                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="https://res.cloudinary.com/dxs9d8uua/image/upload/v1661453159/urh0kmsgkxktheudu9m3.jpg" width="40">
+                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="${d.idAccount.customer.avatar}" width="40">
                             <div class="ml-2">
                                 <div class="d-flex flex-row align-items-center"><span class="name font-weight-bold">${d.idAccount.username}</span>
                                     <span class="dot"></span>
@@ -76,7 +76,7 @@ function addReview(endpoint, productId) {
         let h = `   
                 <div style="background-color: grey; margin: 10px; padding: 2px">
                     <div class="coment-bottom bg-white p-2 px-4">
-                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="https://res.cloudinary.com/dxs9d8uua/image/upload/v1661453159/urh0kmsgkxktheudu9m3.jpg" width="40">
+                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="${data.idAccount.customer.avatar}" width="40">
                             <div class="ml-2">
                                 <div class="d-flex flex-row align-items-center"><span class="name font-weight-bold">${data.idAccount.username}</span>
                                     <span class="dot"></span>

@@ -61,6 +61,11 @@ public class Seller implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "address")
     private String address;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 150)
+    @Column(name = "description")
+    private String description;
     @Lob
     @Size(max = 65535)
     @Column(name = "avatar")
@@ -199,5 +204,18 @@ public class Seller implements Serializable {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
-    
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -6,6 +6,7 @@ package com.tmdt.pojos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -25,6 +26,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +45,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Account.findByRole", query = "SELECT a FROM Account a WHERE a.role = :role"),
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    private Collection<Seller> sellerCollection;
 
     
     public static final String ADMIN = "ROLE_ADMIN";
@@ -70,11 +75,6 @@ public class Account implements Serializable {
     @Size(min = 1, max = 15)
     @Column(name = "phone")
     private String phone;
-    @JsonIgnore
-    @Lob
-    @Size(max = 65535)
-    @Column(name = "description")
-    private String description;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -100,7 +100,6 @@ public class Account implements Serializable {
     @JsonIgnore
     @OneToOne(mappedBy = "idAccount")
     private Admin admin;
-    @JsonIgnore
     @OneToOne(mappedBy = "idAccount")
     private Customer customer;
     @JsonIgnore
@@ -145,14 +144,6 @@ public class Account implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getUsername() {
@@ -280,6 +271,15 @@ public class Account implements Serializable {
      */
     public void setReviewSet(Set<Review> reviewSet) {
         this.reviewSet = reviewSet;
+    }
+
+    @XmlTransient
+    public Collection<Seller> getSellerCollection() {
+        return sellerCollection;
+    }
+
+    public void setSellerCollection(Collection<Seller> sellerCollection) {
+        this.sellerCollection = sellerCollection;
     }
     
 }

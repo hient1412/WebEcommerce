@@ -20,6 +20,7 @@
             <div class="collapse show center" id="home-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
                     <li class="nav-item p-1"><a href="<c:url value="/seller/dashboard"/>" class="link-dark"><strong><i class="fa fa-tachometer" aria-hidden="true"></i> Tổng quan</strong></a></li>
+                    <li class="nav-item p-1"><a href="<c:url value="/seller/list-order"/>" class="link-dark"><strong><i class="fa fa-file-text-o" aria-hidden="true"></i> Quản lý đơn hàng</strong></a></li>
                     <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#product-collapse" aria-expanded="false">
                         <li class="nav-item p-1"><strong><i class="fa fa-shopping-bag" aria-hidden="true"></i> Quản lý sản phẩm</strong></li>
                     </button>
@@ -32,7 +33,6 @@
                     <li class="nav-item p-1"><a href="#" class="link-dark" ><strong><i class="fa fa-credit-card" aria-hidden="true"></i> Doanh Thu</strong></a></li>
                     <li class="nav-item p-1"><a href="#" class="link-dark" >Mã giảm cửa hàng</a></li>
                     <li class="nav-item p-1"><a href="#" class="link-dark" >Đánh giá</a></li>
-                    <li class="nav-item p-1"><a href="#" class="link-dark" >Hồ sơ cửa hàng</a></li>
                     <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#stats-collapse" aria-expanded="false">
                         <li class="nav-item p-1"><strong><i class="fa fa-line-chart" aria-hidden="true"></i> Thống kê</strong></li>
                     </button>

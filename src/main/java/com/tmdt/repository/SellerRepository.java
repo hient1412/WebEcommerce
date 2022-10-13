@@ -4,8 +4,6 @@
  */
 package com.tmdt.repository;
 
-import com.tmdt.pojos.Account;
-import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import java.util.List;
 
@@ -15,4 +13,7 @@ import java.util.List;
  */
 public interface SellerRepository {
     boolean addSel(Seller sel);
+    Seller getSellerById(int sellerId);
+    Object[] getgeneral(int sellerId);
+    List<Object[]> getSellers(String kw,int page);
 }

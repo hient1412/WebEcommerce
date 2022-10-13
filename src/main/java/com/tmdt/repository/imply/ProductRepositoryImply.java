@@ -5,9 +5,6 @@
 package com.tmdt.repository.imply;
 
 
-import com.tmdt.pojos.Category;
-import com.tmdt.pojos.Image;
-import com.tmdt.pojos.Location;
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Review;
@@ -17,11 +14,9 @@ import com.tmdt.repository.CustomerRepository;
 import com.tmdt.repository.ProductRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Spliterator;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -132,10 +127,7 @@ public class ProductRepositoryImply implements ProductRepository {
             Root roots = q.from(Seller.class);
             Predicate p = builder.and(
                     builder.equal(root.get("idSeller"), roots.get("id")),
-                    builder.equal(roots.join("idLocation").get("id").as(Integer.class), location)
-            );
-            
-//            Predicate p = builder.equal(rootl.get("id").as(Integer.class), location);
+                    builder.equal(roots.join("idLocation").get("id").as(Integer.class), location));
             predicates.add(p);
         }
         Predicate p1 = builder.equal(root.get("active"), 1);
@@ -191,14 +183,44 @@ public class ProductRepositoryImply implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductBySellerId(int sellerId, int page) {
+    public List<Product> getProductBySellerId(Map<String,String> params,int sellerId, int page) {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Product> q = builder.createQuery(Product.class);
         Root root = q.from(Product.class);
         q.select(root);
 
-        q.where(builder.equal(root.get("idSeller"), sellerId));
+        List<Predicate> predicates = new ArrayList<>();
+
+        String kw = params.get("kw");
+        if (!kw.isEmpty()) {
+            Predicate p = builder.like(root.get("name").as(String.class), String.format("%%%s%%", kw));
+            predicates.add(p);
+        }
+        String cat = params.get("cat");
+        if (!cat.isEmpty()) {
+            Predicate p = builder.equal(root.join("idCategory").get("id").as(Integer.class), cat);
+            predicates.add(p);
+        }
+        String quantityMin = params.get("quantityMin");
+        if (!quantityMin.isEmpty()) {
+            Predicate p = builder.greaterThanOrEqualTo(root.get("quantity"), quantityMin);
+            predicates.add(p);
+        }
+        String quantityMax = params.get("quantityMax");
+        if (!quantityMax.isEmpty()) {
+            Predicate p = builder.lessThanOrEqualTo(root.get("quantity"), quantityMax);
+            predicates.add(p);
+        }
+        String active = params.get("active");
+        if (!active.isEmpty()) {
+            Predicate p = builder.equal(root.get("active"), active);
+            predicates.add(p);
+        }
+        
+        Predicate p1 = builder.equal(root.get("idSeller"), sellerId);
+        predicates.add(p1);
+        q = q.where(predicates.toArray(new Predicate[]{}));
         
         q.orderBy(builder.desc(root.get("id")));
         
@@ -296,4 +318,59 @@ public class ProductRepositoryImply implements ProductRepository {
 
         return r;
     }
+
+    @Override
+    public List<Product> getProductBySeller(Map<String,String> params,int sellerId, int page) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> q = builder.createQuery(Product.class);
+        Root root = q.from(Product.class);
+        q.select(root);
+
+        List<Predicate> predicates = new ArrayList<>();
+        String sort = params.get("sort");
+        if (!sort.isEmpty() || sort != null) {
+            if (sort.equals("asc")) {
+                q.orderBy(builder.asc(root.get("id")));
+            }
+            if (sort.equals("desc")) {
+                q.orderBy(builder.desc(root.get("id")));
+            }
+            if (sort.equals("pin")) {
+                q.orderBy(builder.asc(root.get("price")));
+            }
+            if (sort.equals("pde")) {
+                q.orderBy(builder.desc(root.get("price")));
+            }
+        }
+        String cateId = params.get("cateId");
+        if (!cateId.isEmpty()) {
+            Predicate p = builder.equal(root.get("idCategory"), Integer.parseInt(cateId));
+            predicates.add(p);
+        }
+        String kw = params.get("kw");
+        if (!kw.isEmpty()) {
+            Predicate p = builder.like(root.get("name").as(String.class), String.format("%%%s%%", kw));
+            predicates.add(p);
+        }
+        
+        
+        Predicate p1 = builder.equal(root.get("active"), 1);
+        Predicate p2 = builder.equal(root.get("idSeller"), sellerId);
+        predicates.add(p1);
+        predicates.add(p2);
+        q = q.where(predicates.toArray(new Predicate[]{}));
+        
+        Query query = session.createQuery(q);
+
+        if (page > 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            query.setMaxResults(size);
+            query.setFirstResult((page - 1) * size);
+        }
+        
+        return query.getResultList();
+    }
+
+    
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -82,7 +83,7 @@ public class Orders implements Serializable {
     @NotNull
     @Column(name = "is_payment")
     private int isPayment;
-    @OneToMany(mappedBy = "idOrder")
+    @OneToMany(mappedBy = "idOrder",fetch = FetchType.EAGER)
     private Collection<OrderDetail> orderDetailCollection;
     @JoinColumn(name = "id_customer", referencedColumnName = "id")
     @ManyToOne

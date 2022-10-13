@@ -54,6 +54,20 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected")})
 public class Customer implements Serializable {
 
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Transient
     private MultipartFile file;
 
@@ -63,43 +77,59 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 25)
     @Column(name = "first_name")
     private String firstName;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "last_name")
     private String lastName;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Column(name = "dob")
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dob;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Column(name = "gender")
     private String gender;
+    @JsonIgnore
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 150)
+    @Column(name = "description")
+    private String description;
     @Lob
     @Size(max = 65535)
     @Column(name = "avatar")
     private String avatar;
+    @JsonIgnore
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_delected")
     private int isDelected;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<VoucherCustomer> voucherCustomerCollection;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<ShipAdress> shipAdressCollection;
+    @JsonIgnore
     @OneToMany(mappedBy = "idCustomer")
     private Collection<Orders> ordersCollection;
+    @JsonIgnore
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     @OneToOne
     private Account idAccount;
+    @JsonIgnore
     @JoinColumn(name = "id_hometown", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Location location;

@@ -12,12 +12,14 @@ import com.tmdt.pojos.Product;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CategoryService;
 import com.tmdt.service.ImageService;
+import com.tmdt.service.OrderService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.StatsService;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -49,6 +51,8 @@ public class SellerController {
     @Autowired
     private ProductService productService;
     @Autowired
+    private OrderService orderService;
+    @Autowired
     private ImageService imageService;
     @Autowired
     private Environment env;
@@ -65,10 +69,33 @@ public class SellerController {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
-        model.addAttribute("product", this.productService.getProductBySellerId(id, page));
-        model.addAttribute("counterS", this.productService.getProductBySellerId(id, 0).size());
+        model.addAttribute("cateBySeller",this.categoryService.getCateBySellerId(id));
+        Map<String,String> pre = new HashMap<>();
+        pre.put("kw", params.getOrDefault("kw",""));
+        pre.put("quantityMin", params.getOrDefault("quantityMin",""));
+        pre.put("quantityMax", params.getOrDefault("quantityMax",""));
+        pre.put("cat", params.getOrDefault("cat",""));
+        pre.put("active", params.getOrDefault("active",""));
+        model.addAttribute("product", this.productService.getProductBySellerId(pre,id, page));
+        model.addAttribute("counterS", this.productService.getProductBySellerId(pre,id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
         return "list-product-upload";
+    }
+    @GetMapping("/list-order")
+    public String listView(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        int id = ac.getSeller().getId();
+        Map<String,String> pre = new HashMap<>();
+        pre.put("idOrder", params.getOrDefault("idOrder",""));
+        pre.put("nameCus", params.getOrDefault("nameCus",""));
+        pre.put("namePro", params.getOrDefault("namePro",""));
+        pre.put("active", params.getOrDefault("active",""));
+         model.addAttribute("product", this.orderService.getOrderBySellerId(pre,id, page));
+        model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre,id, 0).size());
+        model.addAttribute("count", env.getProperty("page.size"));
+//        pre.put("namePro", params.getOrDefault("namePro",""));
+        return "list-order";
     }
 
     @GetMapping("/product")

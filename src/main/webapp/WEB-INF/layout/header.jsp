@@ -10,7 +10,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top"  style="background-color: #1a1919;">
     <div class="container">
         <ul class="navbar-nav">
-            <li class="nav-item active"><a href="#" class="nav-link" >Công ty</a></li>
+            <li class="nav-item active"><a href="<c:url value="/sellers"/>" class="nav-link" >Cửa hàng</a></li>
             <li class="nav-item active"><a href="#" class="nav-link" >Ứng viên</a></li>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -25,6 +25,7 @@
                             <ul class="dropdown-menu">
                                     <c:if test="${pageContext.session.getAttribute('current').active == 1}">
                                     <li><a href="<c:url value="/seller/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý công việc</a></li>
+                                    <li><a href="<c:url value="/seller-detail/${pageContext.session.getAttribute('currentSeller').id}"/>"><i class="fa fa-user-o"></i>Hồ sơ cửa hàng</a></li>
                                     </c:if>
                                     <c:if test="${pageContext.session.getAttribute('current').active == 0}">
                                     <li style="margin-left: 15px; color: red"><i class="fa fa-briefcase"></i>(Chưa kích hoạt)</li>

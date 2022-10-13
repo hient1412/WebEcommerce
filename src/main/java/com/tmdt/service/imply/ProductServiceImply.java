@@ -50,8 +50,8 @@ public class ProductServiceImply implements ProductService{
     }
 
     @Override
-    public List<Product> getProductBySellerId(int sellerId, int page) {
-        return this.productRepository.getProductBySellerId(sellerId,page);
+    public List<Product> getProductBySellerId(Map<String,String> params,int sellerId, int page) {
+        return this.productRepository.getProductBySellerId(params,sellerId,page);
     }
 
     @Override
@@ -76,6 +76,11 @@ public class ProductServiceImply implements ProductService{
     @Override
     public Review addReview(String review, int productId,int rating) {
         return this.productRepository.addReview(review,productId, rating);
+    }
+
+    @Override
+    public List<Product> getProductBySeller(Map<String,String> params,int sellerId, int page) {
+        return this.productRepository.getProductBySeller(params,sellerId,page);
     }
     
 }
