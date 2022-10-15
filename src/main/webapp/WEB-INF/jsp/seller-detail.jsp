@@ -18,13 +18,12 @@
                 <h4>${general[0]}</h4>
                 <a href="#" class="btn btn-dark">Nhắn tin</a>
             </div>
-            <div class="col-md-4 p-3">
-                <h5 class="center text-uppercase">Mô tả shop</h5>
+            <div class="col-md-4">
+                <h3 class="center text-uppercase">Mô tả shop</h3>
                 <span class="center">${seller.description}</span>
             </div>
             <div class="col-md-4">
-                <p>Đánh giá: </p>
-                <p>Sản phẩm: <span class="text-danger">${general[2]}</span> </p>
+                <h4 class="center text-uppercase">Sản phẩm: <span style="font-size: 30px" class="text-danger">${general[2]}</span> </h4>
             </div>
         </div>
     </div>

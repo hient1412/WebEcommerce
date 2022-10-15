@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : list-order
     Created on : Oct 6, 2022, 7:07:59 PM
     Author     : DELL
@@ -7,7 +7,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 
 <div>
     <h1 class="center p-4">TÌM KIẾM</h1>
@@ -35,7 +34,7 @@
                     </select>
                 </div>
             </div>
-            <div class="center"> 
+            <div class="center">
                 <input type="submit" class="mt-4 p-1" value="Tìm kiếm"/>
                 <input type="button" class="p-1" onclick="clearFilter()" value="Nhập lại"/>
             </div>
@@ -52,10 +51,10 @@
                 </div>
             </c:if>
             <div class="product-list">
-                <div class="row m-1">
-                    <div class="white-box bg-light p-2 ">
+                <div class="row">
+                    <div class="white-box bg-light p-1 center ">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Sản phẩm</label>
                             </div>
                             <div class="col-md-2 center">
@@ -67,60 +66,76 @@
                             <div class="col-md-2 center">
                                 <label>Trạng thái</label>
                             </div>
+                            <div class="col-md-2 center">
+                                <label></label>
+                            </div>
                         </div>
                     </div>
-                    <c:forEach items="${product}" var="p">
+                    <c:forEach items="${orders}" var="o">
                         <div class="white-box-2 mt-2">
                             <div class="row d-flex">
-                                <div class="col-md-4">
+                                <div class="col-md-10">
                                     <div class="user-2 d-inline-block">
-                                        <img class="rounded-circle img-fluid" src="${p[5]}">
+                                        <img class="rounded-circle img-fluid" src="${o.idSeller.avatar}">
                                     </div>
                                     <div class="d-inline">
-                                    <label>${p[6]}</label> <i class="fa fa-comments" aria-hidden="true"></i>
+                                        <label>${o.idSeller.idAccount.username}</label> <i class="fa fa-comments" aria-hidden="true"></i>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="col-md-2" style="text-align: right">
-                                    <label>Mã đơn: ${p[0]}</label>
+                                    <label>Mã đơn: ${o.id}</label>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-1">
-                                    <div class="product-img-3">
-                                        <img src="${p[4].image}">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <c:forEach items="${orderDetail}" var="od">
+                                            <div class="col-md-2">
+                                                <div class="product-img-3">
+                                                    <div class="mb-2">
+                                                        <img src="${od.idProduct.imageCollection.get(0).image}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label>${od.idProduct.name}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 center">
+                                                <div class="mb-3">
+                                                    <label>x ${od.quantity}</label>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
-                                    <c:forEach items="${p[3].getOrderDetailCollection()}" var="c">
-                                        <div class="mb-3">
-                                            <label>${c.idProduct.name}</label>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4 center">
+                                            <div>
+                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/>
+                                                <c:if test="${o.paymentType == 1}">
+                                                    <span style="font-size: 10px;color: #ccc">Thanh toán tại nhà</span>
+                                                </c:if>
+                                                <c:if test="${o.paymentType == 2}">
+                                                    <span style="font-size: 10px;color: #ccc">Thanh toán qua thẻ</span>
+                                                </c:if>
+                                            </div>
                                         </div>
-                                    </c:forEach>
-                                </div>
-                                <div class="col-md-2 center">
-                                    <div class="mb-3">
-                                        <label>x ${p[7]}</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 center">
-                                    <div>
-                                        <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p[1]}" maxFractionDigits="3" type="number"/>
-                                        <c:if test="${p[8] == 1}">
-                                        <span style="font-size: 10px;color: #ccc">Thanh toán tại nhà</span>
-                                        </c:if>
-                                        <c:if test="${p[8] == 2}">
-                                        <span style="font-size: 10px;color: #ccc">Thanh toán qua thẻ</span>
-                                        </c:if>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 center">
-                                    <div>
-                                        <c:if test="${p[2] == 1}">
-                                            <label>Đã đặt hàng</label>
-                                        </c:if>
-                                        <c:if test="${p[2] == 0}">
-                                            <label>Đã hủy</label>
-                                        </c:if>
+                                        <div class="col-md-4 center">
+                                            <div>
+                                                <c:if test="${o.active == 1}">
+                                                    <label>Đã đặt hàng</label>
+                                                </c:if>
+                                                <c:if test="${o.active == 0}">
+                                                    <label>Đã hủy</label>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 center">
+                                            <a href="#">Xem chi tiết</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +151,7 @@
                             </c:forEach>
                     </ul>
                 </div>
-            </div>    
+            </div>
         </c:when>
         <c:when test="${product.size() == 0}">
             <h3 class="center p-3">

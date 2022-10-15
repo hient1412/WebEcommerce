@@ -38,19 +38,14 @@ public class OrderRepositoryImply implements OrderRepository{
     private Environment env;
     
     @Override
-    public List<Object[]> getOrderBySellerId(Map<String, String> params, int sellerId, int page) {
+    public List<Orders> getOrderBySellerId(Map<String, String> params, int sellerId, int page) {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        CriteriaQuery<Orders> q = builder.createQuery(Orders.class);
         Root root = q.from(Orders.class);
-        Root rootP = q.from(Product.class);
-        Root rootOd = q.from(OrderDetail.class);
 
         List<Predicate> predicates = new ArrayList<>();
         
-        Predicate pp = builder.and(builder.equal(rootOd.get("idProduct"), rootP.get("id")),
-                                   builder.equal(rootOd.get("idOrder"), root.get("id")));
-        predicates.add(pp);
         String idOrder = params.get("idOrder");
         if (!idOrder.isEmpty()) {
             Predicate p = builder.equal(root.get("id"), Integer.parseInt(idOrder));
@@ -61,11 +56,6 @@ public class OrderRepositoryImply implements OrderRepository{
             Predicate p = builder.like(root.get("idCustomer").get("idAccount").get("username").as(String.class),String.format("%%%s%%",nameCus));
             predicates.add(p);
         }
-        String namePro = params.get("namePro");
-        if (!namePro.isEmpty()) {
-            Predicate p = builder.like(rootP.get("name").as(String.class), String.format("%%%s%%",namePro));
-            predicates.add(p);
-        }
         String active = params.get("active");
         if (!active.isEmpty()) {
             Predicate p = builder.equal(root.get("active"), active);
@@ -74,10 +64,6 @@ public class OrderRepositoryImply implements OrderRepository{
         Predicate p1 = builder.equal(root.get("idSeller"), sellerId);
         predicates.add(p1);
         q = q.where(predicates.toArray(new Predicate[]{}));
-        q.multiselect(root.get("id"),root.get("amount"),root.get("active"),root.join("orderDetailCollection").getParent(),
-                    rootP.join("imageCollection"),root.get("idCustomer").get("avatar"),root.get("idCustomer").get("idAccount").get("username"),
-                    rootOd.get("quantity"),root.get("paymentType"));
-        q.groupBy(root.get("id"));
         Query query = session.createQuery(q);
         if (page > 0) {
             int size = Integer.parseInt(env.getProperty("page.size").toString());

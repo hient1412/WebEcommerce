@@ -46,8 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
-    private Collection<Seller> sellerCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.EAGER)
+    private Set<Seller> sellerSet;
 
     
     public static final String ADMIN = "ROLE_ADMIN";
@@ -274,12 +274,12 @@ public class Account implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Seller> getSellerCollection() {
-        return sellerCollection;
+    public Set<Seller> getSellerSet() {
+        return sellerSet;
     }
 
-    public void setSellerCollection(Collection<Seller> sellerCollection) {
-        this.sellerCollection = sellerCollection;
+    public void setSellerSet(Set<Seller> sellerSet) {
+        this.sellerSet = sellerSet;
     }
     
 }

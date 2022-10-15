@@ -13,5 +13,5 @@ import java.util.Map;
  * @author DELL
  */
 public interface OrderRepository {
-    List<Object[]> getOrderBySellerId(Map<String,String> params,int sellerId, int page);
+    List<Orders> getOrderBySellerId(Map<String,String> params,int sellerId, int page);
 }

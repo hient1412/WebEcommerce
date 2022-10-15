@@ -31,15 +31,15 @@ function loadReview(endpoint) {
         h += `   
                 <div style="background-color: grey; margin: 10px; padding: 2px">
                     <div class="coment-bottom bg-white p-2 px-4">
-                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="${d.idAccount.customer.avatar}" width="40">
+                        <div class="d-flex flex-row comment-user"><img class="rounded-circle" src="${d.idAccount.customer.avatar}" height="50" width="45">
                             <div class="ml-2">
                                 <div class="d-flex flex-row align-items-center"><span class="name font-weight-bold">${d.idAccount.username}</span>
                                     <span class="dot"></span>
                                     <span class="my-date">${moment(d.reviewDate).locale("vi").fromNow()}</span>
                                     
                                 </div>
-                                <span>${d.rating}</span>
-                            </div>
+                                <span>${d.rating} <label style="color: yellow; font-size: 20px">&#9733;</label></span>
+                            </div> 
                         </div>
                         <div class="mt-2">
                             <p class="comment-text">${d.content}</p>

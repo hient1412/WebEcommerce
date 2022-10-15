@@ -12,6 +12,7 @@ import com.tmdt.pojos.Product;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CategoryService;
 import com.tmdt.service.ImageService;
+import com.tmdt.service.OrderDetailService;
 import com.tmdt.service.OrderService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.StatsService;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,8 +32,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -52,6 +56,8 @@ public class SellerController {
     private ProductService productService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderDetailService orderDetailService;
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -81,6 +87,22 @@ public class SellerController {
         model.addAttribute("count", env.getProperty("page.size"));
         return "list-product-upload";
     }
+//    @GetMapping("/list-order")
+//    public String listView(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
+//        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+//        Account ac = this.accountService.getAcByUsername(a.getName());
+//        int id = ac.getSeller().getId();
+//        Map<String,String> pre = new HashMap<>();
+//        pre.put("idOrder", params.getOrDefault("idOrder",""));
+//        pre.put("nameCus", params.getOrDefault("nameCus",""));
+//        pre.put("namePro", params.getOrDefault("namePro",""));
+//        pre.put("active", params.getOrDefault("active",""));
+//         model.addAttribute("product", this.orderService.getOrderBySellerId(pre,id, page));
+//        model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre,id, 0).size());
+//        model.addAttribute("count", env.getProperty("page.size"));
+//        return "list-order";
+//    }
+    
     @GetMapping("/list-order")
     public String listView(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
@@ -91,12 +113,13 @@ public class SellerController {
         pre.put("nameCus", params.getOrDefault("nameCus",""));
         pre.put("namePro", params.getOrDefault("namePro",""));
         pre.put("active", params.getOrDefault("active",""));
-         model.addAttribute("product", this.orderService.getOrderBySellerId(pre,id, page));
+        model.addAttribute("orderDetail", this.orderDetailService.getOrderDetail(1));
+        model.addAttribute("orders", this.orderService.getOrderBySellerId(pre,id, page));
         model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre,id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
-//        pre.put("namePro", params.getOrDefault("namePro",""));
         return "list-order";
     }
+
 
     @GetMapping("/product")
     public String productView(Model model) {

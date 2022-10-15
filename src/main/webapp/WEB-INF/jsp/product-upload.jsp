@@ -13,7 +13,7 @@
     <div class="card">
         <div class="card-body">
             <h1 class="center">ĐĂNG SẢN PHẨM</h1>
-            <form:form action="${action}" method="post" modelAttribute="product"  accept-charset="utf-8" enctype="multipart/form-data">
+            <form:form action="${action}" method="post" modelAttribute="product"  enctype="multipart/form-data">
                 <div class="form-group row">
                     <div class="col">
                         <label>Tên sản phẩm</label>
@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <label>Mô tả chi tiết</label>
-                    <form:textarea  path="description" class="form-control"/>
+                    <form:input type="text"  path="description" class="form-control" autocomplete="off"/>
                 </div>
                 <br>
                 <div>

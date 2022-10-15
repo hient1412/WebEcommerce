@@ -98,11 +98,6 @@ public class StatsRepositoryImply implements StatsRepository {
         }
         query.where(predicates.toArray(new Predicate[]{}));
         query.groupBy(root.get("id"));
-
-//        Query q = session.createQuery("Select p.id,p.name,sum((od.unitPrice * od.quantity) - (od.unitPrice * od.quantity * od.discount)) as gia\n" +
-//                                      "from Product p, Orders o, OrderDetail od\n" +
-//                                      "where od.idProduct=p.id and od.idOrder=o.id \n" +
-//                                      "group by p.id");
         Query q = session.createQuery(query);
         return q.getResultList();
     }

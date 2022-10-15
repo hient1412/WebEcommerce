@@ -6,6 +6,7 @@ package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import com.tmdt.repository.SellerRepository;
 import java.util.ArrayList;
@@ -79,7 +80,6 @@ public class SellerRepositoryImply implements SellerRepository {
         CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
         Root root = q.from(Seller.class);
         Root rootP = q.from(Product.class);
-        
         List<Predicate> predicates = new ArrayList<>();
 
         Predicate p1 = builder.equal(root.get("id"),rootP.get("idSeller"));

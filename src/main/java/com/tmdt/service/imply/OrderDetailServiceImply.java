@@ -4,11 +4,10 @@
  */
 package com.tmdt.service.imply;
 
-import com.tmdt.pojos.Orders;
-import com.tmdt.repository.OrderRepository;
-import com.tmdt.service.OrderService;
+import com.tmdt.pojos.OrderDetail;
+import com.tmdt.repository.OrderDetailRepository;
+import com.tmdt.service.OrderDetailService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,16 @@ import org.springframework.stereotype.Service;
  * @author DELL
  */
 @Service
-public class OrderServiceImply implements OrderService{
+public class OrderDetailServiceImply implements OrderDetailService{
+    
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderDetailRepository orderDetailRepository;
 
     @Override
-    public List<Orders> getOrderBySellerId(Map<String, String> params, int sellerId, int page) {
-        return this.orderRepository.getOrderBySellerId(params, sellerId, page);
+    public List<OrderDetail> getOrderDetail(int idOrder) {
+        return this.orderDetailRepository.getOrderDetail(idOrder);
     }
+    
+    
+    
 }

@@ -28,6 +28,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -69,8 +70,7 @@ public class Product implements Serializable {
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Size(min = 1, max = 65535)
+    @Size(min = 1, max = 255)
     @Column(name = "description")
     private String description;
     @Basic(optional = false)
@@ -84,7 +84,7 @@ public class Product implements Serializable {
     @Column(name = "manufacturer")
     private String manufacturer;
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
