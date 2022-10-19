@@ -66,4 +66,30 @@ public class ImageRepositoryImply implements ImageRepository{
         }
         return false;
     }
+
+    @Override
+    public boolean delete(Image i) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.delete(i);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+//    @Override
+//    public Image getImageByProductId(int productId) {
+//        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<Image> q = builder.createQuery(Image.class);
+//        Root root = q.from(Image.class);
+//        q.select(root);
+//
+//        q.where(builder.equal(root.get("idProduct"), productId));
+//
+//        Query query = session.createQuery(q);
+//        return (Image) query.getSingleResult();
+//    }
 }

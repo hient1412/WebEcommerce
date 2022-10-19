@@ -32,6 +32,7 @@ public class LoginHandler implements AuthenticationSuccessHandler {
         request.getSession().setAttribute("current", ac);
         request.getSession().setAttribute("currentSeller", ac.getSeller());
         request.getSession().setAttribute("currentCustomer", ac.getCustomer());
+        request.getSession().setAttribute("currentAdmin", ac.getAdmin());
         response.sendRedirect("/WebEcommerce/");
     }
     

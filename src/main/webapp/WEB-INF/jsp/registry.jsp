@@ -33,18 +33,6 @@
                     <form:option value="ROLE_CUSTOMER" label="Khách hàng"/>
                     <form:option value="ROLE_SELLER" label="Người bán" />
                 </form:select>
-                <div class="form-group">
-                    <label for="inputEmail">Email</label>
-                    <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email"/>
-                </div>
-                <div class="form-group">
-                    <label for="inputPhone">Số điện thoại</label>
-                    <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone"/>
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Mô tả</label>
-                    <form:input type="text" autocomplete="off" class="form-control" id="inputDescription" path="description"/>
-                </div>
                 <input type="submit" class="btn btn-primary btn-lg btn-block login-btn" value="Đăng ký"/>
             </form:form>
             <div class="text-center p-2">

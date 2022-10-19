@@ -6,6 +6,7 @@ package com.tmdt.pojos;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,6 +43,9 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Seller.findByAddress", query = "SELECT s FROM Seller s WHERE s.address = :address")})
 public class Seller implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSeller")
+    private Collection<SellerOrder> sellerOrderCollection;
+
     @Transient
     private MultipartFile file;
     
@@ -56,6 +60,16 @@ public class Seller implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "email")
+    private String email;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 15)
+    @Column(name = "phone")
+    private String phone;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -78,8 +92,6 @@ public class Seller implements Serializable {
     private Location idLocation;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSeller")
     private Collection<Product> productCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSeller")
-    private Collection<Orders> ordersCollection;
 
     public Seller() {
     }
@@ -141,15 +153,6 @@ public class Seller implements Serializable {
 
     public void setProductCollection(Collection<Product> productCollection) {
         this.productCollection = productCollection;
-    }
-
-    @XmlTransient
-    public Collection<Orders> getOrdersCollection() {
-        return ordersCollection;
-    }
-
-    public void setOrdersCollection(Collection<Orders> ordersCollection) {
-        this.ordersCollection = ordersCollection;
     }
 
     @Override
@@ -217,5 +220,56 @@ public class Seller implements Serializable {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+//
+//    @XmlTransient
+//    public Set<SellerOrder> getSellerOrderSet() {
+//        return sellerOrderSet;
+//    }
+//
+//    public void setSellerOrderSet(Set<SellerOrder> sellerOrderSet) {
+//        this.sellerOrderSet = sellerOrderSet;
+//    }
+
+    /**
+     * @return the sellerOrderCollection
+     */
+    public Collection<SellerOrder> getSellerOrderCollection() {
+        return sellerOrderCollection;
+    }
+
+    /**
+     * @param sellerOrderCollection the sellerOrderCollection to set
+     */
+    public void setSellerOrderCollection(Collection<SellerOrder> sellerOrderCollection) {
+        this.sellerOrderCollection = sellerOrderCollection;
     }
 }

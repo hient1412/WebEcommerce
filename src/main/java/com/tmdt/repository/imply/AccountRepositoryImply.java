@@ -117,4 +117,23 @@ public class AccountRepositoryImply  implements AccountRepository{
         return (Account) q.getSingleResult();
     }
 
+    @Override
+    public List<Account> getAccount(int page) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Account> query = builder.createQuery(Account.class);
+        Root root = query.from(Account.class);
+        query = query.select(root);
+        query.orderBy(builder.desc(root.get("id")));
+
+        Query q = session.createQuery(query);
+
+        if (page != 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            q.setMaxResults(size);
+            q.setFirstResult((page - 1) * size);
+        }
+        return q.getResultList();
+    }
+
 }

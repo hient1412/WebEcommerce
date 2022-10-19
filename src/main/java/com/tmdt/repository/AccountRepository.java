@@ -14,8 +14,10 @@ import java.util.List;
 public interface AccountRepository {
     boolean addAccount(Account ac);
     List<Account> getAccount(String username);
+    List<Account> getAccount(int page);
     Account getAcById(int id);
     List<Account> getRole(String role, int page, int active);
     boolean updateAc(Account ac);
     Account getAcByUsername(String username);
+    
 }

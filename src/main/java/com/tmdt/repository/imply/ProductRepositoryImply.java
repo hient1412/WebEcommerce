@@ -47,8 +47,6 @@ public class ProductRepositoryImply implements ProductRepository {
     @Autowired
     private Environment env;
     @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
     private AccountRepository accountRepository;
     
     @Override

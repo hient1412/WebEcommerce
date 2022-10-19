@@ -51,11 +51,11 @@
                                         <div class="col-md-6">
                                             <div class="row">
                                             <div class="col-md-6 center" style="border-left: 1px solid #000000">
-                                                <h4><i class="fa fa-map-marker" aria-hidden="true"></i> ${s[3]}</h4>
+                                                <h4><i class="fa-solid fa-location-dot"></i> ${s[3]}</h4>
                                                 <span>Địa chỉ</span>
                                             </div>
                                             <div class="col-md-6 center" style="border-left: 1px solid #000000">
-                                                <h4><i class="fa fa-codepen" aria-hidden="true"></i> ${s[4]}</h4>
+                                                <h4><i class="fa-solid fa-box"></i> ${s[4]}</h4>
                                                 <span>Sản phẩm</span>
                                             </div>
                                             </div>

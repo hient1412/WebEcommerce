@@ -7,8 +7,10 @@ package com.tmdt.controllers;
 import com.tmdt.pojos.Customer;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Admin;
 import com.tmdt.pojos.Seller;
 import com.tmdt.service.AccountService;
+import com.tmdt.service.AdminService;
 import com.tmdt.service.CategoryService;
 import com.tmdt.service.CustomerService;
 import com.tmdt.service.ImageService;
@@ -22,6 +24,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -48,6 +52,8 @@ public class HomeController {
     private SellerService sellerService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private AdminService adminService;
     @Autowired
     private LocationService locationService;
     @Autowired
@@ -153,6 +159,24 @@ public class HomeController {
         model.addAttribute("count", env.getProperty("page.size"));
         return "sellers";
     }
+    
+    @GetMapping("/personal")
+    public String personal(Model model, Authentication authentication) {
+        Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
+        model.addAttribute("ac", ac);
+        try {
+            if (ac.getRole().equals(Account.SELLER)) {
+                model.addAttribute("sel", this.sellerService.getSellerById(ac.getSeller().getId()));
+            } else if (ac.getRole().equals(Account.CUSTOMER)) {
+                model.addAttribute("cus", this.customerService.getCusById(ac.getCustomer().getId()));
+            } else {
+                model.addAttribute("ad", this.adminService.getAdById(ac.getAdmin().getId()));
+            }
+        } catch (Exception e) {
+            return "redirect:/";
+        }
+        return "personal";
+    }
 
     @GetMapping("/registry")
     public String registry(Model model) {
@@ -190,32 +214,58 @@ public class HomeController {
         model.addAttribute("customer", new Customer());
         model.addAttribute("locations", this.locationService.getLos());
         model.addAttribute("ac", this.userDetailsService.getAcById(Integer.parseInt(id)));
+        model.addAttribute("action", "/registry/cus");
         return "registry-cus";
     }
 
     @PostMapping("/registry/cus")
-    public String cus(Model model, @ModelAttribute(value = "customer") Customer cus) {
+    public String cus(Model model, @ModelAttribute(value = "customer") Customer cus,HttpSession s) {
         cus.setIdAccount(cus.getIdAccount());
-        if (this.customerService.addCus(cus) == true) {
-            return "redirect:/login";
+        if (this.customerService.addCus(cus) == true){
+            if(s.getAttribute("currentAdmin") == null)
+                return "redirect:/login";
+            else
+                return "redirect:/admin/account";
         }
+        model.addAttribute("action", "/registry/cus");
         return "registry-cus";
     }
 
+    @GetMapping("/registry/admin")
+    public String adminView(Model model, @RequestParam(name = "id", required = false) String id) {
+        model.addAttribute("admin", new Admin());
+        model.addAttribute("ac", this.userDetailsService.getAcById(Integer.parseInt(id)));
+        return "registry-admin";
+    }
+
+    @PostMapping("/registry/admin")
+    public String admin(Model model, @ModelAttribute(value = "admin") Admin ad) {
+        ad.setIdAccount(ad.getIdAccount());
+        if (this.adminService.addAdmin(ad) == true) {
+            return "redirect:/admin/account";
+        }
+        return "registry-admin";
+    }
+    
     @GetMapping("/registry/sel")
     public String selView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("seller", new Seller());
         model.addAttribute("locations", this.locationService.getLos());
         model.addAttribute("ac", this.userDetailsService.getAcById(Integer.parseInt(id)));
+        model.addAttribute("action", "/registry/sel");
         return "registry-sel";
     }
 
     @PostMapping("/registry/sel")
-    public String sel(Model model, @ModelAttribute(value = "seller") Seller sel) {
+    public String sel(Model model, @ModelAttribute(value = "seller") Seller sel,HttpSession s) {
         sel.setIdAccount(sel.getIdAccount());
         if (this.sellerService.addSel(sel) == true) {
-            return "redirect:/login";
+            if(s.getAttribute("currentAdmin") == null)
+                return "redirect:/login";
+            else
+                return "redirect:/admin/account";
         }
+        model.addAttribute("action", "/registry/sel");
         return "registry-sel";
     }
 }

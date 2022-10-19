@@ -5,6 +5,7 @@
 package com.tmdt.utils;
 
 import com.tmdt.pojos.Cart;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,5 +22,21 @@ public class Utils {
             }
         }
         return count;
+    }
+    
+    public static Map<String, String> cartAmount(Map<Integer, Cart> cart) {
+        Long sum = 0l;
+        int quantity = 0;
+        if (cart != null) {
+            for (Cart c: cart.values()) {
+                quantity += c.getCount();
+                sum += c.getCount() * c.getPrice();
+            }
+        }
+        Map<String, String> r = new HashMap<>();
+        r.put("counter", String.valueOf(quantity));
+        r.put("amount", String.valueOf(sum));
+        
+        return r;
     }
 }

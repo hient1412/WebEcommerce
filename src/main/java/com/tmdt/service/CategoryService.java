@@ -12,7 +12,10 @@ import java.util.List;
  * @author DELL
  */
 public interface CategoryService {
-     List<Category> getCates();
-     Category getCateById(int cateId);
-     List<Category> getCateBySellerId(int sellerId);
+    List<Category> getCates();
+    Category getCateById(int cateId);
+    List<Category> getCateBySellerId(int sellerId);
+    List<Category> getCates(int page);
+    boolean addCate(Category c);
+    boolean updateCate(Category c);
 }

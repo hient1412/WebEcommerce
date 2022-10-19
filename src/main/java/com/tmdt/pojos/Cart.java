@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class Cart {
     private int productId;
     private String productName;
-    private BigDecimal price;
+    private Long price;
     private int count;
 
     /**
@@ -47,14 +47,14 @@ public class Cart {
     /**
      * @return the price
      */
-    public BigDecimal getPrice() {
+    public Long getPrice() {
         return price;
     }
 
     /**
      * @param price the price to set
      */
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

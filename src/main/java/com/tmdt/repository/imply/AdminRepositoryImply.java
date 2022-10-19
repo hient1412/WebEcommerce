@@ -4,8 +4,8 @@
  */
 package com.tmdt.repository.imply;
 
-import com.tmdt.pojos.Customer;
-import com.tmdt.repository.CustomerRepository;
+import com.tmdt.pojos.Admin;
+import com.tmdt.repository.AdminRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,28 +19,25 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CustomerRepositoryImply implements CustomerRepository{
+public class AdminRepositoryImply implements AdminRepository{
 
     @Autowired
     private LocalSessionFactoryBean sessionFactoryBean;
     
     @Override
-    public boolean addCus(Customer cus) {
+    public boolean addAdmin(Admin ad) {
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
         try {
-            s.save(cus);
+            s.save(ad);
             return true;
         } catch (HibernateException ex) {
             System.err.println(ex.getMessage());
         }
         return false;
     }
-
     @Override
-    public Customer getCusById(int id) {
+    public Admin getAdById(int id) {
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
-        return s.get(Customer.class, id);
+        return s.get(Admin.class, id);
     }
-    
-    
 }

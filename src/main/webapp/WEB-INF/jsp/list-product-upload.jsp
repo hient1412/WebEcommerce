@@ -86,7 +86,7 @@
                                 </div>
                                 <div class="row mt-3 center">
                                     <div class="col">
-                                        <a title="Sửa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Sửa</a>
+                                        <a title="Sửa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa-regular fa-pen-to-square"></i>Sửa</a>
                                     </div>
                                     <div class="col">
                                         <c:if test="${p.active == '1'}">

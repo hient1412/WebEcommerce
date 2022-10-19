@@ -9,7 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div>
-    <h1 class="center p-4">TÌM KIẾM</h1>
+    <h1 class="center p-4">TÌM KIẾM  ${sizeod}</h1>
     <div class="p-4" style="background-color: #ccc">
         <form action="" >
             <div class="row">
@@ -76,10 +76,10 @@
                             <div class="row d-flex">
                                 <div class="col-md-10">
                                     <div class="user-2 d-inline-block">
-                                        <img class="rounded-circle img-fluid" src="${o.idSeller.avatar}">
+                                        <img class="rounded-circle img-fluid" src="${o.idCustomer.avatar}">
                                     </div>
                                     <div class="d-inline">
-                                        <label>${o.idSeller.idAccount.username}</label> <i class="fa fa-comments" aria-hidden="true"></i>
+                                        <label>${o.idCustomer.idAccount.username}</label> <i class="fa fa-comments" aria-hidden="true"></i>
                                     </div>
                                 </div>
                                 <div class="col-md-2" style="text-align: right">
@@ -89,7 +89,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <c:forEach items="${orderDetail}" var="od">
+                                        <c:forEach items="${orderDetail.getOrderDetail(o.id)}" var="od">
                                             <div class="col-md-2">
                                                 <div class="product-img-3">
                                                     <div class="mb-2">

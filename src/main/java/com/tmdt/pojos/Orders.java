@@ -7,7 +7,9 @@ package com.tmdt.pojos;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,10 +25,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -45,6 +54,9 @@ import org.springframework.format.annotation.DateTimeFormat;
     @NamedQuery(name = "Orders.findByPaymentType", query = "SELECT o FROM Orders o WHERE o.paymentType = :paymentType"),
     @NamedQuery(name = "Orders.findByIsPayment", query = "SELECT o FROM Orders o WHERE o.isPayment = :isPayment")})
 public class Orders implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOrder")
+    private Collection<SellerOrder> sellerOrderCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -88,9 +100,6 @@ public class Orders implements Serializable {
     @JoinColumn(name = "id_customer", referencedColumnName = "id")
     @ManyToOne
     private Customer idCustomer;
-    @JoinColumn(name = "id_seller", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Seller idSeller;
     @JoinColumn(name = "id_voucher", referencedColumnName = "id")
     @ManyToOne
     private Voucher idVoucher;
@@ -194,14 +203,6 @@ public class Orders implements Serializable {
         this.idCustomer = idCustomer;
     }
 
-    public Seller getIdSeller() {
-        return idSeller;
-    }
-
-    public void setIdSeller(Seller idSeller) {
-        this.idSeller = idSeller;
-    }
-
     public Voucher getIdVoucher() {
         return idVoucher;
     }
@@ -234,5 +235,20 @@ public class Orders implements Serializable {
     public String toString() {
         return "com.tmdt.pojos.Orders[ id=" + id + " ]";
     }
+
+    /**
+     * @return the sellerOrderCollection
+     */
+    public Collection<SellerOrder> getSellerOrderCollection() {
+        return sellerOrderCollection;
+    }
+
+    /**
+     * @param sellerOrderCollection the sellerOrderCollection to set
+     */
+    public void setSellerOrderCollection(Collection<SellerOrder> sellerOrderCollection) {
+        this.sellerOrderCollection = sellerOrderCollection;
+    }
+
     
 }

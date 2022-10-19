@@ -39,4 +39,14 @@ public class ImageServiceImply implements ImageService {
     public boolean updateImage(Image i) {
         return this.imageRepository.updateImage(i);
     }
+
+    @Override
+    public boolean delete(Image i) {
+        return this.imageRepository.delete(i);
+    }
+
+//    @Override
+//    public Image getImageByProductId(int productId) {
+//        return this.imageRepository.getImageByProductId(productId);
+//    }
 }

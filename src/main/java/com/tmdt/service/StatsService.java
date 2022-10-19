@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface StatsService {
     List<Object[]> countRole();
-    List<Object[]> countCategories();
+    List<Object[]> countCategories(int idSeller);
+    List<Object[]> countAdminProCategories();
     List<Object[]> statsProduct(String kw,Date fromDate, Date toDate);
 }

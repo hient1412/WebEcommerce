@@ -4,6 +4,7 @@
  */
 package com.tmdt.repository;
 
+import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Orders;
 import java.util.List;
 import java.util.Map;

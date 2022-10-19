@@ -46,6 +46,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Voucher.findByIsDelected", query = "SELECT v FROM Voucher v WHERE v.isDelected = :isDelected")})
 public class Voucher implements Serializable {
 
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "amount")
+    private Double amount;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,8 +59,6 @@ public class Voucher implements Serializable {
     @Size(max = 50)
     @Column(name = "name")
     private String name;
-    @Column(name = "amount")
-    private Long amount;
     @Column(name = "max_quantity")
     private Integer maxQuantity;
     @Column(name = "start_date")
@@ -104,13 +106,6 @@ public class Voucher implements Serializable {
         this.name = name;
     }
 
-    public Long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
 
     public Integer getMaxQuantity() {
         return maxQuantity;
@@ -209,6 +204,14 @@ public class Voucher implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.Voucher[ id=" + id + " ]";
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
     
 }

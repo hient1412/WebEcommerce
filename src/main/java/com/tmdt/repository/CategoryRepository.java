@@ -15,4 +15,7 @@ public interface CategoryRepository {
     List<Category> getCates();
     Category getCateById(int cateId);
     List<Category> getCateBySellerId(int sellerId);
+    List<Category> getCates(int page);
+    boolean addCate(Category c);
+    boolean updateCate(Category c);
 }

@@ -51,6 +51,20 @@ public class Admin implements Serializable {
     private String name;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 20)
+    @Column(name = "email")
+    private String email;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 15)
+    @Column(name = "phone")
+    private String phone;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "gender")
+    private String gender;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "is_deleted")
     private int isDeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdmin")
@@ -136,6 +150,48 @@ public class Admin implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.Admin[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the gender
+     */
+    public String getGender() {
+        return gender;
+    }
+
+    /**
+     * @param gender the gender to set
+     */
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
     
 }

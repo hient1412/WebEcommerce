@@ -28,6 +28,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="header2" value="" />
         <put-attribute name="footer" value="" />
     </definition>
+    <definition name="personal" extends="baseLayout">
+        <put-attribute name="title" value="Thông tin cá nhân" />
+        <put-attribute name="content" value="/WEB-INF/jsp/personal.jsp" />
+    </definition>
     <definition name="registry" extends="baseLayout">
         <put-attribute name="title" value="Đăng ký" />
         <put-attribute name="content" value="/WEB-INF/jsp/registry.jsp" />
@@ -45,6 +49,13 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
     <definition name="registry-sel" extends="baseLayout">
         <put-attribute name="title" value="Thêm thông tin người bán" />
         <put-attribute name="content" value="/WEB-INF/jsp/registry-sel.jsp" />
+        <put-attribute name="header" value="" />
+        <put-attribute name="header2" value="" />
+        <put-attribute name="footer" value="" />
+    </definition>
+    <definition name="registry-admin" extends="baseLayout">
+        <put-attribute name="title" value="Thêm thông tin admin" />
+        <put-attribute name="content" value="/WEB-INF/jsp/registry-admin.jsp" />
         <put-attribute name="header" value="" />
         <put-attribute name="header2" value="" />
         <put-attribute name="footer" value="" />
@@ -108,7 +119,6 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="content" value="/WEB-INF/jsp/stats-turnover.jsp" />
     </definition>
     <definition name="admin-view" extends="base2">
-        <put-attribute name="title" value="Thống kê loại sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/stats-categories.jsp" />
     </definition>
     <definition name="dashboard-admin" extends="base2">
@@ -125,6 +135,41 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Thống kê loại tài khoản" />
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/stats-role.jsp" />
+    </definition>
+    <definition name="admin-account" extends="base2">
+        <put-attribute name="title" value="Quản lý tài khoản" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-account.jsp" />
+    </definition>
+    <definition name="admin-stats-cate" extends="base2">
+        <put-attribute name="title" value="Thống kê loại sản phẩm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-stats-cate.jsp" />
+    </definition>
+    <definition name="product-cate" extends="base2">
+        <put-attribute name="title" value="Danh sách các loại sản phẩm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-cate.jsp" />
+    </definition>
+    <definition name="product-cate-add" extends="base2">
+        <put-attribute name="title" value="Thêm loại sản phẩm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-cate-add.jsp" />
+    </definition>
+    <definition name="product-cate-edit" extends="base2">
+        <put-attribute name="title" value="Sửa loại sản phẩm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/product-cate-edit.jsp" />
+    </definition>
+    <definition name="admin-account-add" extends="base2">
+        <put-attribute name="title" value="Thêm thành viên mới" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-account-add.jsp" />
+    </definition>
+    <definition name="admin-account-edit" extends="base2">
+        <put-attribute name="title" value="Sửa thành viên" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-account-edit.jsp" />
     </definition>
     
 </tiles-definitions>

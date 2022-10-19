@@ -12,14 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,12 +23,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author DELL
  */
 @Entity
-@Table(name = "image")
+@Table(name = "seller_order")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Image.findAll", query = "SELECT i FROM Image i"),
-    @NamedQuery(name = "Image.findById", query = "SELECT i FROM Image i WHERE i.id = :id")})
-public class Image implements Serializable {
+    @NamedQuery(name = "SellerOrder.findAll", query = "SELECT s FROM SellerOrder s"),
+    @NamedQuery(name = "SellerOrder.findById", query = "SELECT s FROM SellerOrder s WHERE s.id = :id")})
+public class SellerOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,26 +36,18 @@ public class Image implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @Null
-    @Lob
-    @Size(min = 1, max = 65535)
-    @Column(name = "image")
-    private String image;
-    @JoinColumn(name = "id_product", referencedColumnName = "id")
+    @JoinColumn(name = "idOrder", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Product idProduct;
+    private Orders idOrder;
+    @JoinColumn(name = "idSeller", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Seller idSeller;
 
-    public Image() {
+    public SellerOrder() {
     }
 
-    public Image(Integer id) {
+    public SellerOrder(Integer id) {
         this.id = id;
-    }
-
-    public Image(Integer id, String image) {
-        this.id = id;
-        this.image = image;
     }
 
     public Integer getId() {
@@ -70,20 +58,20 @@ public class Image implements Serializable {
         this.id = id;
     }
 
-    public String getImage() {
-        return image;
+    public Orders getIdOrder() {
+        return idOrder;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setIdOrder(Orders idOrder) {
+        this.idOrder = idOrder;
     }
 
-    public Product getIdProduct() {
-        return idProduct;
+    public Seller getIdSeller() {
+        return idSeller;
     }
 
-    public void setIdProduct(Product idProduct) {
-        this.idProduct = idProduct;
+    public void setIdSeller(Seller idSeller) {
+        this.idSeller = idSeller;
     }
 
     @Override
@@ -96,10 +84,10 @@ public class Image implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Image)) {
+        if (!(object instanceof SellerOrder)) {
             return false;
         }
-        Image other = (Image) object;
+        SellerOrder other = (SellerOrder) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +96,7 @@ public class Image implements Serializable {
 
     @Override
     public String toString() {
-        return "com.tmdt.pojos.Image[ id=" + id + " ]";
+        return "com.tmdt.pojos.SellerOrder[ id=" + id + " ]";
     }
-  
+    
 }

@@ -38,13 +38,8 @@ public class OrderDetailRepositoryImly implements OrderDetailRepository{
         CriteriaQuery<OrderDetail> q = builder.createQuery(OrderDetail.class);
         Root root = q.from(OrderDetail.class);
         q.select(root);
-        
         q.where(builder.equal(root.get("idOrder"), idOrder));
-        
         Query query = session.createQuery(q);
         return query.getResultList();
     }
-    
-    
-    
 }

@@ -8,6 +8,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Image;
+import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CategoryService;
@@ -19,8 +20,10 @@ import com.tmdt.service.StatsService;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -75,15 +78,15 @@ public class SellerController {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
-        model.addAttribute("cateBySeller",this.categoryService.getCateBySellerId(id));
-        Map<String,String> pre = new HashMap<>();
-        pre.put("kw", params.getOrDefault("kw",""));
-        pre.put("quantityMin", params.getOrDefault("quantityMin",""));
-        pre.put("quantityMax", params.getOrDefault("quantityMax",""));
-        pre.put("cat", params.getOrDefault("cat",""));
-        pre.put("active", params.getOrDefault("active",""));
-        model.addAttribute("product", this.productService.getProductBySellerId(pre,id, page));
-        model.addAttribute("counterS", this.productService.getProductBySellerId(pre,id, 0).size());
+        model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(id));
+        Map<String, String> pre = new HashMap<>();
+        pre.put("kw", params.getOrDefault("kw", ""));
+        pre.put("quantityMin", params.getOrDefault("quantityMin", ""));
+        pre.put("quantityMax", params.getOrDefault("quantityMax", ""));
+        pre.put("cat", params.getOrDefault("cat", ""));
+        pre.put("active", params.getOrDefault("active", ""));
+        model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
+        model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
         return "list-product-upload";
     }
@@ -102,25 +105,60 @@ public class SellerController {
 //        model.addAttribute("count", env.getProperty("page.size"));
 //        return "list-order";
 //    }
-    
+
     @GetMapping("/list-order")
     public String listView(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
-        Map<String,String> pre = new HashMap<>();
-        pre.put("idOrder", params.getOrDefault("idOrder",""));
-        pre.put("nameCus", params.getOrDefault("nameCus",""));
-        pre.put("namePro", params.getOrDefault("namePro",""));
-        pre.put("active", params.getOrDefault("active",""));
-        model.addAttribute("orderDetail", this.orderDetailService.getOrderDetail(1));
-        model.addAttribute("orders", this.orderService.getOrderBySellerId(pre,id, page));
-        model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre,id, 0).size());
+        Map<String, String> pre = new HashMap<>();
+        pre.put("idOrder", params.getOrDefault("idOrder", ""));
+        pre.put("nameCus", params.getOrDefault("nameCus", ""));
+        pre.put("namePro", params.getOrDefault("namePro", ""));
+        pre.put("active", params.getOrDefault("active", ""));
+        model.addAttribute("orderDetail", this.orderDetailService);
+        model.addAttribute("orders", this.orderService.getOrderBySellerId(pre, id, page));
+        model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
         return "list-order";
     }
 
-
+//    @GetMapping("/product")
+//    public String productView(Model model) {
+//        model.addAttribute("categories", this.categoryService.getCates());
+//        model.addAttribute("product", new Product());
+//        return "product-upload";
+//    }
+//
+//    @PostMapping("/product")
+//    public String product(Model model, @ModelAttribute(value = "product") Product pd,
+//            RedirectAttributes r, Authentication a) {
+//        Account ac = this.accountService.getAcByUsername(a.getName());
+//        if (ac.getRole().equals(Account.SELLER)) {
+//            if (ac.getActive() == 1) {
+//                pd.setIdSeller(ac.getSeller());
+//                pd.setActive(1);
+//                Image img = new Image();
+//                img.setIdProduct(pd);
+//                if (this.productService.addProduct(pd) == true) {
+//                    for (int j = 0; j < pd.getFile().length; j++) {
+//                        try {
+//                            Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+//                            img.setImage((String) map.get("secure_url"));
+//                            this.imageService.addImage(img);
+//                        } catch (IOException ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//                    r.addFlashAttribute("errMessage", String.format("Đăng thành công sản phẩm '%s'", pd.getName()));
+//                    return "redirect:/seller/list-product-upload?id=" + ac.getSeller().getId();
+//                }
+//            } else {
+//                model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể đăng tin '%s'", pd.getName()));
+//            }
+//        }
+//        return "product-upload";
+//    }
     @GetMapping("/product")
     public String productView(Model model) {
         model.addAttribute("categories", this.categoryService.getCates());
@@ -165,26 +203,99 @@ public class SellerController {
         return "product-edit";
     }
 
+//    @PostMapping("/product-edit")
+//    public String productEdit(Model model, @ModelAttribute(value = "product") Product pd,
+//            RedirectAttributes r, Authentication a) {
+//        Account ac = this.accountService.getAcByUsername(a.getName());
+//        pd.setIdSeller(ac.getSeller());
+//        String errMessage = "";
+//        pd.setActive(1);
+//        if (this.productService.updateProduct(pd) == true) {
+//            for (int j = 0; j < pd.getFile().length; j++) {
+//                try {
+//                    Image img = this.imageService.getImageByProductId(pd.getId()).get(j);
+//                    Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+//                    img.setImage((String) map.get("secure_url"));
+//                    this.imageService.updateImage(img);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//            errMessage = String.format("Đã chỉnh sửa thành công thành công sản phẩm: '%s'", pd.getName());
+//            return "redirect:/seller/list-product-upload?id=" + pd.getIdSeller().getId();
+//            }
+//        } else {
+//            errMessage = String.format("Có lỗi xảy ra không thể chỉnh sửa sản phẩm: '%s'", pd.getName());
+//        }
+//        r.addFlashAttribute("errMessage", errMessage);
+//        model.addAttribute("errMessage", errMessage);
+//        return "product-edit";
+//    }
+//    @PostMapping("/product-edit")
+//    public String productEdit(Model model, @ModelAttribute(value = "product") Product pd,
+//            @RequestParam(name = "id") int id, RedirectAttributes r, Authentication a) {
+//        Product productOld = this.productService.getProductById(id);
+//        Account ac = this.accountService.getAcByUsername(a.getName());
+//        pd.setIdSeller(ac.getSeller());
+//        String errMessage = "";
+//        pd.setActive(1);
+//        int size = this.productService.getProductById(id).getImageCollection().size();
+//        if (this.productService.updateProduct(pd) == true) {
+//            for (int i = 0; i < size; i++) {
+//                Image image =this.imageService.getImageByProductId(productOld.getId()).get(0);
+//                this.imageService.delete(image);
+//            }
+//            Image img = new Image();
+//            img.setIdProduct(pd);
+//            for (int j = 0; j < pd.getFile().length; j++) {
+//                try {
+//                    Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+//                    img.setImage((String) map.get("secure_url"));
+//                    this.imageService.addImage(img);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//            errMessage = String.format("Đã chỉnh sửa thành công thành công sản phẩm: '%s'", pd.getName());
+//            return "redirect:/seller/list-product-upload?id=" + pd.getIdSeller().getId();
+//        } else {
+//            errMessage = String.format("Có lỗi xảy ra không thể chỉnh sửa sản phẩm: '%s'", pd.getName());
+//        }
+//        r.addFlashAttribute("errMessage", errMessage);
+//        model.addAttribute("errMessage", errMessage);
+//        return "product-edit";
+//    }
     @PostMapping("/product-edit")
     public String productEdit(Model model, @ModelAttribute(value = "product") Product pd,
-            RedirectAttributes r, Authentication a) {
+            @RequestParam(name = "id") int id, RedirectAttributes r, Authentication a) {
+        Product productOld = this.productService.getProductById(id);
         Account ac = this.accountService.getAcByUsername(a.getName());
         pd.setIdSeller(ac.getSeller());
         String errMessage = "";
         pd.setActive(1);
+        int size = this.productService.getProductById(id).getImageCollection().size();
+        Image img = new Image();
         if (this.productService.updateProduct(pd) == true) {
-            for (int j = 0; j < pd.getFile().length; j++) {
-                try {
-                    Image img = this.imageService.getImageByProductId(pd.getId()).get(j);
-                    Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                    img.setImage((String) map.get("secure_url"));
-                    this.imageService.updateImage(img);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            if (pd.getFile()[0].getSize() == 0) {
+                for (int i = 0; i < this.imageService.getImageByProductId(productOld.getId()).size(); i++) {
+                    img.setImage(this.imageService.getImageByProductId(productOld.getId()).get(0).getImage());
                 }
-                errMessage = String.format("Đã chỉnh sửa thành công thành công sản phẩm: '%s'", pd.getName());
-                return "redirect:/seller/list-product-upload?id=" + pd.getIdSeller().getId();
+            } else {
+                for (int i = 0; i < size; i++) {
+                    this.imageService.delete(this.imageService.getImageByProductId(productOld.getId()).get(0));
+                }
+                img.setIdProduct(pd);
+                for (int j = 0; j < pd.getFile().length; j++) {
+                    try {
+                        Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                        img.setImage((String) map.get("secure_url"));
+                        this.imageService.addImage(img);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
+            errMessage = String.format("Đã chỉnh sửa thành công thành công sản phẩm: '%s'", pd.getName());
+            return "redirect:/seller/list-product-upload?id=" + pd.getIdSeller().getId();
         } else {
             errMessage = String.format("Có lỗi xảy ra không thể chỉnh sửa sản phẩm: '%s'", pd.getName());
         }
@@ -228,13 +339,15 @@ public class SellerController {
     }
 
     @GetMapping("/stats/categories")
-    public String statsCategories(Model model) {
-        model.addAttribute("countcate", this.statsService.countCategories());
+    public String statsCategories(Model model, Authentication a) {
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("countcate", this.statsService.countCategories(ac.getSeller().getId()));
         return "stats-categories";
     }
 
     @GetMapping("/stats/turnover/product")
-    public String turnoverProduct(Model model, @RequestParam(required = false) Map<String, String> params) throws ParseException {
+    public String turnoverProduct(Model model,
+            @RequestParam(required = false) Map<String, String> params) throws ParseException {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         String kw = params.getOrDefault("kw", null);
         Date fromDate = null;

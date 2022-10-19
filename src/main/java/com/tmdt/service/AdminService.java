@@ -4,13 +4,13 @@
  */
 package com.tmdt.service;
 
-import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Admin;
 
 /**
  *
  * @author DELL
  */
-public interface CustomerService {
-    boolean addCus(Customer cus);
-    Customer getCusById(int id);
+public interface AdminService {
+    boolean addAdmin(Admin ad);
+    Admin getAdById(int id);
 }

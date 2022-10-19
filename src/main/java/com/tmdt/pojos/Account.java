@@ -38,13 +38,16 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
     @NamedQuery(name = "Account.findById", query = "SELECT a FROM Account a WHERE a.id = :id"),
-    @NamedQuery(name = "Account.findByEmail", query = "SELECT a FROM Account a WHERE a.email = :email"),
-    @NamedQuery(name = "Account.findByPhone", query = "SELECT a FROM Account a WHERE a.phone = :phone"),
     @NamedQuery(name = "Account.findByUsername", query = "SELECT a FROM Account a WHERE a.username = :username"),
     @NamedQuery(name = "Account.findByPassword", query = "SELECT a FROM Account a WHERE a.password = :password"),
     @NamedQuery(name = "Account.findByRole", query = "SELECT a FROM Account a WHERE a.role = :role"),
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    private Collection<Admin> adminCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
+    private Collection<Customer> customerCollection;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.EAGER)
     private Set<Seller> sellerSet;
@@ -63,18 +66,6 @@ public class Account implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JsonIgnore
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "email")
-    private String email;
-    @JsonIgnore
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 15)
-    @Column(name = "phone")
-    private String phone;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -113,10 +104,8 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public Account(Integer id, String email, String phone, String username, String password, String role) {
+    public Account(Integer id, String email, String password, String role) {
         this.id = id;
-        this.email = email;
-        this.phone = phone;
         this.username = username;
         this.password = password;
         this.role = role;
@@ -128,22 +117,6 @@ public class Account implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getUsername() {
@@ -280,6 +253,24 @@ public class Account implements Serializable {
 
     public void setSellerSet(Set<Seller> sellerSet) {
         this.sellerSet = sellerSet;
+    }
+
+    @XmlTransient
+    public Collection<Admin> getAdminCollection() {
+        return adminCollection;
+    }
+
+    public void setAdminCollection(Collection<Admin> adminCollection) {
+        this.adminCollection = adminCollection;
+    }
+
+    @XmlTransient
+    public Collection<Customer> getCustomerCollection() {
+        return customerCollection;
+    }
+
+    public void setCustomerCollection(Collection<Customer> customerCollection) {
+        this.customerCollection = customerCollection;
     }
     
 }

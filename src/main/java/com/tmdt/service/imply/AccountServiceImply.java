@@ -69,11 +69,18 @@ public class AccountServiceImply implements AccountService{
 
     @Override
     public boolean updateAc(Account ac) {
+        String password = ac.getPassword();
+        ac.setPassword(this.passwordEncoder.encode(password));
         return this.accountRepository.updateAc(ac);
     }
     @Override
     public Account getAcByUsername(String username) {
         return this.accountRepository.getAcByUsername(username);
+    }
+
+    @Override
+    public List<Account> getAccount(int page) {
+        return this.accountRepository.getAccount(page);
     }
 
 }

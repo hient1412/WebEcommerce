@@ -27,7 +27,7 @@
                 <div class="form-group row">
                     <div class="col">
                         <label>Số lượng</label>
-                        <form:input type="number" path="quantity" class="form-control" autocomplete="off"/>
+                        <form:input type="number" value="1" path="quantity" class="form-control" autocomplete="off"/>
                     </div>
                     <div class="col">
                         <label>Thương hiệu</label>
@@ -44,11 +44,12 @@
                 </div>
                 <div class="form-group">
                     <label for="image">Hình ảnh</label>
-                    <form:input type="file" accept="image/*, .jpg,.png" multiple="multiple" path="file" id="image" class="form-control"/>
+                    <br>(Chỉ upload file hình ảnh)<span style="color: red">*</span><br>
+                    <form:input type="file" accept="image/*, .jpg,.png" multiple="multiple" path="file" id="image" class="form-control" required="required"/>
                 </div>
                 <div>
                     <label>Mô tả chi tiết</label>
-                    <form:input type="text"  path="description" class="form-control" autocomplete="off"/>
+                    <form:textarea type="text" autocomplete="off" class="form-control input-lg" path="description" placeholder="Mô tả"/>
                 </div>
                 <br>
                 <div>

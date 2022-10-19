@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface AccountService extends UserDetailsService {
     boolean addAccount(Account ac);
     List<Account> getAccount(String username);
+    List<Account> getAccount(int page);
     Account getAcById(int id);
     List<Account> getRole(String role, int page, int active);
     boolean updateAc(Account ac);

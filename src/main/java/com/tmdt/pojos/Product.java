@@ -6,6 +6,7 @@ package com.tmdt.pojos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -18,7 +19,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -77,7 +77,7 @@ public class Product implements Serializable {
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "price")
-    private String price;
+    private Double price;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
@@ -124,7 +124,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public Product(Integer id, String name, String description, String price, String manufacturer, Date createdDate, int active, int quantity) {
+    public Product(Integer id, String name, String description, Double price, String manufacturer, Date createdDate, int active, int quantity) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -159,13 +159,6 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
 
     public String getManufacturer() {
         return manufacturer;
@@ -280,7 +273,7 @@ public class Product implements Serializable {
     public void setFile(MultipartFile[] file) {
         this.file = file;
     }
-
+    
     /**
      * @return the reviewSet
      */
@@ -293,6 +286,21 @@ public class Product implements Serializable {
      */
     public void setReviewSet(Set<Review> reviewSet) {
         this.reviewSet = reviewSet;
+    }
+
+
+    /**
+     * @return the price
+     */
+    public Double getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
 }

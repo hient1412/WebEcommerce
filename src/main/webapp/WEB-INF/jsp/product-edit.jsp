@@ -47,15 +47,15 @@
                 <div class="form-group">
                     <label for="image">Hình ảnh</label>
                     <c:if test="${product.imageCollection.size() != 0}">
-                        <br>Đã từng upload ảnh trước đây:<br>
+                        <br>Ảnh trước đây:<br><br>
                     </c:if>
                     <c:forEach items="${product.imageCollection}" var="p">
                         <c:if test="${p.image.startsWith('http')}">
-                            <span><a target="_blank" href="${p.image}">Xem lại</a></span><br>
-                        </c:if>
-                    </c:forEach>
-                    <br>(Chỉ upload file hình ảnh)<span style="color: red">*</span>
-                    <form:input type="file" accept="image/*, .jpg,.png" multiple="multiple" path="file" id="image" class="form-control"/>
+                            <span class="ml-2"><img src="${p.image}" class="border border-dark" width="70" height="60" ></span>
+                            </c:if>
+                        </c:forEach>
+                    <br><br>(Chỉ upload file hình ảnh)<span style="color: red">*</span>
+                    <form:input type="file" accept="image/*, .jpg,.png"  multiple="multiple" path="file" id="image" class="form-control"/>
                 </div>
                 <div class="form-group">
                     <form:textarea type="text" autocomplete="off" class="form-control input-lg" path="description" placeholder="Mô tả"/>

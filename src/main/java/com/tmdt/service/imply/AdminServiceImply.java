@@ -4,10 +4,9 @@
  */
 package com.tmdt.service.imply;
 
-import com.tmdt.pojos.OrderDetail;
-import com.tmdt.repository.OrderDetailRepository;
-import com.tmdt.service.OrderDetailService;
-import java.util.List;
+import com.tmdt.pojos.Admin;
+import com.tmdt.repository.AdminRepository;
+import com.tmdt.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +15,18 @@ import org.springframework.stereotype.Service;
  * @author DELL
  */
 @Service
-public class OrderDetailServiceImply implements OrderDetailService{
-    
+public class AdminServiceImply implements AdminService{
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private AdminRepository adminRepository;
 
     @Override
-    public List<OrderDetail> getOrderDetail(int idOrder) {
-        return this.orderDetailRepository.getOrderDetail(idOrder);
+    public boolean addAdmin(Admin ad) {
+        return this.adminRepository.addAdmin(ad);
     }
+
+    @Override
+    public Admin getAdById(int id) {
+        return this.adminRepository.getAdById(id);
+    }
+    
 }

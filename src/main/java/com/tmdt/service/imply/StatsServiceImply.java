@@ -27,13 +27,18 @@ public class StatsServiceImply implements StatsService{
     }
 
     @Override
-    public List<Object[]> countCategories() {
-        return this.statsRepository.countCategories();
+    public List<Object[]> countCategories(int idSeller) {
+        return this.statsRepository.countCategories(idSeller);
     }
 
     @Override
     public List<Object[]> statsProduct(String kw,Date fromDate, Date toDate) {
         return this.statsRepository.statsProduct(kw,fromDate,toDate);
+    }
+
+    @Override
+    public List<Object[]> countAdminProCategories() {
+        return this.statsRepository.countAdminProCategories();
     }
     
 }

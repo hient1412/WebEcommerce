@@ -45,4 +45,9 @@ public class CustomerServiceImply implements CustomerService {
         return this.customerRepository.addCus(cus);
     }
 
+    @Override
+    public Customer getCusById(int id) {
+        return this.customerRepository.getCusById(id);
+    }
+
 }

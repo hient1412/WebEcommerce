@@ -8,7 +8,15 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <body style="background-image: url('https://static.tapchitaichinh.vn/images/upload/hoangthuviet/09092021/e-commerce-770x385.jpg')">
-    <c:url value="/registry/cus" var="action"/>
+    <c:choose>
+        <c:when test="${action != null}">
+            <c:url value="${action}" var="action"/>
+        </c:when>
+        <c:otherwise>
+            <c:url value="/admin/account/add" var="action"/>
+        </c:otherwise>
+    </c:choose>
+
     <div class="login-form">
         <form:form action="${action}" method="post" modelAttribute="customer" enctype="multipart/form-data">
             <h1 class="p-4 center text-uppercase">Thêm thông tin<br>khách hàng</h1>
@@ -24,11 +32,24 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="dob">Ngày sinh</label>
                 <form:input type="date" class="form-control" path="dob" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email"/>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone">Số điện thoại</label>
+                <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone"/>
             </div>
             <div class="form-group">
                 <label for="avatar">Avatar</label>
                 <form:input type="file" path="file" id="avatar" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <label for="description">Mô tả bản thân</label>
+                <form:textarea type="text" class="form-control" path="description"/>
             </div>
             <div class="form-group row">
                 <div class="col">

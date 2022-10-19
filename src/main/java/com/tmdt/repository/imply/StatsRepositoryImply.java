@@ -53,7 +53,7 @@ public class StatsRepositoryImply implements StatsRepository {
     }
 
     @Override
-    public List<Object[]> countCategories() {
+    public List<Object[]> countCategories(int idSeller) {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
@@ -61,7 +61,7 @@ public class StatsRepositoryImply implements StatsRepository {
         Root root = query.from(Product.class);
         Root rootCate = query.from(Category.class);
 
-        query.where(builder.equal(root.get("idCategory"), rootCate.get("id")));
+        query.where(builder.and(builder.equal(root.get("idCategory"), rootCate.get("id")),builder.equal(root.get("idSeller"), idSeller)));
 
         query.multiselect(rootCate.get("id"), rootCate.get("name"), builder.count(root.get("id")));
         query.orderBy(builder.desc(builder.count(root.get("id"))));
@@ -98,6 +98,25 @@ public class StatsRepositoryImply implements StatsRepository {
         }
         query.where(predicates.toArray(new Predicate[]{}));
         query.groupBy(root.get("id"));
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Object[]> countAdminProCategories() {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+
+        Root root = query.from(Product.class);
+        Root rootCate = query.from(Category.class);
+
+        query.where(builder.equal(root.get("idCategory"), rootCate.get("id")));
+
+        query.multiselect(rootCate.get("id"), rootCate.get("name"), builder.count(root.get("id")));
+        query.orderBy(builder.desc(builder.count(root.get("id"))));
+        query.groupBy(rootCate.get("id"));
+
         Query q = session.createQuery(query);
         return q.getResultList();
     }
