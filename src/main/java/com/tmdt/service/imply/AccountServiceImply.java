@@ -83,4 +83,10 @@ public class AccountServiceImply implements AccountService{
         return this.accountRepository.getAccount(page);
     }
 
+    @Override
+    public boolean deleteAc(Account ac) {
+        return this.accountRepository.deleteAc(ac);
+    }
+
+
 }

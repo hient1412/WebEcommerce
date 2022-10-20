@@ -40,4 +40,22 @@ public class AdminRepositoryImply implements AdminRepository{
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
         return s.get(Admin.class, id);
     }
+
+    @Override
+    public boolean updateAdmin(Admin ad) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            Admin admin = this.getAdById(ad.getId());
+            admin.setEmail(ad.getEmail());
+            admin.setName(ad.getName());
+            admin.setPhone(ad.getPhone());
+            admin.setGender(ad.getGender());
+            s.update(admin);
+            
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
 }

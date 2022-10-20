@@ -110,7 +110,7 @@ public class HomeController {
         model.addAttribute("count", env.getProperty("page.size"));
         return "home";
     }
-
+    
     @GetMapping("/search")
     public String search(Model model,
             @RequestParam(required = false) Map<String, String> params) {
@@ -159,7 +159,7 @@ public class HomeController {
         model.addAttribute("count", env.getProperty("page.size"));
         return "sellers";
     }
-    
+
     @GetMapping("/personal")
     public String personal(Model model, Authentication authentication) {
         Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
@@ -219,13 +219,14 @@ public class HomeController {
     }
 
     @PostMapping("/registry/cus")
-    public String cus(Model model, @ModelAttribute(value = "customer") Customer cus,HttpSession s) {
+    public String cus(Model model, @ModelAttribute(value = "customer") Customer cus, HttpSession s) {
         cus.setIdAccount(cus.getIdAccount());
-        if (this.customerService.addCus(cus) == true){
-            if(s.getAttribute("currentAdmin") == null)
+        if (this.customerService.addCus(cus) == true) {
+            if (s.getAttribute("currentAdmin") == null) {
                 return "redirect:/login";
-            else
+            } else {
                 return "redirect:/admin/account";
+            }
         }
         model.addAttribute("action", "/registry/cus");
         return "registry-cus";
@@ -246,7 +247,7 @@ public class HomeController {
         }
         return "registry-admin";
     }
-    
+
     @GetMapping("/registry/sel")
     public String selView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("seller", new Seller());
@@ -257,13 +258,14 @@ public class HomeController {
     }
 
     @PostMapping("/registry/sel")
-    public String sel(Model model, @ModelAttribute(value = "seller") Seller sel,HttpSession s) {
+    public String sel(Model model, @ModelAttribute(value = "seller") Seller sel, HttpSession s) {
         sel.setIdAccount(sel.getIdAccount());
         if (this.sellerService.addSel(sel) == true) {
-            if(s.getAttribute("currentAdmin") == null)
+            if (s.getAttribute("currentAdmin") == null) {
                 return "redirect:/login";
-            else
+            } else {
                 return "redirect:/admin/account";
+            }
         }
         model.addAttribute("action", "/registry/sel");
         return "registry-sel";

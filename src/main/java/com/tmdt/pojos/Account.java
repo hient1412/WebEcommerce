@@ -44,22 +44,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
-    private Collection<Admin> adminCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount")
-    private Collection<Customer> customerCollection;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAccount", fetch = FetchType.EAGER)
-    private Set<Seller> sellerSet;
-
-    
     public static final String ADMIN = "ROLE_ADMIN";
     public static final String CUSTOMER = "ROLE_CUSTOMER";
     public static final String SELLER = "ROLE_SELLER";
-    
+
     @Transient
     private String confirmPassword;
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,7 +85,7 @@ public class Account implements Serializable {
     @OneToOne(mappedBy = "idAccount")
     private Customer customer;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "idAccount")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idAccount")
     private Set<Review> reviewSet;
 
     public Account() {
@@ -246,31 +237,4 @@ public class Account implements Serializable {
         this.reviewSet = reviewSet;
     }
 
-    @XmlTransient
-    public Set<Seller> getSellerSet() {
-        return sellerSet;
-    }
-
-    public void setSellerSet(Set<Seller> sellerSet) {
-        this.sellerSet = sellerSet;
-    }
-
-    @XmlTransient
-    public Collection<Admin> getAdminCollection() {
-        return adminCollection;
-    }
-
-    public void setAdminCollection(Collection<Admin> adminCollection) {
-        this.adminCollection = adminCollection;
-    }
-
-    @XmlTransient
-    public Collection<Customer> getCustomerCollection() {
-        return customerCollection;
-    }
-
-    public void setCustomerCollection(Collection<Customer> customerCollection) {
-        this.customerCollection = customerCollection;
-    }
-    
 }

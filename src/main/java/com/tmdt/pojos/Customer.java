@@ -30,6 +30,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -51,8 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Customer.findByFirstName", query = "SELECT c FROM Customer c WHERE c.firstName = :firstName"),
     @NamedQuery(name = "Customer.findByLastName", query = "SELECT c FROM Customer c WHERE c.lastName = :lastName"),
     @NamedQuery(name = "Customer.findByDob", query = "SELECT c FROM Customer c WHERE c.dob = :dob"),
-    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender"),
-    @NamedQuery(name = "Customer.findByIsDelected", query = "SELECT c FROM Customer c WHERE c.isDelected = :isDelected")})
+    @NamedQuery(name = "Customer.findByGender", query = "SELECT c FROM Customer c WHERE c.gender = :gender")})
 public class Customer implements Serializable {
 
     /**
@@ -92,13 +92,13 @@ public class Customer implements Serializable {
     private String lastName;
     @JsonIgnore
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Size(min = 1, max = 20)
     @Column(name = "email")
     private String email;
     @JsonIgnore
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Size(min = 1, max = 15)
     @Column(name = "phone")
     private String phone;
@@ -116,7 +116,7 @@ public class Customer implements Serializable {
     private String gender;
     @JsonIgnore
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Size(min = 1, max = 150)
     @Column(name = "description")
     private String description;
@@ -124,11 +124,6 @@ public class Customer implements Serializable {
     @Size(max = 65535)
     @Column(name = "avatar")
     private String avatar;
-    @JsonIgnore
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "is_delected")
-    private int isDelected;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
     private Collection<VoucherCustomer> voucherCustomerCollection;
@@ -154,13 +149,12 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public Customer(Integer id, String firstName, String lastName, Date dob, String gender, int isDelected) {
+    public Customer(Integer id, String firstName, String lastName, Date dob, String gender) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.gender = gender;
-        this.isDelected = isDelected;
     }
 
     public Integer getId() {
@@ -201,14 +195,6 @@ public class Customer implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public int getIsDelected() {
-        return isDelected;
-    }
-
-    public void setIsDelected(int isDelected) {
-        this.isDelected = isDelected;
     }
 
     @XmlTransient

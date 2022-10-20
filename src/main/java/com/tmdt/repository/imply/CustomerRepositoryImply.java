@@ -41,6 +41,28 @@ public class CustomerRepositoryImply implements CustomerRepository{
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
         return s.get(Customer.class, id);
     }
+
+    @Override
+    public boolean updateCustomer(Customer c) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            Customer customer = this.getCusById(c.getId());
+            customer.setFirstName(c.getFirstName());
+            customer.setLastName(c.getLastName());
+            customer.setDob(c.getDob());
+            customer.setEmail(c.getEmail());
+            customer.setAvatar(c.getAvatar());
+            customer.setDescription(c.getDescription());
+            customer.setGender(c.getGender());
+            customer.setLocation(c.getLocation());
+            s.update(customer);
+            
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
     
     
 }

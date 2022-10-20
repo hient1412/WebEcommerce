@@ -13,4 +13,5 @@ import com.tmdt.pojos.Admin;
 public interface AdminService {
     boolean addAdmin(Admin ad);
     Admin getAdById(int id);
+    boolean updateAdmin(Admin ad);
 }

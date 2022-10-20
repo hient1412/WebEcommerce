@@ -32,6 +32,18 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Thông tin cá nhân" />
         <put-attribute name="content" value="/WEB-INF/jsp/personal.jsp" />
     </definition>
+    <definition name="admin-edit" extends="baseLayout">
+        <put-attribute name="title" value="Sửa thông tin cá nhân"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-edit.jsp" />
+    </definition>
+    <definition name="seller-edit" extends="baseLayout">
+        <put-attribute name="title" value="Sửa thông tin cá nhân"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/seller-edit.jsp" />
+    </definition>
+    <definition name="customer-edit" extends="baseLayout">
+        <put-attribute name="title" value="Sửa thông tin cá nhân"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/customer-edit.jsp" />
+    </definition>
     <definition name="registry" extends="baseLayout">
         <put-attribute name="title" value="Đăng ký" />
         <put-attribute name="content" value="/WEB-INF/jsp/registry.jsp" />

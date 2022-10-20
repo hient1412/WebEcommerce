@@ -13,4 +13,5 @@ import com.tmdt.pojos.Customer;
 public interface CustomerService {
     boolean addCus(Customer cus);
     Customer getCusById(int id);
+    boolean updateCustomer(Customer c);
 }

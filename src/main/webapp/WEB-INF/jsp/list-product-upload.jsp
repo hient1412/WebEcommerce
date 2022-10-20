@@ -97,7 +97,7 @@
                                         </c:if>
                                     </div>
                                     <div class="col">
-                                        <a title="Xóa" href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-trash" aria-hidden="true"></i>Xóa</a>
+                                        <a title="Xóa" href="<c:url value="/seller/product-delete"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa fa-trash" aria-hidden="true"></i>Xóa</a>
                                     </div>
                                 </div>
                             </div>

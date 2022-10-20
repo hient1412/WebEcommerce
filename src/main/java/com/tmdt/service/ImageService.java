@@ -16,5 +16,4 @@ public interface ImageService {
     boolean addImage(Image i);
     boolean updateImage(Image i);
     boolean delete(Image i);
-//    Image getImageByProductId(int productId);
 }

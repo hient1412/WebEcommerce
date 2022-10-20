@@ -50,4 +50,19 @@ public class CustomerServiceImply implements CustomerService {
         return this.customerRepository.getCusById(id);
     }
 
+    @Override
+    public boolean updateCustomer(Customer c) {
+        if (!c.getFile().isEmpty()) {
+            try {
+                Map r = this.cloudinary.uploader().upload(c.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                c.setAvatar((String) r.get("secure_url"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else{
+            c.setAvatar(c.getAvatar());
+        }
+        return this.customerRepository.updateCustomer(c);
+    }
+
 }

@@ -20,4 +20,5 @@ public interface AccountService extends UserDetailsService {
     List<Account> getRole(String role, int page, int active);
     boolean updateAc(Account ac);
     Account getAcByUsername(String username);
+    boolean deleteAc(Account ac);
 }

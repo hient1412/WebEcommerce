@@ -66,7 +66,7 @@ public class SellerRepositoryImply implements SellerRepository {
         CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
         Root root = q.from(Product.class);
 
-        q.where(builder.equal(root.get("idSeller"), sellerId));
+        q.where(builder.equal(root.get("idSeller"), sellerId),builder.equal(root.get("isDelete"), 0));
         q.multiselect(root.get("idSeller").get("name"), root.get("idSeller").get("avatar"), builder.count(root.get("id")));
         Query query = session.createQuery(q);
 
@@ -84,6 +84,8 @@ public class SellerRepositoryImply implements SellerRepository {
 
         Predicate p1 = builder.equal(root.get("id"),rootP.get("idSeller"));
         predicates.add(p1);
+        Predicate p2 = builder.equal(rootP.get("isDelete"),0);
+        predicates.add(p2);
 
         if (!kw.isEmpty()) {
             Predicate p = builder.like(root.get("name").as(String.class), String.format("%%%s%%", kw));
@@ -107,6 +109,27 @@ public class SellerRepositoryImply implements SellerRepository {
             query.setFirstResult((page - 1) * size);
         }
         return query.getResultList();
+    }
+
+    @Override
+    public boolean updateSeller(Seller s) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            Seller seller = this.getSellerById(s.getId());
+            seller.setName(s.getName());
+            seller.setAddress(s.getAddress());
+            seller.setIdLocation(s.getIdLocation());
+            seller.setEmail(s.getEmail());
+            seller.setPhone(s.getPhone());
+            seller.setAvatar(s.getAvatar());
+            seller.setDescription(s.getDescription());
+            session.update(seller);
+            
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
     }
 
 }

@@ -54,6 +54,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Product.findByQuantity", query = "SELECT p FROM Product p WHERE p.quantity = :quantity")})
 public class Product implements Serializable {
 
+    @Column(name = "is_delete")
+    @NotNull
+    private Integer isDelete;
+    
     @Transient
     private MultipartFile[] file;
     
@@ -69,7 +73,7 @@ public class Product implements Serializable {
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Size(min = 1, max = 255)
     @Column(name = "description")
     private String description;
@@ -89,7 +93,7 @@ public class Product implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
     @Basic(optional = false)
-    @NotNull
+    @Null
     @Column(name = "active")
     private int active;
     @Basic(optional = false)
@@ -301,6 +305,20 @@ public class Product implements Serializable {
      */
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    /**
+     * @return the isDelete
+     */
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    /**
+     * @param isDelete the isDelete to set
+     */
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
     }
 
 }

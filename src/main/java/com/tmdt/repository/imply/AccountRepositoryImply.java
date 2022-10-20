@@ -136,4 +136,16 @@ public class AccountRepositoryImply  implements AccountRepository{
         return q.getResultList();
     }
 
+    @Override
+    public boolean deleteAc(Account ac) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.delete(ac);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

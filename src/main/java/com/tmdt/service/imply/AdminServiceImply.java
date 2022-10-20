@@ -28,5 +28,10 @@ public class AdminServiceImply implements AdminService{
     public Admin getAdById(int id) {
         return this.adminRepository.getAdById(id);
     }
+
+    @Override
+    public boolean updateAdmin(Admin ad) {
+        return this.adminRepository.updateAdmin(ad);
+    }
     
 }

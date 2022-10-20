@@ -31,9 +31,12 @@
                 <div class="row product p-4" style="height: 635px;">
                     <div class="mt-4 mb-4">
                         <h3 class="text-uppercase">${product.name}</h3>
-                        <div class="price d-flex flex-row align-items-center"> <span class="act-price">$20</span>
-                            <div class="ml-2"> <small class="dis-price"><span style="text-decoration: underline">đ</span><fmt:formatNumber value="${product.price}" maxFractionDigits="3" type="number"/></small> <span>40% OFF</span> </div>
+                        <div class="price d-flex flex-row align-items-center"> <span class="act-price"><span style="text-decoration: underline">đ</span><fmt:formatNumber value="${product.price}" maxFractionDigits="3" type="number"/></span>
                         </div>
+<!--                        <h3 class="text-uppercase">product.name</h3>
+                        <div class="price d-flex flex-row align-items-center"> <span class="act-price">$20</span>
+                            <div class="ml-2"> <small class="dis-price"><span style="text-decoration: underline">đ</span>product.price</small> <span>40% OFF</span> </div>
+                        </div>-->
                     </div>
                     <div>
                         <h4>Mô tả sản phẩm</h4>

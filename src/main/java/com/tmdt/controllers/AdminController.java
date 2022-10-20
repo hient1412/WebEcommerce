@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -184,7 +185,25 @@ public class AdminController {
         }
         return "redirect:/admin/product-cate";
     }
+    
+    @GetMapping("/edit")
+    public String adminEditView(Model model, Authentication authentication) {
+        Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
+        model.addAttribute("admin", ac.getAdmin());
+        return "admin-edit";
+    }
 
+    @PostMapping("/edit")
+    public String adminEdit(Model model, @ModelAttribute(value = "admin") Admin admin, RedirectAttributes r) {
+        if (this.adminService.updateAdmin(admin) == true) {
+            r.addFlashAttribute("errMessage", "Cập nhật thông tin thành công");
+            return "redirect:/personal";
+        } else {
+            model.addAttribute("errMessage", "Có lỗi xảy ra không thể cập nhật thông tin");
+        }
+        return "admin-edit";
+    }
+    
     @GetMapping("/account")
     public String account(Model model, @RequestParam(required = false) Map<String, String> params) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
@@ -222,20 +241,35 @@ public class AdminController {
     }
 
     @GetMapping("/account/edit")
-    public String updateTKView(Model model, @RequestParam(name = "id") int id) {
+    public String updateAccountView(Model model, @RequestParam(name = "id") int id) {
         Account ac = this.userDetailsService.getAcById(id);
         model.addAttribute("ac", ac);
         return "admin-account-edit";
     }
 
-    @PostMapping("account/edit")
-    public String updateTK(Model model, @ModelAttribute(value = "ac") Account account,
+    @PostMapping("/account/edit")
+    public String updateAccount(Model model, @ModelAttribute(value = "ac") Account account,
             RedirectAttributes r) {
         if (this.userDetailsService.updateAc(account) == true) {
             r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
         } else {
             r.addFlashAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
         }
+        return "redirect:/admin/account";
+    }
+    
+    
+    @GetMapping("/account/delete")
+    public String deleteTK(Model model,@RequestParam(name = "id") int id,
+                RedirectAttributes r) {
+        String errMessage = "";
+        Account ac = this.userDetailsService.getAcById(id);
+        if (this.userDetailsService.deleteAc(ac) == true) {
+            errMessage = String.format("Đã xóa thành công tài khoản: '%s'", ac.getUsername());
+        } else {
+            errMessage = String.format("Có lỗi xảy ra không thể xóa tài khoản: '%s'", ac.getUsername());
+        }
+        r.addFlashAttribute("errMessage", errMessage);
         return "redirect:/admin/account";
     }
 

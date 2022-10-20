@@ -56,4 +56,19 @@ public class SellerServiceImply implements SellerService{
     public List<Object[]> getSellers(String kw,int page) {
         return this.sellerRepository.getSellers(kw,page);
     }
+
+    @Override
+    public boolean updateSeller(Seller s) {
+        if (!s.getFile().isEmpty()) {
+            try {
+                Map r = this.cloudinary.uploader().upload(s.getFile().getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                s.setAvatar((String) r.get("secure_url"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else{
+            s.setAvatar(s.getAvatar());
+        }
+        return this.sellerRepository.updateSeller(s);
+    }
 }

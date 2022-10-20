@@ -16,4 +16,5 @@ public interface SellerService {
     Seller getSellerById(int sellerId);
     Object[] getgeneral(int sellerId);
     List<Object[]> getSellers(String kw,int page);
+    boolean updateSeller(Seller s);
 }

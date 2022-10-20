@@ -56,7 +56,7 @@ public class ProductRepositoryImply implements ProductRepository {
         CriteriaQuery<Product> q = builder.createQuery(Product.class);
         Root root = q.from(Product.class);
         q = q.select(root);
-
+        q.where(builder.equal(root.get("isDelete"), 0));
         q.orderBy(builder.desc(root.get("id")));
 
         Query query = session.createQuery(q);
@@ -130,6 +130,8 @@ public class ProductRepositoryImply implements ProductRepository {
         }
         Predicate p1 = builder.equal(root.get("active"), 1);
         predicates.add(p1);
+        Predicate p2 = builder.equal(root.get("isDelete"), 0);
+        predicates.add(p2);
         q = q.where(predicates.toArray(new Predicate[]{}));
         q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q.distinct(true));
@@ -156,7 +158,7 @@ public class ProductRepositoryImply implements ProductRepository {
         Root root = q.from(Product.class);
         q.select(root);
 
-        q.where(builder.equal(root.get("idCategory"), cateId));
+        q.where(builder.equal(root.get("idCategory"), cateId),builder.equal(root.get("isDelete"), 0));
 
         q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q);
@@ -218,6 +220,8 @@ public class ProductRepositoryImply implements ProductRepository {
         
         Predicate p1 = builder.equal(root.get("idSeller"), sellerId);
         predicates.add(p1);
+        Predicate p2 = builder.equal(root.get("isDelete"), 0);
+        predicates.add(p2);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         q.orderBy(builder.desc(root.get("id")));
@@ -252,7 +256,7 @@ public class ProductRepositoryImply implements ProductRepository {
         Root root = q.from(Product.class);
         Root rootOD = q.from(OrderDetail.class);
      
-        q = q.where(builder.equal(rootOD.get("idProduct"), root.get("id")));
+        q = q.where(builder.equal(rootOD.get("idProduct"), root.get("id")),builder.equal(root.get("isDelete"), 0));
         q.multiselect(root.get("id"),root.get("name"),
                 root.get("price"),root,builder.count(root.get("id")));
 
@@ -273,7 +277,8 @@ public class ProductRepositoryImply implements ProductRepository {
         Root root = q.from(Product.class);
         Root rootOD = q.from(OrderDetail.class);
      
-        q = q.where(builder.and(builder.equal(rootOD.get("idProduct"), root.get("id"))),builder.equal(root.join("idSeller").get("id"), sellerId));
+        q = q.where(builder.and(builder.equal(rootOD.get("idProduct"), root.get("id"))),
+                builder.equal(root.join("idSeller").get("id"), sellerId),builder.equal(root.get("isDelete"), 0));
         q.multiselect(root.get("id"),root.get("name"),
                 root.get("price"),root,builder.count(root.get("id")));
 
@@ -355,8 +360,10 @@ public class ProductRepositoryImply implements ProductRepository {
         
         Predicate p1 = builder.equal(root.get("active"), 1);
         Predicate p2 = builder.equal(root.get("idSeller"), sellerId);
+        Predicate p3 = builder.equal(root.get("isDelete"), 0);
         predicates.add(p1);
         predicates.add(p2);
+        predicates.add(p3);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         Query query = session.createQuery(q);

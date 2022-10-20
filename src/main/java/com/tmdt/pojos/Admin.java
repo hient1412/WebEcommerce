@@ -34,8 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Admin.findAll", query = "SELECT a FROM Admin a"),
     @NamedQuery(name = "Admin.findById", query = "SELECT a FROM Admin a WHERE a.id = :id"),
-    @NamedQuery(name = "Admin.findByName", query = "SELECT a FROM Admin a WHERE a.name = :name"),
-    @NamedQuery(name = "Admin.findByIsDeleted", query = "SELECT a FROM Admin a WHERE a.isDeleted = :isDeleted")})
+    @NamedQuery(name = "Admin.findByName", query = "SELECT a FROM Admin a WHERE a.name = :name")})
 public class Admin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,10 +62,6 @@ public class Admin implements Serializable {
     @NotNull
     @Column(name = "gender")
     private String gender;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "is_deleted")
-    private int isDeleted;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAdmin")
     private Collection<Voucher> voucherCollection;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
@@ -80,10 +75,9 @@ public class Admin implements Serializable {
         this.id = id;
     }
 
-    public Admin(Integer id, String name, int isDeleted) {
+    public Admin(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.isDeleted = isDeleted;
     }
 
     public Integer getId() {
@@ -100,14 +94,6 @@ public class Admin implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
     }
 
     @XmlTransient

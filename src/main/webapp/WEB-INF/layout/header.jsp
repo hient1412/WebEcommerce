@@ -26,7 +26,7 @@
                                     <li><a href="<c:url value="/seller/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý công việc</a></li>
                                     <li><a href="<c:url value="/seller-detail/${pageContext.session.getAttribute('currentSeller').id}"/>"><i class="fa-solid fa-store"></i> Hồ sơ cửa hàng</a></li>
                                     <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
-                                    <li><a href="<c:url value="/admin/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
+                                    <li><a href="<c:url value="/seller/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
                                     </c:if>
                                     <c:if test="${pageContext.session.getAttribute('current').active == 0}">
                                     <li style="margin-left: 15px; color: red"><i class="fa fa-briefcase"></i>(Chưa kích hoạt)</li>
@@ -38,16 +38,16 @@
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link"><img src="${pageContext.session.getAttribute('currentCustomer').getAvatar()}">${pageContext.request.userPrincipal.name}</a>
                             <ul class="dropdown-menu">
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
-                                <li><a href="<c:url value="/candidate/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
+                                <li><a href="<c:url value="/customer/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
                                 <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </c:if>
                         <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_ADMIN')}">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle user-action nav-link"><span>${pageContext.request.userPrincipal.name}</span>(${pageContext.session.getAttribute('current').role})</a>
                             <ul class="dropdown-menu">
+                                <li><a href="<c:url value="/admin/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý</a></li>
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                 <li><a href="<c:url value="/admin/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
-                                <li><a href="<c:url value="/admin/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý</a></li>
                                 <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </c:if>
