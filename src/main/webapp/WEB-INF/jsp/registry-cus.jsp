@@ -20,6 +20,11 @@
     <div class="login-form">
         <form:form action="${action}" method="post" modelAttribute="customer" enctype="multipart/form-data">
             <h1 class="p-4 center text-uppercase">Thêm thông tin<br>khách hàng</h1>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
                 <form:input hidden="true" path="idAccount" value="${ac.id}"/>
             <div class="form-group row">
                 <div class="col">
@@ -37,11 +42,11 @@
             </div>
             <div class="form-group">
                 <label for="inputEmail">Email</label>
-                <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email"/>
+                <form:input type="email" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
             </div>
             <div class="form-group">
                 <label for="inputPhone">Số điện thoại</label>
-                <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone"/>
+                <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone" required="required"/>
             </div>
             <div class="form-group">
                 <label for="avatar">Avatar</label>
@@ -72,11 +77,6 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Xong</button>
             </div>
-            <c:if test="${errMessage != null}">
-                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                    ${errMessage}
-                </div>
-            </c:if>
         </form:form>
     </div>
 </body>

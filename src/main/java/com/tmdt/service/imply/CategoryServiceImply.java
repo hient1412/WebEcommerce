@@ -50,5 +50,10 @@ public class CategoryServiceImply implements CategoryService{
     public boolean updateCate(Category c) {
         return this.categoryRepository.updateCate(c);
     }
+
+    @Override
+    public List<Category> getCates(String name) {
+        return this.categoryRepository.getCates(name);
+    }
     
 }

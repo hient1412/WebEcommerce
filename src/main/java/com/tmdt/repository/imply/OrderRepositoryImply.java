@@ -96,41 +96,45 @@ public class OrderRepositoryImply implements OrderRepository {
 
     }
 
-//    @Override
-//    @Transactional(propagation = Propagation.REQUIRED)
-//    public boolean addReceipt(Map<Integer, Cart> cart) {
-//        try {
-//            Session session = this.sessionFactoryBean.getObject().getCurrentSession();
-//            Orders order = new Orders();
-//
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            order.setIdCustomer(this.accountRepository.getAcByUsername(authentication.getName()).getCustomer());
-//
-//            order.setOrderDate(new Date());
-//            order.setRequiredDate(new Date());
-//            order.setActive(1);
-//            order.setIsPayment(0);
-//            order.setAmount(0);
-//            
-//
-//            Map<String, String> amount = Utils.cartAmount(cart);
-//            order.setAmount(Long.parseLong(amount.get("amount")));
-//
-//            session.save(order);
-//
-//            for (Cart c : cart.values()) {
-//                OrderDetail detail = new OrderDetail();
-//                detail.setIdOrder(order);
-//                detail.setIdProduct(this.productRepository.getProductById(c.getProductId()));
-//                detail.setUnitPrice(c.getPrice());
-//                detail.setQuantity(c.getCount());
-//                session.save(detail);
-//            }
-//
-//            return true;
-//        } catch (HibernateException ex) {
-//            ex.printStackTrace();
-//        }
-//        return false;
-//    }
+    @Override
+    public List<Orders> getOrderByCusId(Map<String, String> params, int cusId, int page) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Orders> q = builder.createQuery(Orders.class);
+        Root root = q.from(Orders.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        String idOrder = params.get("idOrder");
+        if (!idOrder.isEmpty()) {
+            Predicate p = builder.equal(root.get("id"), Integer.parseInt(idOrder));
+            predicates.add(p);
+        }
+        String namePro = params.get("namePro");
+        if (!namePro.isEmpty()) {
+            Predicate p = builder.like(root.join("orderDetailCollection").join("idProduct").get("name").as(String.class), String.format("%%%s%%", namePro));
+            predicates.add(p);
+        }
+        String active = params.get("active");
+        if (!active.isEmpty()) {
+            Predicate p = builder.equal(root.get("active"), active);
+            predicates.add(p);
+        }
+        String nameSel = params.get("nameSel");
+        if (!nameSel.isEmpty()) {
+            Predicate p = builder.like(root.join("sellerOrderCollection").join("idSeller").get("name").as(String.class), String.format("%%%s%%", nameSel));
+            predicates.add(p);
+        }
+        Predicate p1 = builder.equal(root.get("idCustomer"), cusId);
+        predicates.add(p1);
+        q = q.where(predicates.toArray(new Predicate[]{}));
+        q.groupBy(root.get("id"));
+        Query query = session.createQuery(q);
+        if (page > 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            query.setMaxResults(size);
+            query.setFirstResult((page - 1) * size);
+        }
+        return query.getResultList();
+    }
 }

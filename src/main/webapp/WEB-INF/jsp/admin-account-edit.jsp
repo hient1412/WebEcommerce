@@ -10,6 +10,12 @@
 <div class="p-5">
     <div class="white-box">
         <form:form action="${action}" modelAttribute="ac" method="post">
+            <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
             <h1 class="text-center">Sửa tài khoản</h1>
             <div class="form-group">
                 <label>Tên đăng nhập</label>
@@ -37,11 +43,6 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Sửa</button>
             </div>
-            <c:if test="${errMessage != null}">
-                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                    ${errMessage}
-                </div>
-            </c:if>
         </form:form>
     </div>
 </div>

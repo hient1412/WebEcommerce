@@ -5,6 +5,7 @@
 package com.tmdt.repository;
 
 import com.tmdt.pojos.Customer;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ public interface CustomerRepository {
     boolean addCus(Customer cus);
     Customer getCusById(int id);
     boolean updateCustomer(Customer c);
+    List<Customer> getCusEmail(String email);
+    List<Customer> getCusPhone(String phone);
 }

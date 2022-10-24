@@ -80,6 +80,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Tìm kiếm cửa hàng" />
         <put-attribute name="content" value="/WEB-INF/jsp/sellers.jsp" />
     </definition>
+    <definition name="list-cus-order" extends="baseLayout">
+        <put-attribute name="title" value="Danh sách đơn mua hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/list-cus-order.jsp" />
+    </definition>
     <definition name="search" extends="baseLayout">
         <put-attribute name="title" value="Tìm kiếm sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/search.jsp" />

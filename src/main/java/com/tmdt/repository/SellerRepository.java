@@ -17,4 +17,5 @@ public interface SellerRepository {
     Object[] getgeneral(int sellerId);
     List<Object[]> getSellers(String kw,int page);
     boolean updateSeller(Seller s);
+    Object[] getSeller(int idOrder);
 }

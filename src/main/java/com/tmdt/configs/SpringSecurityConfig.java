@@ -31,7 +31,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     "com.tmdt.controllers",
     "com.tmdt.repository",
     "com.tmdt.service",
-    "com.tmdt.handler"
+    "com.tmdt.handler",
+    "com.tmdt.validator"
 })
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     

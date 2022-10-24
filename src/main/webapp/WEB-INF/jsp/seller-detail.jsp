@@ -65,9 +65,6 @@
                     <c:forEach items="${productBySeller}" var="p">
                         <div class="col-md-3 col-sm-6">
                             <div class="white-box mt-3">
-                                <div class="wishlist-icon">
-                                    <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
-                                </div>
                                 <div class="product-img">
                                     <img src="${p.imageCollection.get(0).image}">
                                 </div>

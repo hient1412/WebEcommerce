@@ -14,6 +14,12 @@
             </div>
         </div>
         <form:form action="" method="post" modelAttribute="category">
+            <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
             <div class="form-group">
                 <label>Tên loại sản phẩm</label>
                 <form:input type="text" path="name" class="form-control" autocomplete="off"/>

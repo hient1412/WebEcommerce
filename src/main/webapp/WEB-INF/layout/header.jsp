@@ -39,6 +39,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                 <li><a href="<c:url value="/customer/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
+                                <li><a href="<c:url value="/customer/list-cus-order"/>"><i class="fa-regular fa-file"></i>  Đơn hàng</a></li>
                                 <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </c:if>

@@ -88,5 +88,10 @@ public class AccountServiceImply implements AccountService{
         return this.accountRepository.deleteAc(ac);
     }
 
+    @Override
+    public List<Account> getAcUserNameList(String username) {
+        return this.accountRepository.getAcUserNameList(username);
+    }
+
 
 }

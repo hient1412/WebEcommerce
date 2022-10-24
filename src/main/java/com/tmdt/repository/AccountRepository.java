@@ -20,5 +20,6 @@ public interface AccountRepository {
     boolean updateAc(Account ac);
     Account getAcByUsername(String username);
     boolean deleteAc(Account ac);
+    List<Account> getAcUserNameList(String username);
     
 }

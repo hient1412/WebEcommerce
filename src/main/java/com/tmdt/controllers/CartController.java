@@ -31,6 +31,8 @@ public class CartController {
             model.addAttribute("cartProducts", null);
         }
 
+        model.addAttribute("cartAmount", Utils.cartAmount(cartProduct));
+        
         return "cart";
     }
 }

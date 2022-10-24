@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="cart mt-4 align-items-center">
-                        <a class="btn btn-dark text-uppercase mr-2 px-4" href="javascript:;" class="btn btn-warning" onclick="addProductIntoCart(${product.id}, '${product.name}', ${product.price})">Thêm vào giỏ hàng</a>
+                        <a class="btn btn-dark text-uppercase mr-2 px-4" href="javascript:;" class="btn btn-warning" onclick="addProductIntoCart(${product.id}, '${product.name}', '${product.imageCollection.get(0).image}', ${product.price})">Thêm vào giỏ hàng</a>
                         <button class="btn btn-dark text-uppercase mr-2 px-4">Mua ngay</button>
                     </div>
                 </div>
@@ -68,9 +68,6 @@
                 <c:forEach items="${buyALotSeller}" var="p">
                     <div class="col-md-3 col-sm-6">
                         <div class="white-box mt-3">
-                            <div class="wishlist-icon">
-                                <img src="https://pngimage.net/wp-content/uploads/2018/06/wishlist-icon-png-3.png"/>
-                            </div>
                             <div class="product-img">
                                 <img src="${p[3].imageCollection.get(0).image}">
                             </div>

@@ -71,4 +71,9 @@ public class SellerServiceImply implements SellerService{
         }
         return this.sellerRepository.updateSeller(s);
     }
+
+    @Override
+    public Object[] getSeller(int idOrder) {
+        return this.sellerRepository.getSeller(idOrder);
+    }
 }

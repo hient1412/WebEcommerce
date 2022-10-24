@@ -5,6 +5,7 @@
 package com.tmdt.repository;
 
 import com.tmdt.pojos.Admin;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ public interface AdminRepository {
     boolean addAdmin(Admin ad);
     Admin getAdById(int id);
     boolean updateAdmin(Admin ad);
+    List<Admin> getAdEmail(String email);
+    List<Admin> getAdPhone(String phone);
 }

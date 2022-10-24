@@ -18,4 +18,5 @@ public interface CategoryRepository {
     List<Category> getCates(int page);
     boolean addCate(Category c);
     boolean updateCate(Category c);
+    List<Category> getCates(String name);
 }

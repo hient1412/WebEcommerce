@@ -5,6 +5,7 @@
 package com.tmdt.service;
 
 import com.tmdt.pojos.Admin;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ public interface AdminService {
     boolean addAdmin(Admin ad);
     Admin getAdById(int id);
     boolean updateAdmin(Admin ad);
+    List<Admin> getAdEmail(String email);
+    List<Admin> getAdPhone(String phone);
 }

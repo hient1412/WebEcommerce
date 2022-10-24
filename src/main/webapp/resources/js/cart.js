@@ -4,13 +4,14 @@
  */
 
 
-function addProductIntoCart(id, name, price) {
+function addProductIntoCart(id, name, img, price) {
     event.preventDefault();
     fetch("/WebEcommerce/api/cart/", {
         method: 'post',
         body: JSON.stringify({
             "productId": id,
             "productName": name,
+            "img": img,
             "price": price,
             "count": 1
         }),
@@ -40,8 +41,11 @@ function updateCart(obj, id) {
     }).then(function (res) {
         return res.json();
     }).then(function (data) {
-        let counter = document.getElementById("cartCounter");
-        counter.innerText = data;
+        let counter = document.getElementById("cartCounter")
+        counter.innerText = data.counter
+        let amount = document.getElementById("cartAmount")
+        amount.innerText = data.amount
+        location.reload();
     });
 }
 function deleteItemInCart(id) {
@@ -51,9 +55,10 @@ function deleteItemInCart(id) {
         }).then(function (res) {
             return res.json();
         }).then(function (data) {
-            let counter = document.getElementById("cartCounter");
-            counter.innerText = data;
-//        location.reload()
+            let counter = document.getElementById("cartCounter")
+            counter.innerText = data.counter
+            let amount = document.getElementById("cartAmount")
+            amount.innerText = data.amount
             let row = document.getElementById(`product${id}`);
             row.style.display = "none";
             location.reload();

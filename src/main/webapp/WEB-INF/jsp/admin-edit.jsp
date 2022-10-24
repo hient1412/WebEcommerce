@@ -12,6 +12,12 @@
     <div class="card">
         <div class="card-body">
             <form:form action="${action}" method="post" modelAttribute="admin">
+                <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
+                <c:if test="${errMessage != null}">
+                    <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                        ${errMessage}
+                    </div>
+                </c:if>
                 <h1 class="p-4 center text-uppercase">CHỈNH SỬA THÔNG TIN CÁ NHÂN</h1>
                 <form:input hidden="true" path="id" value="${admin.id}"/>
                 <div class="form-group">
@@ -20,11 +26,11 @@
                 </div>
                 <div class="form-group">
                     <label for="inputEmail">Email</label>
-                    <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email"/>
-                </div>
+                    <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
+                </div> 
                 <div class="form-group">
                     <label for="inputPhone">Số điện thoại</label>
-                    <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone"/>
+                    <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone" required="required"/>
                 </div>
                 <div class="form-group">
                     <label for="gender">Giới tính:</label>
@@ -38,11 +44,6 @@
                     <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Xong</button>
                 </div>
             </form:form>
-            <c:if test="${errMessage != null}">
-                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                    ${errMessage}
-                </div>
-            </c:if>
         </div>
     </div>
 </div>

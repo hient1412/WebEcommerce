@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class Cart {
     private int productId;
     private String productName;
+    private String img;
     private Long price;
     private int count;
 
@@ -70,5 +71,19 @@ public class Cart {
      */
     public void setCount(int count) {
         this.count = count;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 }

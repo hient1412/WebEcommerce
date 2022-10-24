@@ -8,6 +8,7 @@ import com.tmdt.pojos.Customer;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Admin;
+import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Seller;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.AdminService;
@@ -18,15 +19,18 @@ import com.tmdt.service.LocationService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.utils.Utils;
+import com.tmdt.validator.AccountValidator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+import org.hibernate.annotations.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -55,6 +59,8 @@ public class HomeController {
     @Autowired
     private AdminService adminService;
     @Autowired
+    private AccountValidator accountValidator;
+    @Autowired
     private LocationService locationService;
     @Autowired
     private ProductService productService;
@@ -70,7 +76,7 @@ public class HomeController {
 
     @GetMapping("/seller-detail/{sellerId}")
     public String sellerDetail(Model model, @PathVariable(value = "sellerId") int sellerId,
-            @RequestParam(required = false) Map<String, String> params) {
+            @RequestParam(required = false) Map<String, String> params, HttpSession s) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Map<String, String> pre = new HashMap<>();
         pre.put("sort", params.getOrDefault("sort", ""));
@@ -81,12 +87,13 @@ public class HomeController {
         model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(sellerId));
         model.addAttribute("productBySeller", this.productService.getProductBySeller(pre, sellerId, page));
         model.addAttribute("counterS", this.productService.getProductBySeller(pre, sellerId, 0).size());
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("count", env.getProperty("page.size"));
         return "seller-detail";
     }
 
     @GetMapping("/")
-    public String home(Model model, @RequestParam(required = false) Map<String, String> params) {
+    public String home(Model model, @RequestParam(required = false) Map<String, String> params, HttpSession s) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Map<String, String> pre = new HashMap<>();
         pre.put("kw", params.getOrDefault("kw", ""));
@@ -108,12 +115,13 @@ public class HomeController {
             model.addAttribute("counterS", this.productService.getProductByCateId(Integer.parseInt(cateId), 0).size());
         }
         model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         return "home";
     }
-    
+
     @GetMapping("/search")
     public String search(Model model,
-            @RequestParam(required = false) Map<String, String> params) {
+            @RequestParam(required = false) Map<String, String> params, HttpSession s) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         model.addAttribute("categories", this.categoryService.getCates());
 
@@ -135,15 +143,17 @@ public class HomeController {
         model.addAttribute("kw", params.getOrDefault("kw", ""));
         model.addAttribute("count", env.getProperty("page.size"));
         model.addAttribute("categories", this.categoryService.getCates());
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("locations", this.locationService.getLos());
         return "search";
     }
 
     @GetMapping("/product-detail/{productId}")
-    public String productDetail(Model model, @PathVariable(value = "productId") int productId) {
+    public String productDetail(Model model, @PathVariable(value = "productId") int productId, HttpSession s) {
         model.addAttribute("product", this.productService.getProductById(productId));
         model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
         model.addAttribute("image", this.imageService.getImageByProductId(productId));
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")),
                 this.productService.getProductById(productId).getIdSeller().getId()));
 
@@ -151,17 +161,18 @@ public class HomeController {
     }
 
     @GetMapping("/sellers")
-    public String sellers(Model model, @RequestParam(required = false) Map<String, String> params) {
+    public String sellers(Model model, @RequestParam(required = false) Map<String, String> params, HttpSession s) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         String kw = params.getOrDefault("kw", "");
         model.addAttribute("sellers", this.sellerService.getSellers(kw, page));
         model.addAttribute("counterS", this.sellerService.getSellers(kw, 0).size());
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("count", env.getProperty("page.size"));
         return "sellers";
     }
 
     @GetMapping("/personal")
-    public String personal(Model model, Authentication authentication) {
+    public String personal(Model model, Authentication authentication, HttpSession s) {
         Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
         model.addAttribute("ac", ac);
         try {
@@ -175,6 +186,7 @@ public class HomeController {
         } catch (Exception e) {
             return "redirect:/";
         }
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         return "personal";
     }
 
@@ -185,8 +197,12 @@ public class HomeController {
     }
 
     @PostMapping("/registry")
-    public ModelAndView registry(Model model, @ModelAttribute(value = "account") Account ac) {
-        String errMessage = "";
+    public ModelAndView registry(Model model, @ModelAttribute(value = "account") Account ac,
+            BindingResult br) {
+        accountValidator.validate(ac, br);
+        if (br.hasErrors()) {
+            return new ModelAndView("registry");
+        }
         if (ac.getPassword().equals(ac.getConfirmPassword())) {
             if (ac.getRole().equals("ROLE_SELLER")) {
                 ac.setActive(0);
@@ -200,12 +216,11 @@ public class HomeController {
                     return new ModelAndView("redirect:/registry/sel", "id", ac.getId());
                 }
             } else {
-                errMessage = "Có lỗi!!";
+                model.addAttribute("errMessage", "Có lỗi xảy ra không thể đăng ký tài khoản!!");
             }
         } else {
-            errMessage = "Không khớp mật khẩu!!";
+            model.addAttribute("errMessage", "Mật khẩu không khớp!!");
         }
-        model.addAttribute("errMessage", errMessage);
         return new ModelAndView("registry");
     }
 
@@ -227,6 +242,8 @@ public class HomeController {
             } else {
                 return "redirect:/admin/account";
             }
+        } else {
+            model.addAttribute("errMessage", "Có lỗi xảy ra đăng ký không thành công!!");
         }
         model.addAttribute("action", "/registry/cus");
         return "registry-cus";

@@ -15,6 +15,9 @@ import com.tmdt.service.CategoryService;
 import com.tmdt.service.CustomerService;
 import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
+import com.tmdt.validator.AccountValidator;
+import com.tmdt.validator.AdminValidator;
+import com.tmdt.validator.CategoryValidator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +52,12 @@ public class AdminController {
     private AccountService userDetailsService;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private CategoryValidator categoryValidator;
+    @Autowired
+    private AdminValidator adminValidator;
+    @Autowired
+    private AccountValidator accountValidator;
     @Autowired
     private SellerService sellerService;
     @Autowired
@@ -142,13 +152,22 @@ public class AdminController {
 
     @PostMapping("/product-cate/add")
     public String productCateAdd(Model model, @ModelAttribute(value = "category") Category cate,
-            RedirectAttributes r) {
-        cate.setIsDelete(0);
-        if (this.categoryService.addCate(cate) == true) {
-            r.addFlashAttribute("errMessage", String.format("Thêm thành công loại sản phẩm '%s'", cate.getName()));
-            return "redirect:/admin/product-cate";
+            RedirectAttributes r, BindingResult br) {
+        categoryValidator.validate(cate, br);
+        if (br.hasErrors()) {
+            return "product-cate-add";
         } else {
-            model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể thêm loại sản phẩm '%s'", cate.getName()));
+            if (this.categoryService.getCates(cate.getName()).size() > 0) {
+                model.addAttribute("errMessage", "Tên loại sản phẩm này đã tồn tại!!");
+            } else {
+                cate.setIsDelete(0);
+                if (this.categoryService.addCate(cate) == true) {
+                    r.addFlashAttribute("errMessage", String.format("Thêm thành công loại sản phẩm '%s'", cate.getName()));
+                    return "redirect:/admin/product-cate";
+                } else {
+                    model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể thêm loại sản phẩm '%s'", cate.getName()));
+                }
+            }
         }
         return "product-cate-add";
     }
@@ -161,17 +180,37 @@ public class AdminController {
 
     @PostMapping("/product-cate/edit")
     public String productCateEdit(Model model, @ModelAttribute(value = "category") Category cate,
-            RedirectAttributes r) {
-        cate.setIsDelete(0);
-        if (this.categoryService.updateCate(cate) == true) {
-            r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công loại sản phẩm '%s'", cate.getName()));
-            return "redirect:/admin/product-cate";
+            RedirectAttributes r, BindingResult br) {
+        Category cateOld = this.categoryService.getCateById(cate.getId());
+        categoryValidator.validate(cate, br);
+        if (br.hasErrors()) {
+            return "product-cate-edit";
         } else {
-            model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa loại sản phẩm");
+            if (!cateOld.getName().equals(cate.getName())) {
+                if (this.categoryService.getCates(cate.getName()).size() > 0) {
+                    model.addAttribute("errMessage", "Tên loại sản phẩm này đã tồn tại!!");
+                } else {
+                    cate.setIsDelete(0);
+                    if (this.categoryService.updateCate(cate) == true) {
+                        r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công loại sản phẩm '%s'", cate.getName()));
+                        return "redirect:/admin/product-cate";
+                    } else {
+                        model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa loại sản phẩm");
+                    }
+                }
+            } else {
+                cate.setIsDelete(0);
+                if (this.categoryService.updateCate(cate) == true) {
+                    r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công loại sản phẩm '%s'", cate.getName()));
+                    return "redirect:/admin/product-cate";
+                } else {
+                    model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa loại sản phẩm");
+                }
+            }
         }
         return "product-cate-edit";
     }
-    
+
     @GetMapping("/product-cate/delete")
     public String productCateDelete(Model model, @RequestParam(name = "id") int id,
             RedirectAttributes r) {
@@ -185,7 +224,7 @@ public class AdminController {
         }
         return "redirect:/admin/product-cate";
     }
-    
+
     @GetMapping("/edit")
     public String adminEditView(Model model, Authentication authentication) {
         Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
@@ -194,16 +233,45 @@ public class AdminController {
     }
 
     @PostMapping("/edit")
-    public String adminEdit(Model model, @ModelAttribute(value = "admin") Admin admin, RedirectAttributes r) {
-        if (this.adminService.updateAdmin(admin) == true) {
-            r.addFlashAttribute("errMessage", "Cập nhật thông tin thành công");
-            return "redirect:/personal";
+    public String adminEdit(Model model, @ModelAttribute(value = "admin") Admin admin,
+            RedirectAttributes r, BindingResult br) {
+        Admin adminOld = this.adminService.getAdById(admin.getId());
+        adminValidator.validate(admin, br);
+        if (br.hasErrors()) {
+            return "admin-edit";
         } else {
-            model.addAttribute("errMessage", "Có lỗi xảy ra không thể cập nhật thông tin");
+            if (!adminOld.getEmail().equals(admin.getEmail())) {
+                if (this.adminService.getAdEmail(admin.getEmail()).size() > 0) {
+                    model.addAttribute("errMessage", "Email đã tồn tại!!");
+                } else {
+                    if (this.adminService.updateAdmin(admin) == true) {
+                        r.addFlashAttribute("errMessage", "Cập nhật thông tin thành công");
+                        return "redirect:/personal";
+                    } else {
+                        model.addAttribute("errMessage", "Có lỗi xảy ra không thể cập nhật thông tin");
+                    }
+                }
+            } else if (!adminOld.getPhone().equals(admin.getPhone())) {
+                if (this.adminService.getAdPhone(admin.getPhone()).size() > 0) {
+                    model.addAttribute("errMessage", "Số điện thoại đã tồn tại!!");
+                } else {
+                    if (this.adminService.updateAdmin(admin) == true) {
+                        r.addFlashAttribute("errMessage", "Cập nhật thông tin thành công");
+                        return "redirect:/personal";
+                    } else {
+                        model.addAttribute("errMessage", "Có lỗi xảy ra không thể cập nhật thông tin");
+                    }
+                }
+            } else if (this.adminService.updateAdmin(admin) == true) {
+                r.addFlashAttribute("errMessage", "Cập nhật thông tin thành công");
+                return "redirect:/personal";
+            } else {
+                model.addAttribute("errMessage", "Có lỗi xảy ra không thể cập nhật thông tin");
+            }
         }
         return "admin-edit";
     }
-    
+
     @GetMapping("/account")
     public String account(Model model, @RequestParam(required = false) Map<String, String> params) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
@@ -225,17 +293,24 @@ public class AdminController {
 
     @PostMapping("/account/add")
     public String addAccount(Model model, @ModelAttribute(value = "ac") Account ac,
-            RedirectAttributes r) {
-        if (this.userDetailsService.addAccount(ac)) {
-            if (ac.getRole().equals("ROLE_CUSTOMER")) {
-                return "redirect:/registry/cus?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
-            } else if(ac.getRole().equals("ROLE_SELLER")){
-                return "redirect:/registry/sel?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
-            } else {
-                return "redirect:/registry/admin?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
-            } 
+            RedirectAttributes r, BindingResult br) {
+        accountValidator.validate(ac, br);
+        if (br.hasErrors()) {
+            return "admin-account-add";
         } else {
-            r.addFlashAttribute("errMessage", "Có lỗi xảy ra không thể thêm tài khoản");
+            if (this.userDetailsService.getAcUserNameList(ac.getUsername()).size() > 0) {
+                model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+            } else if (this.userDetailsService.addAccount(ac)) {
+                if (ac.getRole().equals("ROLE_CUSTOMER")) {
+                    return "redirect:/registry/cus?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
+                } else if (ac.getRole().equals("ROLE_SELLER")) {
+                    return "redirect:/registry/sel?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
+                } else {
+                    return "redirect:/registry/admin?id=" + this.userDetailsService.getAcByUsername(ac.getUsername()).getId();
+                }
+            } else {
+                model.addAttribute("errMessage", "Có lỗi xảy ra không thể thêm tài khoản");
+            }
         }
         return "admin-account-add";
     }
@@ -249,19 +324,36 @@ public class AdminController {
 
     @PostMapping("/account/edit")
     public String updateAccount(Model model, @ModelAttribute(value = "ac") Account account,
-            RedirectAttributes r) {
-        if (this.userDetailsService.updateAc(account) == true) {
-            r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+            RedirectAttributes r, BindingResult br) {
+        Account accountOld = this.userDetailsService.getAcById(account.getId());
+        accountValidator.validate(account, br);
+        if (br.hasErrors()) {
+            return "admin-account-edit";
         } else {
-            r.addFlashAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+            if (!accountOld.getUsername().equals(account.getUsername())) {
+                if (this.userDetailsService.getAcUserNameList(account.getUsername()).size() > 0) {
+                    model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+                } else {
+                    if (this.userDetailsService.updateAc(account) == true) {
+                        r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                        return "redirect:/admin/account";
+                    } else {
+                        model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                    }
+                }
+            } else if (this.userDetailsService.updateAc(account) == true) {
+                r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                return "redirect:/admin/account";
+            } else {
+                model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+            }
         }
-        return "redirect:/admin/account";
+        return "admin-account-edit";
     }
-    
-    
+
     @GetMapping("/account/delete")
-    public String deleteTK(Model model,@RequestParam(name = "id") int id,
-                RedirectAttributes r) {
+    public String deleteTK(Model model, @RequestParam(name = "id") int id,
+            RedirectAttributes r) {
         String errMessage = "";
         Account ac = this.userDetailsService.getAcById(id);
         if (this.userDetailsService.deleteAc(ac) == true) {

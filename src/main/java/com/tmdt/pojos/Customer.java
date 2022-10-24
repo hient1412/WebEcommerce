@@ -30,7 +30,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -81,25 +80,23 @@ public class Customer implements Serializable {
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 25)
+    @Size(min = 4, max = 25)
     @Column(name = "first_name")
     private String firstName;
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 4, max = 25)
     @Column(name = "last_name")
     private String lastName;
     @JsonIgnore
     @Basic(optional = false)
-    @Null
-    @Size(min = 1, max = 20)
+    @Size(max = 20)
     @Column(name = "email")
     private String email;
     @JsonIgnore
     @Basic(optional = false)
-    @Null
-    @Size(min = 1, max = 15)
+    @Size(max = 15)
     @Column(name = "phone")
     private String phone;
     @JsonIgnore
@@ -107,21 +104,21 @@ public class Customer implements Serializable {
     @NotNull
     @Column(name = "dob")
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
     @JsonIgnore
-    @Basic(optional = false)
     @NotNull
+    @Basic(optional = false)
+    @Size(max = 5)
     @Column(name = "gender")
     private String gender;
     @JsonIgnore
     @Basic(optional = false)
-    @Null
-    @Size(min = 1, max = 150)
+    @Size(max = 150)
     @Column(name = "description")
     private String description;
     @Lob
-    @Size(max = 65535)
+    @Size(max = 150)
     @Column(name = "avatar")
     private String avatar;
     @JsonIgnore

@@ -46,7 +46,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Voucher.findByIsDelected", query = "SELECT v FROM Voucher v WHERE v.isDelected = :isDelected")})
 public class Voucher implements Serializable {
 
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "amount")
     private Double amount;
 

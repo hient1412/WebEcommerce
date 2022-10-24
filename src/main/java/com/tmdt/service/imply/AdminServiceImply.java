@@ -7,6 +7,7 @@ package com.tmdt.service.imply;
 import com.tmdt.pojos.Admin;
 import com.tmdt.repository.AdminRepository;
 import com.tmdt.service.AdminService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,16 @@ public class AdminServiceImply implements AdminService{
     @Override
     public boolean updateAdmin(Admin ad) {
         return this.adminRepository.updateAdmin(ad);
+    }
+
+    @Override
+    public List<Admin> getAdEmail(String email) {
+        return this.adminRepository.getAdEmail(email);
+    }
+
+    @Override
+    public List<Admin> getAdPhone(String phone) {
+        return this.adminRepository.getAdPhone(phone);
     }
     
 }

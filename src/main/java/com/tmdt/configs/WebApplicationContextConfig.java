@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -34,7 +36,8 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = {
     "com.tmdt.controllers",
     "com.tmdt.repository",
-    "com.tmdt.service"
+    "com.tmdt.service",
+    "com.tmdt.validator"
 })
 public class WebApplicationContextConfig implements WebMvcConfigurer {
 
@@ -59,6 +62,18 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("/images/**").addResourceLocations("/resources/images/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+    }
+    
+    
+    @Override
+    public Validator getValidator() {
+        return validator();
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validator(){
+        LocalValidatorFactoryBean v = new LocalValidatorFactoryBean();
+        return v;
     }
     
     @Bean

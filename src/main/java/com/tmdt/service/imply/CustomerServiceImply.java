@@ -6,11 +6,13 @@ package com.tmdt.service.imply;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Customer;
 import com.tmdt.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 import com.tmdt.service.CustomerService;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,11 +38,11 @@ public class CustomerServiceImply implements CustomerService {
                 ex.printStackTrace();
             }
         } else if ("Nam".equals(cus.getGender())) {
-            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/Avatar-Facebook-tr%E1%BA%AFng.jpg"); 
+            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/Avatar-Facebook-tr%E1%BA%AFng.jpg");
         } else if ("Nữ".equals(cus.getGender())) {
-            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/%E1%BA%A2nh-%C4%91%E1%BA%A1i-di%E1%BB%87n-FB-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh-n%E1%BB%AF.jpg");   
+            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/%E1%BA%A2nh-%C4%91%E1%BA%A1i-di%E1%BB%87n-FB-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh-n%E1%BB%AF.jpg");
         } else {
-            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/%E1%BA%A2nh-%C4%91%E1%BA%A1i-di%E1%BB%87n-FB-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh-n%E1%BB%AF.jpg");     
+            cus.setAvatar("https://scr.vn/wp-content/uploads/2020/07/%E1%BA%A2nh-%C4%91%E1%BA%A1i-di%E1%BB%87n-FB-m%E1%BA%B7c-%C4%91%E1%BB%8Bnh-n%E1%BB%AF.jpg");
         }
         return this.customerRepository.addCus(cus);
     }
@@ -59,10 +61,20 @@ public class CustomerServiceImply implements CustomerService {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        } else{
+        } else {
             c.setAvatar(c.getAvatar());
         }
         return this.customerRepository.updateCustomer(c);
+    }
+
+    @Override
+    public List<Customer> getCusEmail(String email) {
+        return this.customerRepository.getCusEmail(email);
+    }
+
+    @Override
+    public List<Customer> getCusPhone(String phone) {
+        return this.customerRepository.getCusPhone(phone);
     }
 
 }

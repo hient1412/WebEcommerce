@@ -25,4 +25,8 @@ public class OrderServiceImply implements OrderService{
     public List<Orders> getOrderBySellerId(Map<String, String> params, int sellerId, int page) {
         return this.orderRepository.getOrderBySellerId(params, sellerId, page);
     }
+    @Override
+    public List<Orders> getOrderByCusId(Map<String, String> params, int cusId, int page) {
+        return this.orderRepository.getOrderByCusId(params, cusId, page);
+    }
 }

@@ -118,5 +118,20 @@ public class CategoryRepositoryImply implements CategoryRepository{
         }
         return false;
     }
+
+    @Override
+    public List<Category> getCates(String name) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Category> q = builder.createQuery(Category.class);
+        Root root = q.from(Category.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("name"), name), builder.equal(root.get("isDelete"), 0));
+        
+        Query query = session.createQuery(q);
+
+        return query.getResultList();
+    }
     
 }

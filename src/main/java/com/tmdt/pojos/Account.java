@@ -59,7 +59,7 @@ public class Account implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
+    @Size(min = 1, max = 30)
     @Column(name = "username")
     private String username;
     @JsonIgnore
@@ -71,7 +71,7 @@ public class Account implements Serializable {
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 15)
+    @Size(min = 1, max = 20)
     @Column(name = "role")
     private String role;
     @Column(name = "active")

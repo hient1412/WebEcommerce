@@ -5,7 +5,16 @@
 package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Seller;
 import com.tmdt.repository.CustomerRepository;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CustomerRepositoryImply implements CustomerRepository{
+public class CustomerRepositoryImply implements CustomerRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactoryBean;
-    
+
     @Override
     public boolean addCus(Customer cus) {
         Session s = this.sessionFactoryBean.getObject().getCurrentSession();
@@ -51,18 +60,48 @@ public class CustomerRepositoryImply implements CustomerRepository{
             customer.setLastName(c.getLastName());
             customer.setDob(c.getDob());
             customer.setEmail(c.getEmail());
+            customer.setPhone(c.getPhone());
             customer.setAvatar(c.getAvatar());
             customer.setDescription(c.getDescription());
             customer.setGender(c.getGender());
             customer.setLocation(c.getLocation());
             s.update(customer);
-            
+
             return true;
         } catch (HibernateException ex) {
             System.err.println(ex.getMessage());
         }
         return false;
     }
-    
-    
+
+    @Override
+    public List<Customer> getCusEmail(String email) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Customer> q = builder.createQuery(Customer.class);
+        Root root = q.from(Customer.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("email"), email));
+        
+        Query query = session.createQuery(q);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Customer> getCusPhone(String phone) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Customer> q = builder.createQuery(Customer.class);
+        Root root = q.from(Customer.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("phone"), phone));
+        
+        Query query = session.createQuery(q);
+
+        return query.getResultList();
+    }
+
 }

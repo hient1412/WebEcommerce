@@ -5,9 +5,11 @@
 package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.repository.SellerRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +132,25 @@ public class SellerRepositoryImply implements SellerRepository {
             System.err.println(ex.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public Object[] getSeller(int idOrder) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        Root root = q.from(Seller.class);
+        Root rootSO = q.from(SellerOrder.class);
+        Root rootO = q.from(Orders.class);
+        
+        q = q.where(builder.and(builder.equal(root.get("id"), rootSO.get("idSeller")),
+                builder.and(builder.equal(rootO.get("id"), rootSO.get("idOrder")),
+                        builder.equal(rootO.get("id"), idOrder))));
+        q.multiselect(root.get("name"), root.get("avatar"),root.get("id"));
+
+        Query query = session.createQuery(q);
+        
+        return (Object[]) query.getSingleResult();
     }
 
 }

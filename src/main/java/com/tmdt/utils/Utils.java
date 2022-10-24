@@ -18,7 +18,7 @@ public class Utils {
         int count = 0;
         if (cart != null) {
             for (Cart c : cart.values()) {
-                count += c.getCount();
+                count += 1;
             }
         }
         return count;

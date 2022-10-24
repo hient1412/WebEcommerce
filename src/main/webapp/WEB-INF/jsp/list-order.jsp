@@ -22,7 +22,7 @@
                     <input type="text" name="nameCus" autocomplete="off"/>
                 </div>
                 <div class="col-3">
-                    <label>Sản phẩm</label>
+                    <label>Tên sản phẩm</label>
                     <input type="text" name="namePro" autocomplete="off"/>
                 </div>
                 <div class="col-3">
@@ -44,12 +44,7 @@
 
 <div>
     <c:choose>
-        <c:when test="${product.size() != 0}">
-            <c:if test="${errMessage != null}">
-                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                    ${errMessage}
-                </div>
-            </c:if>
+        <c:when test="${orders.size() != 0}">
             <div class="product-list">
                 <div class="row">
                     <div class="white-box bg-light p-1 center ">
@@ -153,9 +148,9 @@
                 </div>
             </div>
         </c:when>
-        <c:when test="${product.size() == 0}">
+        <c:when test="${orders.size() == 0}">
             <h3 class="center p-3">
-                <i class="text-danger">Không có sản phẩm</i>
+                <i class="text-danger">Không có đơn hàng</i>
             </h3>
         </c:when>
     </c:choose>

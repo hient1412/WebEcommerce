@@ -6,6 +6,7 @@ package com.tmdt.controllers;
 
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Product;
+import com.tmdt.service.CustomerService;
 import com.tmdt.service.ProductService;
 import com.tmdt.utils.Utils;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class ApiCartController {
     }
 
     @PutMapping("/api/cart")
-    public int updateItemInCart(@RequestBody Cart params, HttpSession session) {
+    public ResponseEntity<Map<String, String>> updateItemInCart(@RequestBody Cart params, HttpSession session) {
         Map<Integer, Cart> cartProduct = (Map<Integer, Cart>) session.getAttribute("cartProduct");
 
         if (cartProduct == null) {
@@ -68,16 +69,16 @@ public class ApiCartController {
 
         session.setAttribute("cartProduct", cartProduct);
 
-        return Utils.countCart(cartProduct);
+        return new ResponseEntity<>(Utils.cartAmount(cartProduct), HttpStatus.OK);
     }
 
     @DeleteMapping("/api/cart/{productId}")
-    public int deleteItemInCart(@PathVariable(value = "productId") int productId, HttpSession session) {
+     public ResponseEntity<Map<String, String>> deleteItemInCart(@PathVariable(value = "productId") int productId, HttpSession session) {
         Map<Integer, Cart> cartProduct = (Map<Integer, Cart>) session.getAttribute("cartProduct");
         if (cartProduct != null && cartProduct.containsKey(productId)) {
             cartProduct.remove(productId);
             session.setAttribute("cartProduct", cartProduct);
         }
-        return Utils.countCart(cartProduct);
+        return new ResponseEntity<>(Utils.cartAmount(cartProduct), HttpStatus.OK);
     }
 }

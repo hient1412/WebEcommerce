@@ -148,4 +148,18 @@ public class AccountRepositoryImply  implements AccountRepository{
         return false;
     }
 
+    @Override
+    public List<Account> getAcUserNameList(String username) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
+        CriteriaQuery<Account> q = builder.createQuery(Account.class);
+        Root root = q.from(Account.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("username"), username));
+       
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
+
 }
