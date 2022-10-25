@@ -37,9 +37,13 @@ public class AdminValidator implements Validator {
             errors.rejectValue("name", "", "Họ và tên không được ít hơn " + nameMinLength + " kí tự!!");
         } else if (admin.getName().length() > nameMaxLength) {
             errors.rejectValue("name", "", "Họ và tên không quá " + nameMaxLength + " kí tự!!");
-        } else if (admin.getEmail().length() > emailMaxLength) {
+        }
+        
+        if (admin.getEmail().length() > emailMaxLength) {
             errors.rejectValue("email", "", "Email không quá " + emailMaxLength + " kí tự!!");
-        } else if (admin.getPhone().length() > phoneMaxLength) {
+        }
+        
+        if (admin.getPhone().length() > phoneMaxLength) {
             errors.rejectValue("phone", "", "Số điện thoại không quá " + nameMaxLength + " kí tự!!");
         }
     }

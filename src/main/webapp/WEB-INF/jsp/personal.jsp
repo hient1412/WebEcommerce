@@ -76,7 +76,10 @@
                                             <h4>${sel.name}</h4>
                                         </div>
                                         <div>
-                                            <p><h5>Địa chỉ:</h5> ${sel.address} ${sel.idLocation.name}</p>
+                                            <p><h5>Địa chỉ:</h5> ${sel.address}</p>
+                                        </div>
+                                        <div>
+                                            <p><h5>Nơi bán:</h5>${sel.idLocation.name}</p>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.email.isEmpty() == true}">

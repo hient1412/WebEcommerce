@@ -76,4 +76,14 @@ public class SellerServiceImply implements SellerService{
     public Object[] getSeller(int idOrder) {
         return this.sellerRepository.getSeller(idOrder);
     }
+
+    @Override
+    public List<Seller> getSelByEmail(String email) {
+        return this.sellerRepository.getSelByEmail(email);
+    }
+
+    @Override
+    public List<Seller> getSelByPhone(String phone) {
+        return this.sellerRepository.getSelByPhone(phone);
+    }
 }

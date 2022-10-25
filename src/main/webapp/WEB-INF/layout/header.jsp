@@ -24,7 +24,7 @@
                             <ul class="dropdown-menu">
                                 <c:if test="${pageContext.session.getAttribute('current').active == 1}">
                                     <li><a href="<c:url value="/seller/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý công việc</a></li>
-                                    <li><a href="<c:url value="/seller-detail/${pageContext.session.getAttribute('currentSeller').id}"/>"><i class="fa-solid fa-store"></i> Hồ sơ cửa hàng</a></li>
+                                    <li><a href="<c:url value="/seller-detail/${pageContext.session.getAttribute('currentSeller').id}"/>"><i class="fa-solid fa-store"></i> Cửa hàng của bạn</a></li>
                                     <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                     <li><a href="<c:url value="/seller/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
                                     </c:if>

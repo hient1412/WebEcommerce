@@ -34,15 +34,23 @@ public class CustomerValidator implements Validator{
             errors.rejectValue("lastName", "", "Họ không được ít hơn " + nameMinLength + " kí tự!!");
         } else if (customer.getLastName().length() > nameMaxLength) {
             errors.rejectValue("lastName", "", "Họ không quá " + nameMaxLength + " kí tự!!");
-        } else if (customer.getFirstName().length() < nameMinLength) {
+        }
+        
+        if (customer.getFirstName().length() < nameMinLength) {
             errors.rejectValue("firstName", "", "Tên không được ít hơn " + nameMinLength + " kí tự!!");
         } else if (customer.getFirstName().length() > nameMaxLength) {
             errors.rejectValue("firstName", "", "Tên không quá " + nameMaxLength + " kí tự!!");
-        } else if (customer.getEmail().length() > emailMaxLength) {
+        }
+        
+        if (customer.getEmail().length() > emailMaxLength) {
             errors.rejectValue("email", "", "Email không quá " + emailMaxLength + " kí tự!!");
-        } else if (customer.getPhone().length() > phoneMaxLength) {
+        }
+        
+        if (customer.getPhone().length() > phoneMaxLength) {
             errors.rejectValue("phone", "", "Số điện thoại không quá " + phoneMaxLength + " kí tự!!");
-        } else if (customer.getDescription().length() > descriptionMaxLength) {
+        }
+        
+        if (customer.getDescription().length() > descriptionMaxLength) {
             errors.rejectValue("description", "", "Mô tả không quá " + descriptionMaxLength + " kí tự!!");
         }
     }

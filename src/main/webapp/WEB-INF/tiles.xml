@@ -44,6 +44,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Sửa thông tin cá nhân"  />
         <put-attribute name="content" value="/WEB-INF/jsp/customer-edit.jsp" />
     </definition>
+    <definition name="change-password" extends="baseLayout">
+        <put-attribute name="title" value="Đổi mật khẩu"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/change-password.jsp" />
+    </definition>
     <definition name="registry" extends="baseLayout">
         <put-attribute name="title" value="Đăng ký" />
         <put-attribute name="content" value="/WEB-INF/jsp/registry.jsp" />

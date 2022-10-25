@@ -34,7 +34,8 @@ public class CategoryValidator implements Validator{
             errors.rejectValue("name", "", "Tên loại sản phẩm không được ít hơn " + nameMinLength + " ký tự!!");
         else if(category.getName().length() > nameMaxLength)
             errors.rejectValue("name", "", "Tên loại sản phẩm không quá " + nameMaxLength + " ký tự!!");
-        else if(category.getDescription().length() > descriptionMaxLength)
+        
+        if(category.getDescription().length() > descriptionMaxLength)
             errors.rejectValue("description", "", "Mô tả không quá " + descriptionMaxLength + " ký tự!!");
     }
     

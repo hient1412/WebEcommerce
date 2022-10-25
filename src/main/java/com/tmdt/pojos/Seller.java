@@ -58,31 +58,30 @@ public class Seller implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
+    @Size(min = 4, max = 45)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(max = 20)
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 15)
+    @Size(max = 15)
     @Column(name = "phone")
     private String phone;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 8, max = 50)
     @Column(name = "address")
     private String address;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 150)
+    @Size(max = 150)
     @Column(name = "description")
     private String description;
-    @Lob
-    @Size(max = 65535)
+    @Basic(optional = false)
+    @Size(max = 150)
     @Column(name = "avatar")
     private String avatar;
     @JoinColumn(name = "id_account", referencedColumnName = "id")

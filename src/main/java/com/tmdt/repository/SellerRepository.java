@@ -18,4 +18,6 @@ public interface SellerRepository {
     List<Object[]> getSellers(String kw,int page);
     boolean updateSeller(Seller s);
     Object[] getSeller(int idOrder);
+    List<Seller> getSelByEmail(String email);
+    List<Seller> getSelByPhone(String phone);
 }

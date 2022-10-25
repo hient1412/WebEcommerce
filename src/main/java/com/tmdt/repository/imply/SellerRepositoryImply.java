@@ -153,4 +153,30 @@ public class SellerRepositoryImply implements SellerRepository {
         return (Object[]) query.getSingleResult();
     }
 
+    @Override
+    public List<Seller> getSelByEmail(String email) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Seller> q = builder.createQuery(Seller.class);
+        Root root = q.from(Seller.class);
+        
+        q.where(builder.equal(root.get("email"), email));
+        Query query = session.createQuery(q);
+        
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Seller> getSelByPhone(String phone) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Seller> q = builder.createQuery(Seller.class);
+        Root root = q.from(Seller.class);
+        
+        q.where(builder.equal(root.get("phone"), phone));
+        Query query = session.createQuery(q);
+        
+        return query.getResultList();
+    }
+
 }

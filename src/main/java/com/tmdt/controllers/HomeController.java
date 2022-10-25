@@ -224,6 +224,12 @@ public class HomeController {
         return new ModelAndView("registry");
     }
 
+    @GetMapping("/change-password")
+    public String changePass() {
+        
+        return "change-password";
+    }
+    
     @GetMapping("/registry/cus")
     public String cusView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("customer", new Customer());
