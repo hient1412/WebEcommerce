@@ -100,7 +100,7 @@ public class HomeController {
         pre.put("fp", params.getOrDefault("fp", ""));
         pre.put("tp", params.getOrDefault("tp", ""));
         pre.put("id", params.getOrDefault("id", ""));
-        pre.put("sort", params.getOrDefault("sort", ""));
+        pre.put("sort", params.getOrDefault("sort", "desc"));
         pre.put("seller", params.getOrDefault("seller", ""));
         pre.put("cat", params.getOrDefault("cat", ""));
         pre.put("location", params.getOrDefault("location", ""));
@@ -131,7 +131,7 @@ public class HomeController {
         pre.put("fp", params.getOrDefault("fp", ""));
         pre.put("tp", params.getOrDefault("tp", ""));
         pre.put("id", params.getOrDefault("id", ""));
-        pre.put("sort", params.getOrDefault("sort", ""));
+        pre.put("sort", params.getOrDefault("sort", "desc"));
         pre.put("seller", params.getOrDefault("seller", ""));
         pre.put("cat", params.getOrDefault("cat", ""));
         pre.put("location", params.getOrDefault("location", ""));
@@ -142,7 +142,6 @@ public class HomeController {
         model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
         model.addAttribute("kw", params.getOrDefault("kw", ""));
         model.addAttribute("count", env.getProperty("page.size"));
-        model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("locations", this.locationService.getLos());
         return "search";

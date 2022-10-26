@@ -112,7 +112,7 @@ public class ProductRepositoryImply implements ProductRepository {
         }
         String seller = params.get("seller");
         if (!seller.isEmpty()) {
-            Predicate p = builder.equal(root.join("idSeller").get("name").as(String.class), String.format("%s", seller));
+            Predicate p = builder.like(root.join("idSeller").get("name").as(String.class), String.format("%%%s%%", seller));
             predicates.add(p);
         }
         String cat = params.get("cat");
@@ -133,7 +133,6 @@ public class ProductRepositoryImply implements ProductRepository {
         Predicate p2 = builder.equal(root.get("isDelete"), 0);
         predicates.add(p2);
         q = q.where(predicates.toArray(new Predicate[]{}));
-        q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q.distinct(true));
         if (page > 0) {
             int size = Integer.parseInt(env.getProperty("page.size").toString());
