@@ -25,7 +25,7 @@ public class CustomerValidator implements Validator{
     public void validate(Object target, Errors errors) {
         Customer customer = (Customer) target;
         int nameMinLength = 4;
-        int nameMaxLength = 45;
+        int nameMaxLength = 25;
         int emailMaxLength = 20;
         int phoneMaxLength = 15;
         int descriptionMaxLength = 15;

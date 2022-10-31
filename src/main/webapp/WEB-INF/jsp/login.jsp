@@ -43,7 +43,7 @@
         </div>
         <c:if test="${param.error != null}">
             <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                Username hoặc password KHÔNG chính xác!
+                Tên đăng nhập hoặc mật khẩu KHÔNG chính xác!
             </div>
         </c:if>
         <c:if test="${param.accessDenied != null}">

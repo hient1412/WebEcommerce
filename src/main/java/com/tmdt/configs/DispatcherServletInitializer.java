@@ -44,8 +44,6 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
             servletContext.addFilter("endcoding-filter", new CharacterEncodingFilter());
         filterRegistration.setInitParameter("encoding", "UTF-8");
         filterRegistration.setInitParameter("forceEncoding", "true");
-        
-        //make sure encodingFilter is matched most first, by "false" arg
         filterRegistration.addMappingForUrlPatterns(null, false, "/*");
         
         super.onStartup(servletContext);

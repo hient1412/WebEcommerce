@@ -202,7 +202,9 @@ public class HomeController {
         if (br.hasErrors()) {
             return new ModelAndView("registry");
         }
-        if (ac.getPassword().equals(ac.getConfirmPassword())) {
+        if(this.userDetailsService.getAccount(ac.getUsername()).size() > 0){
+            model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+        } else if (ac.getPassword().equals(ac.getConfirmPassword())) {
             if (ac.getRole().equals("ROLE_SELLER")) {
                 ac.setActive(0);
             } else {

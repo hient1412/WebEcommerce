@@ -109,7 +109,7 @@
                                     <div class="row">
                                         <div class="col-md-4 center">
                                             <div>
-                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/>
+                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/><br>
                                                 <c:if test="${o.paymentType == 1}">
                                                     <span style="font-size: 10px;color: #ccc">Thanh toán tại nhà</span>
                                                 </c:if>

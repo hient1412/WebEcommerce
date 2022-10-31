@@ -16,4 +16,5 @@ public interface StatsService {
     List<Object[]> countCategories(int idSeller);
     List<Object[]> countAdminProCategories();
     List<Object[]> statsProduct(String kw,Date fromDate, Date toDate);
+    List<Object[]> statsProduct(String kw,Date fromDate, Date toDate, int seller);
 }

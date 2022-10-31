@@ -15,6 +15,11 @@
     <div class="login-form">
         <form:form method="post" action="${action}" modelAttribute="account">
             <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
             <h1 class="p-4 center">ĐĂNG KÝ</h1>
             <div class="m-3">
                 <div class="form-group">

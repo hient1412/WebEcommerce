@@ -9,6 +9,8 @@ import com.tmdt.pojos.Category;
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Seller;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.repository.StatsRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -122,4 +124,40 @@ public class StatsRepositoryImply implements StatsRepository {
         return q.getResultList();
     }
 
+    @Override
+    public List<Object[]> statsProduct(String kw,Date fromDate, Date toDate, int seller) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+
+        Root root = query.from(Product.class);
+        Root rootO = query.from(Orders.class);
+        Root rootOd = query.from(OrderDetail.class);
+        Root rootSO = query.from(SellerOrder.class);
+        Root rootS = query.from(Seller.class);
+        
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(builder.equal(rootOd.get("idProduct"), root.get("id")));
+        predicates.add(builder.equal(rootOd.get("idOrder"), rootO.get("id")));
+        predicates.add(builder.equal(rootSO.get("idSeller"), rootS.get("id")));
+        predicates.add(builder.equal(rootSO.get("idOrder"), rootO.get("id")));
+        predicates.add(builder.equal(rootS.get("id"), seller));
+        
+        query.multiselect(root.get("id"), root.get("name"),
+                builder.sum(builder.diff(builder.prod(rootOd.get("unitPrice"), rootOd.get("quantity")),builder.prod(rootOd.get("unitPrice"),builder.prod(rootOd.get("quantity"), rootOd.get("discount"))))).as(BigDecimal.class));
+        if(kw != null){
+            predicates.add(builder.like(root.get("name").as(String.class), String.format("%%%s%%", kw)));
+        }
+        if(fromDate != null){
+            predicates.add(builder.greaterThanOrEqualTo(rootO.get("orderDate"),fromDate));
+        }
+        if(toDate != null){
+            predicates.add(builder.lessThanOrEqualTo(rootO.get("orderDate"),toDate));
+        }
+        query.where(predicates.toArray(new Predicate[]{}));
+        query.groupBy(root.get("id"));
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
+    
 }
