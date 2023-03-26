@@ -6,6 +6,7 @@ package com.tmdt.service;
 
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Review;
+import com.tmdt.pojos.Seller;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public interface ProductService {
     List<Product> getProductByCateId(int cateId,int page);
     boolean addProduct(Product p);
     boolean updateProduct(Product p);
+    int updateProductHide(Product p);
     List<Product> getProductBySellerId(Map<String,String> params,int sellerId, int page);
     List<Object[]> getProductBuyALot(int num);
     List<Object[]> getProductBuyALotInSeller(int num,int sellerId);

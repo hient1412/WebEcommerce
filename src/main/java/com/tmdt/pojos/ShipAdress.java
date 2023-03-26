@@ -4,10 +4,13 @@
  */
 package com.tmdt.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,7 +47,7 @@ public class ShipAdress implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 4, max = 25)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
@@ -53,12 +57,30 @@ public class ShipAdress implements Serializable {
     private String phone;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 6, max = 50)
     @Column(name = "address")
     private String address;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 4, max = 25)
+    @Column(name = "ward")
+    private String ward;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 4, max = 25)
+    @Column(name = "district")
+    private String district;
+    @JoinColumn(name = "city", referencedColumnName = "id")
+    @ManyToOne
+    private Location city;
     @JoinColumn(name = "id_customer", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Customer idCustomer;
+    @Column(name = "priority")
+    private Integer priority;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idShipAdress")
+    private Collection<Orders> ordersCollection;
 
     public ShipAdress() {
     }
@@ -137,6 +159,76 @@ public class ShipAdress implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.ShipAdress[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the ward
+     */
+    public String getWard() {
+        return ward;
+    }
+
+    /**
+     * @param ward the ward to set
+     */
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    /**
+     * @return the district
+     */
+    public String getDistrict() {
+        return district;
+    }
+
+    /**
+     * @param district the district to set
+     */
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    /**
+     * @return the city
+     */
+    public Location getCity() {
+        return city;
+    }
+
+    /**
+     * @param city the city to set
+     */
+    public void setCity(Location city) {
+        this.city = city;
+    }
+
+    /**
+     * @return the priority
+     */
+    public Integer getPriority() {
+        return priority;
+    }
+
+    /**
+     * @param priority the priority to set
+     */
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    /**
+     * @return the ordersCollection
+     */
+    public Collection<Orders> getOrdersCollection() {
+        return ordersCollection;
+    }
+
+    /**
+     * @param ordersCollection the ordersCollection to set
+     */
+    public void setOrdersCollection(Collection<Orders> ordersCollection) {
+        this.ordersCollection = ordersCollection;
     }
     
 }

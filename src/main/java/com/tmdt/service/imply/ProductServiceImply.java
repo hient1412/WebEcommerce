@@ -8,6 +8,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Image;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Review;
+import com.tmdt.pojos.Seller;
 import com.tmdt.repository.ProductRepository;
 import com.tmdt.service.ProductService;
 import java.io.IOException;
@@ -83,6 +84,11 @@ public class ProductServiceImply implements ProductService{
     @Override
     public List<Product> getProductBySeller(Map<String,String> params,int sellerId, int page) {
         return this.productRepository.getProductBySeller(params,sellerId,page);
+    }
+
+    @Override
+    public int updateProductHide(Product p) {
+        return this.productRepository.updateProductHide(p);
     }
     
 }

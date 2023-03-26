@@ -39,6 +39,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -152,7 +153,7 @@ public class SellerController {
         pre.put("active", params.getOrDefault("active", ""));
         model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
         model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
-        model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("count", env.getProperty("listProduct.size"));
         return "list-product-upload";
     }
 
@@ -182,30 +183,31 @@ public class SellerController {
     }
 
     @PostMapping("/product")
-    public String product(Model model,@ModelAttribute(value = "product") Product pd,
+    public String product(Model model,@ModelAttribute(value = "product") Product product,
             RedirectAttributes r,Authentication a ) {
         Account ac = this.accountService.getAcByUsername(a.getName());
         if (ac.getRole().equals(Account.SELLER)) {
             if (ac.getActive() == 1) {
-                pd.setIdSeller(ac.getSeller());
-                pd.setActive(1);
+                product.setIdSeller(ac.getSeller());
+                product.setIsDelete(0);
+                product.setActive(1);
                 Image img = new Image();
-                img.setIdProduct(pd);
-                if (this.productService.addProduct(pd) == true) {
-                    for (int j = 0; j < pd.getFile().length; j++) {
+                img.setIdProduct(product);
+                if (this.productService.addProduct(product) == true) {
+                    for (int j = 0; j < product.getFile().length; j++) {
                         try {
-                            Map map = this.cloudinary.uploader().upload(pd.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                            Map map = this.cloudinary.uploader().upload(product.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
                             img.setImage((String) map.get("secure_url"));
                             this.imageService.addImage(img);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
-                    r.addFlashAttribute("errMessage", String.format("Đăng thành công sản phẩm '%s'", pd.getName()));
+                    r.addFlashAttribute("errMessage", String.format("Đăng thành công sản phẩm '%s'", product.getName()));
                     return "redirect:/seller/list-product-upload?id=" + ac.getSeller().getId();
                 }
             } else {
-                model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể đăng tin '%s'", pd.getName()));
+                model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể đăng tin '%s'", product.getName()));
             }
         }
         return "product-upload";
@@ -226,11 +228,28 @@ public class SellerController {
         Account ac = this.accountService.getAcByUsername(a.getName());
         pd.setIdSeller(ac.getSeller());
         String errMessage = "";
-        pd.setActive(1);
         pd.setIsDelete(0);
         int size = this.productService.getProductById(id).getImageCollection().size();
         Image img = new Image();
-        if (this.productService.updateProduct(pd) == true) {
+        int nameMinLength = 4;
+        int nameMaxLength = 50;
+        int descriptionMaxLength = 255;
+        int priceMaxLength = 45;
+        int manufacturerMinLength = 4;
+        int manufacturerMaxLength = 50;
+        if (pd.getName().length() < nameMinLength) {
+            errMessage = String.format("Tên sản phẩm không được ít hơn " + nameMinLength + " ký tự!!");
+        } else if (pd.getName().length() > nameMaxLength) {
+            errMessage = String.format("Tên sản phẩm không quá " + nameMaxLength + " ký tự!!");
+        } else if (pd.getDescription().length() > descriptionMaxLength) {
+            errMessage = String.format("Mô tả không quá " + descriptionMaxLength + " ký tự!!");
+        } else if (pd.getManufacturer().length() < manufacturerMinLength) {
+            errMessage = String.format("Tên thương hiệu không được ít hơn " + manufacturerMinLength + " ký tự!!");
+        } else if (pd.getManufacturer().length() > manufacturerMaxLength) {
+            errMessage = String.format("Tên thương hiệu không quá " + manufacturerMaxLength + " ký tự!!");
+        } else if (pd.getPrice().toString().length() >  priceMaxLength) {
+            errMessage = String.format("Giá tiền không quá " + priceMaxLength + " ký tự!!");
+        }else if (this.productService.updateProduct(pd) == true) {
             if (pd.getFile()[0].getSize() == 0) {
                 for (int i = 0; i < this.imageService.getImageByProductId(productOld.getId()).size(); i++) {
                     img.setImage(this.imageService.getImageByProductId(productOld.getId()).get(0).getImage());
@@ -279,7 +298,7 @@ public class SellerController {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
         pd.setActive(0);
-        if (this.productService.updateProduct(pd) == true) {
+        if (this.productService.updateProductHide(pd) == 1) {
             if (pd.getActive() == 0) {
                 errMessage = String.format("Đã ẩn thành công sản phẩm: '%s'", pd.getName());
             } else {
@@ -295,7 +314,7 @@ public class SellerController {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
         pd.setActive(1);
-        if (this.productService.updateProduct(pd) == true) {
+        if (this.productService.updateProductHide(pd) == 1) {
             if (pd.getActive() == 1) {
                 errMessage = String.format("Đã hiện thành công sản phẩm: '%s'", pd.getName());
             } else {
@@ -335,4 +354,13 @@ public class SellerController {
         model.addAttribute("statsProduct", this.statsService.statsProduct(kw, fromDate, toDate,ac.getSeller().getId()));
         return "stats-turnover";
     }
+    
+    @GetMapping("/order-detail/{orderId}")
+    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId) {
+        model.addAttribute("order", this.orderService.getOrderById(orderId));
+        model.addAttribute("orderDetail", this.orderDetailService);
+
+        return "sel-order-detail";
+    }
+    
 }

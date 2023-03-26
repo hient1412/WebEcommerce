@@ -44,12 +44,30 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Account.findByActive", query = "SELECT a FROM Account a WHERE a.active = :active")})
 public class Account implements Serializable {
 
+    /**
+     * @return the passwordNew
+     */
+    public String getPasswordNew() {
+        return passwordNew;
+    }
+
+    /**
+     * @param passwordNew the passwordNew to set
+     */
+    public void setPasswordNew(String passwordNew) {
+        this.passwordNew = passwordNew;
+    }
+
     public static final String ADMIN = "ROLE_ADMIN";
     public static final String CUSTOMER = "ROLE_CUSTOMER";
     public static final String SELLER = "ROLE_SELLER";
 
     @Transient
     private String confirmPassword;
+    @Transient
+    private String passwordOld;
+    @Transient
+    private String passwordNew;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -95,7 +113,7 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public Account(Integer id, String email, String password, String role) {
+    public Account(Integer id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -237,4 +255,17 @@ public class Account implements Serializable {
         this.reviewSet = reviewSet;
     }
 
+    /**
+     * @return the passwordOld
+     */
+    public String getPasswordOld() {
+        return passwordOld;
+    }
+
+    /**
+     * @param passwordOld the passwordOld to set
+     */
+    public void setPasswordOld(String passwordOld) {
+        this.passwordOld = passwordOld;
+    }
 }

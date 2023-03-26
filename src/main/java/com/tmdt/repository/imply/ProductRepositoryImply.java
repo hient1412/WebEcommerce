@@ -110,11 +110,7 @@ public class ProductRepositoryImply implements ProductRepository {
                 q.orderBy(builder.desc(root.get("price")));
             }
         }
-        String seller = params.get("seller");
-        if (!seller.isEmpty()) {
-            Predicate p = builder.like(root.join("idSeller").get("name").as(String.class), String.format("%%%s%%", seller));
-            predicates.add(p);
-        }
+        
         String cat = params.get("cat");
         if (!cat.isEmpty()) {
             Predicate p = builder.equal(root.join("idCategory").get("id").as(Integer.class), cat);
@@ -227,7 +223,7 @@ public class ProductRepositoryImply implements ProductRepository {
         
         Query query = session.createQuery(q);
         if (page > 0) {
-            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            int size = Integer.parseInt(env.getProperty("listProduct.size").toString());
             query.setMaxResults(size);
             query.setFirstResult((page - 1) * size);
         }
@@ -376,5 +372,12 @@ public class ProductRepositoryImply implements ProductRepository {
         return query.getResultList();
     }
 
-    
+    @Override
+    public int updateProductHide(Product p) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        Query query = s.createQuery("UPDATE Product SET active = :active WHERE id = :id");
+        query.setParameter("active", p.getActive());
+        query.setParameter("id", p.getId());
+        return query.executeUpdate();
+    }
 }

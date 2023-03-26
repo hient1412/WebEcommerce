@@ -33,10 +33,10 @@
                         <h3 class="text-uppercase">${product.name}</h3>
                         <div class="price d-flex flex-row align-items-center"> <span class="act-price"><span style="text-decoration: underline">đ</span><fmt:formatNumber value="${product.price}" maxFractionDigits="3" type="number"/></span>
                         </div>
-<!--                        <h3 class="text-uppercase">product.name</h3>
-                        <div class="price d-flex flex-row align-items-center"> <span class="act-price">$20</span>
-                            <div class="ml-2"> <small class="dis-price"><span style="text-decoration: underline">đ</span>product.price</small> <span>40% OFF</span> </div>
-                        </div>-->
+                        <!--                        <h3 class="text-uppercase">product.name</h3>
+                                                <div class="price d-flex flex-row align-items-center"> <span class="act-price">$20</span>
+                                                    <div class="ml-2"> <small class="dis-price"><span style="text-decoration: underline">đ</span>product.price</small> <span>40% OFF</span> </div>
+                                                </div>-->
                     </div>
                     <div>
                         <h4>Mô tả sản phẩm</h4>
@@ -45,19 +45,12 @@
                     <!--                    <div class="sizes mt-5">
                                             <h6 class="text-uppercase">Size</h6> <label class="radio"> <input type="radio" name="size" value="S" checked> <span>S</span> </label> <label class="radio"> <input type="radio" name="size" value="M"> <span>M</span> </label> <label class="radio"> <input type="radio" name="size" value="L"> <span>L</span> </label> <label class="radio"> <input type="radio" name="size" value="XL"> <span>XL</span> </label> <label class="radio"> <input type="radio" name="size" value="XXL"> <span>XXL</span> </label>
                                         </div>-->
-                    <div class="product-count">
-                        <label for="quantity">Số lượng</label>
-                        <form action="# " style="display: flex;">
-                            <div class="qtyminus">-</div>
-                            <input type="number" id="quantity" value="1" class="qty" >
-                            <div class="qtyplus">+</div>
-                        </form>
-                    </div>
-
-                    <div class="cart mt-4 align-items-center">
-                        <a class="btn btn-dark text-uppercase mr-2 px-4" href="javascript:;" class="btn btn-warning" onclick="addProductIntoCart(${product.id}, '${product.name}', '${product.imageCollection.get(0).image}', ${product.price})">Thêm vào giỏ hàng</a>
-                        <button class="btn btn-dark text-uppercase mr-2 px-4">Mua ngay</button>
-                    </div>
+                    <c:if test="${product.isDelete == 0}">
+                        <div class="cart mt-4 align-items-center">
+                            <a class="btn btn-dark text-uppercase mr-2 px-4" href="javascript:;" class="btn btn-warning" onclick="addProductIntoCart(${product.id}, '${seller.id}', '${product.name}', '${product.imageCollection.get(0).image}', ${product.price})">Thêm vào giỏ hàng</a>
+                            <button class="btn btn-dark text-uppercase mr-2 px-4">Mua ngay</button>
+                        </div>
+                    </c:if>
                 </div>
             </div>
 
@@ -158,30 +151,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
 <script>
-                        $(".qtyminus").on("click", function () {
-                            var now = $(".qty").val();
-                            if ($.isNumeric(now)) {
-                                if (parseInt(now) - 1 > 0)
-                                {
-                                    now--;
-                                }
-                                $(".qty").val(now);
-                            }
-                        });
-                        $(".qtyplus").on("click", function () {
-                            var now = $(".qty").val();
-                            if ($.isNumeric(now)) {
-                                $(".qty").val(parseInt(now) + 1);
-                            }
-                        });
-                        window.onload = function () {
-                            loadReview('${endpoint}');
-                        };
-                        var today = new Date();
-                        var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-                        var time = today.getHours() + ":" + today.getMinutes();
+    window.onload = function () {
+        loadReview('${endpoint}');
+    };
+    var today = new Date();
+    var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    var time = today.getHours() + ":" + today.getMinutes();
 
-                        document.getElementById("clock").innerHTML = time;
-                        document.getElementById("calendar").innerHTML = date;
-
+    document.getElementById("clock").innerHTML = time;
+    document.getElementById("calendar").innerHTML = date;
 </script>

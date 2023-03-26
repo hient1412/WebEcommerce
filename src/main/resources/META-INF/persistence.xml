@@ -21,6 +21,7 @@
     <class>com.tmdt.pojos.DiscountProduct</class>
     <class>com.tmdt.pojos.Likes</class>
     <class>com.tmdt.pojos.Discount</class>
+    <class>com.tmdt.pojos.SellerOrder</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/tmdt?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

@@ -9,7 +9,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div>
-    <h1 class="center p-4">TÌM KIẾM  ${sizeod}</h1>
+    <h1 class="center p-4">TÌM KIẾM</h1>
     <div class="p-4" style="background-color: #ccc">
         <form action="" >
             <div class="row">
@@ -129,7 +129,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4 center">
-                                            <a href="#">Xem chi tiết</a>
+                                            <a href="<c:url value="/seller/order-detail/${o.id}"/>">Xem chi tiết</a>
                                         </div>
                                     </div>
                                 </div>

@@ -95,3 +95,40 @@ function addReview(endpoint, productId) {
         d.insertAdjacentHTML("beforebegin", h);
     });
 }
+function loadShipAddress(endpoint) {
+    fetch(endpoint).then(function (res) {
+        return res.json();
+    }).then(function (data) {
+        let ship = document.getElementById("ship");
+        let h = '';
+        let priority = '';
+        for (let d of data){
+        priority = `${d.priority}`;
+        if(priority === '1'){
+            priority = `<b>[Mặc định] </b>`;
+        }
+        else {
+            priority ='';
+        }
+        h += 
+            `   
+                        <div class="bg-light p-2 mt-4 border border-dark">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <b>${d.name}</b> <span> | </span><label> ${d.phone}</label> 
+                                    <p class="capitalizeText">${d.address}</p> 
+                                    <p><span class="capitalizeText">${d.ward}</span><span class="capitalizeText">, ${d.district}</span><span>, ${d.city.name} </span>
+                                    <br>  ${priority} 
+                                </div>
+                                <div class="col-md-3 center">
+                                    <br>
+                                    
+                                    <a title="Sửa" href="/WebEcommerce/customer/ship-address-edit?id=${d.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
+                                    <a title="Xóa" href="/WebEcommerce/customer/ship-address-delete?id=${d.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
+                                    <a title="Đặt làm địa chỉ mặc định" href="/WebEcommerce/customer/ship-address-setdefault?id=${d.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-circle-check"></i></a>
+                                </div>
+                            </div>
+                        </div>`;
+        ship.innerHTML = h;
+        }});
+}

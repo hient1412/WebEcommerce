@@ -44,9 +44,25 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Sửa thông tin cá nhân"  />
         <put-attribute name="content" value="/WEB-INF/jsp/customer-edit.jsp" />
     </definition>
+    <definition name="customer-order-detail" extends="baseLayout">
+        <put-attribute name="title" value="Thông tin chi tiết đơn hàng"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/customer-order-detail.jsp" />
+    </definition>
     <definition name="change-password" extends="baseLayout">
         <put-attribute name="title" value="Đổi mật khẩu"  />
         <put-attribute name="content" value="/WEB-INF/jsp/change-password.jsp" />
+    </definition>
+    <definition name="ship-address" extends="baseLayout">
+        <put-attribute name="title" value="Địa chỉ"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/ship-address.jsp" />
+    </definition>
+    <definition name="ship-address-add" extends="baseLayout">
+        <put-attribute name="title" value="Thêm địa chỉ mới"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/ship-address-add.jsp" />
+    </definition>
+    <definition name="ship-address-edit" extends="baseLayout">
+        <put-attribute name="title" value="Thêm địa chỉ mới"  />
+        <put-attribute name="content" value="/WEB-INF/jsp/ship-address-edit.jsp" />
     </definition>
     <definition name="registry" extends="baseLayout">
         <put-attribute name="title" value="Đăng ký" />
@@ -191,5 +207,16 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/admin-account-edit.jsp" />
     </definition>
-    
+    <definition name="checkout-detail" extends="baseLayout">
+        <put-attribute name="title" value="Thanh toán don hàng" />
+        <put-attribute name="content" value="/WEB-INF/jsp/checkout.jsp" />
+    </definition>
+    <definition name="order-success" extends="baseLayout">
+        <put-attribute name="title" value="Đơn hàng thành công" />
+        <put-attribute name="content" value="/WEB-INF/jsp/order-success.jsp" />
+    </definition>
+    <definition name="sel-order-detail" extends="base2">
+        <put-attribute name="title" value="Chi tiết sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/sel-order-detail.jsp" />
+    </definition>
 </tiles-definitions>

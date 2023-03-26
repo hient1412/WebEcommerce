@@ -27,6 +27,7 @@
                                     <li><a href="<c:url value="/seller-detail/${pageContext.session.getAttribute('currentSeller').id}"/>"><i class="fa-solid fa-store"></i> Cửa hàng của bạn</a></li>
                                     <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                     <li><a href="<c:url value="/seller/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
+                                    <li><a href="<c:url value="/change-password"/>"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a></li>
                                     </c:if>
                                     <c:if test="${pageContext.session.getAttribute('current').active == 0}">
                                     <li style="margin-left: 15px; color: red"><i class="fa fa-briefcase"></i>(Chưa kích hoạt)</li>
@@ -40,6 +41,8 @@
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                 <li><a href="<c:url value="/customer/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
                                 <li><a href="<c:url value="/customer/list-cus-order"/>"><i class="fa-regular fa-file"></i>  Đơn hàng</a></li>
+                                <li><a href="<c:url value="/customer/ship-address"/>"><i class="fa-solid fa-location-arrow"></i>  Địa chỉ</a></li>
+                                <li><a href="<c:url value="/change-password"/>"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a></li>
                                 <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </c:if>
@@ -49,6 +52,7 @@
                                 <li><a href="<c:url value="/admin/dashboard"/>"><i class="fa fa-briefcase"></i> Quản lý</a></li>
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> Thông tin cá nhân</a></li>
                                 <li><a href="<c:url value="/admin/edit"/>"><i class="fa-solid fa-pen-to-square"></i> Cập nhật thông tin</a></li>
+                                <li><a href="<c:url value="/change-password"/>"><i class="fa-solid fa-key"></i> Đổi mật khẩu</a></li>
                                 <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
                             </ul>
                         </c:if>

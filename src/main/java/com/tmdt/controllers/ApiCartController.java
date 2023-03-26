@@ -7,6 +7,7 @@ package com.tmdt.controllers;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Product;
 import com.tmdt.service.CustomerService;
+import com.tmdt.service.OrderService;
 import com.tmdt.service.ProductService;
 import com.tmdt.utils.Utils;
 import java.util.HashMap;
@@ -31,6 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiCartController {
 
+    @Autowired
+    private OrderService orderService;
+    
     @PostMapping("/api/cart")
     public int addProductIntoCart(@RequestBody Cart params, HttpSession session) {
 
@@ -41,6 +45,7 @@ public class ApiCartController {
         }
 
         int productId = params.getProductId();
+        
         if (cartProduct.containsKey(productId) == true) {
             Cart c = cartProduct.get(productId);
             c.setCount(c.getCount()+ 1);
@@ -80,5 +85,13 @@ public class ApiCartController {
             session.setAttribute("cartProduct", cartProduct);
         }
         return new ResponseEntity<>(Utils.cartAmount(cartProduct), HttpStatus.OK);
+    }
+     @PostMapping("/api/pay")
+    public HttpStatus pay(HttpSession session) {
+        if (this.orderService.addReceipt((Map<Integer, Cart>) session.getAttribute("cartProduct")) == true) {
+            session.removeAttribute("cartProduct");
+            return HttpStatus.OK;
+        }
+        return HttpStatus.BAD_REQUEST;
     }
 }

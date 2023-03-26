@@ -4,12 +4,13 @@
  */
 
 
-function addProductIntoCart(id, name, img, price) {
+function addProductIntoCart(id,seller, name, img, price) {
     event.preventDefault();
     fetch("/WebEcommerce/api/cart/", {
         method: 'post',
         body: JSON.stringify({
             "productId": id,
+            "seller": seller,
             "productName": name,
             "img": img,
             "price": price,
@@ -62,6 +63,19 @@ function deleteItemInCart(id) {
             let row = document.getElementById(`product${id}`);
             row.style.display = "none";
             location.reload();
+        });
+    }
+}
+function pay() {
+    if (confirm("Bạn có chắc muốn thanh toán  giỏ hàng?") == true) {
+        fetch("/WebEcommerce/api/pay/", {
+            method: "post"
+        }).then(function(res) {
+            return res.json();
+        }).then(function (code) {
+            console.info(code);
+            location.reload();
+            location.assign("http://localhost:8080/WebEcommerce/customer/order-success");
         });
     }
 }

@@ -5,6 +5,7 @@
 package com.tmdt.service;
 
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.ShipAdress;
 import java.util.List;
 
 /**
@@ -17,4 +18,13 @@ public interface CustomerService {
     boolean updateCustomer(Customer c);
     List<Customer> getCusEmail(String email);
     List<Customer> getCusPhone(String phone);
+    List<ShipAdress> getShipAdress(int customerId);
+    ShipAdress addShipAdress(String name, String phone, String address,String ward,String district, int city,int customerId);
+    boolean addShip(ShipAdress s);
+    boolean deleteS(ShipAdress s);
+    ShipAdress getShipById(int id);
+    boolean updateS(ShipAdress s);
+    List<ShipAdress> getShipAdressPriority(int priority,int idCustomer);
+    int setdefaultShip(ShipAdress s);
+    ShipAdress findShipPriority (Customer c);
 }

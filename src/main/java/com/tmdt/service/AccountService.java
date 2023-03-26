@@ -22,4 +22,5 @@ public interface AccountService extends UserDetailsService {
     Account getAcByUsername(String username);
     boolean deleteAc(Account ac);
     List<Account> getAcUserNameList(String username);
+    int changePassword(Account ac);
 }

@@ -84,15 +84,19 @@
                                     <c:forEach items="${orderDetail.getOrderDetail(o.id)}" var="od">
                                         <div class="col-md-2">
                                             <div class="product-img-3">
-                                                <div>
-                                                    <img src="${od.idProduct.imageCollection.get(0).image}">
-                                                </div>
+                                                <a href="<c:url value="/product-detail/${od.idProduct.id}"/>">
+                                                    <div>
+                                                        <img src="${od.idProduct.imageCollection.get(0).image}">
+                                                    </div>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div>
-                                                <label>${od.idProduct.name}</label>
-                                            </div>
+                                            <a href="<c:url value="/product-detail/${od.idProduct.id}"/>">
+                                                <div>
+                                                    <label style="color: black; cursor: pointer">${od.idProduct.name}</label>
+                                                </div>
+                                            </a>
                                         </div>
                                         <div class="col-md-4 center">
                                             <div>
@@ -126,7 +130,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 center">
-                                        <a href="#">Xem chi tiết</a>
+                                        <a href="<c:url value="/customer/order-detail/${o.id}"/>">Xem chi tiết</a>
                                     </div>
                                 </div>
                             </div>

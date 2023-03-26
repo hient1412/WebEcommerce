@@ -105,6 +105,9 @@ public class Orders implements Serializable {
     @JoinColumn(name = "id_voucher", referencedColumnName = "id")
     @ManyToOne
     private Voucher idVoucher;
+    @JoinColumn(name = "id_shipadress", referencedColumnName = "id")
+    @ManyToOne
+    private ShipAdress idShipAdress;
 
     public Orders() {
     }
@@ -250,6 +253,20 @@ public class Orders implements Serializable {
      */
     public void setSellerOrderCollection(Collection<SellerOrder> sellerOrderCollection) {
         this.sellerOrderCollection = sellerOrderCollection;
+    }
+
+    /**
+     * @return the idShipAdress
+     */
+    public ShipAdress getIdShipAdress() {
+        return idShipAdress;
+    }
+
+    /**
+     * @param idShipAdress the idShipAdress to set
+     */
+    public void setIdShipAdress(ShipAdress idShipAdress) {
+        this.idShipAdress = idShipAdress;
     }
 
     

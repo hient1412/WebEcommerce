@@ -8,6 +8,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="product-list">
+    <c:if test="${errMessage != null}">
+        <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+            ${errMessage}
+        </div>
+    </c:if>
     <div class="row">
         <c:choose>
             <c:when test="${product.size() != 0}">

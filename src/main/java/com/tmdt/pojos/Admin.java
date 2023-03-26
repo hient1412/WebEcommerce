@@ -67,6 +67,8 @@ public class Admin implements Serializable {
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     @OneToOne
     private Account idAccount;
+    @Column(name = "super")
+    private int superAdmin;
 
     public Admin() {
     }
@@ -178,6 +180,20 @@ public class Admin implements Serializable {
      */
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * @return the superAdmin
+     */
+    public int getSuperAdmin() {
+        return superAdmin;
+    }
+
+    /**
+     * @param superAdmin the superAdmin to set
+     */
+    public void setSuperAdmin(int superAdmin) {
+        this.superAdmin = superAdmin;
     }
     
 }

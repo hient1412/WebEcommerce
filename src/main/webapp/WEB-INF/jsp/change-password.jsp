@@ -9,8 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="p-5">
     <div class="white-box">
-        <form:form action="" method="post">
-            <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
+        <form:form action="" method="post" modelAttribute="ac">
             <c:if test="${errMessage != null}">
                 <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
                     ${errMessage}
@@ -19,18 +18,18 @@
             <h1 class="text-center">Đổi mật khẩu</h1>
             <div class="form-group">
                 <label>Mật khẩu cũ</label>
-                <input autocomplete="off" type="password" class="form-control" required="required"/>
+                <form:input path="passwordOld" autocomplete="off" type="password" class="form-control" required="required"/>
             </div>
             <div class="form-group">
                 <label>Mật khẩu mới</label>
-                <input autocomplete="off" type="password" class="form-control" required="required"/>
+                <form:input path="passwordNew" autocomplete="off" type="password" class="form-control" required="required"/>
             </div>
             <div class="form-group">
                 <label>Xác nhận mật khẩu mới</label>
-                <input autocomplete="off" type="password" class="form-control" required="required"/>
+                <form:input path="confirmPassword" autocomplete="off" type="password" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Sửa</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Đổi</button>
             </div>
         </form:form>
     </div>

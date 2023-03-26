@@ -4,18 +4,20 @@
  */
 package com.tmdt.pojos;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  *
  * @author DELL
  */
-public class Cart {
+public class Cart implements Serializable {
     private int productId;
     private String productName;
     private String img;
     private Long price;
     private int count;
+    private Seller seller;
 
     /**
      * @return the productId
@@ -86,4 +88,19 @@ public class Cart {
     public void setImg(String img) {
         this.img = img;
     }
+
+    /**
+     * @return the seller
+     */
+    public Seller getSeller() {
+        return seller;
+    }
+
+    /**
+     * @param seller the seller to set
+     */
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
 }

@@ -323,29 +323,78 @@ public class AdminController {
     }
 
     @PostMapping("/account/edit")
-    public String updateAccount(Model model, @ModelAttribute(value = "ac") Account account,
+    public String updateAccount(Model model, @ModelAttribute(value = "ac") Account account, Authentication a,
             RedirectAttributes r, BindingResult br) {
         Account accountOld = this.userDetailsService.getAcById(account.getId());
+        Account acNow = this.userDetailsService.getAcByUsername(a.getName());
         accountValidator.validate(account, br);
         if (br.hasErrors()) {
             return "admin-account-edit";
         } else {
-            if (!accountOld.getUsername().equals(account.getUsername())) {
-                if (this.userDetailsService.getAcUserNameList(account.getUsername()).size() > 0) {
-                    model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+            if (!acNow.getRole().equals(accountOld.getRole())) {
+                if (!accountOld.getUsername().equals(account.getUsername())) {
+                    if (this.userDetailsService.getAcUserNameList(account.getUsername()).size() > 0) {
+                        model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+                    } else {
+                        if (this.userDetailsService.updateAc(account) == true) {
+                            r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                            return "redirect:/admin/account";
+                        } else {
+                            model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                        }
+                    }
+                } else if (this.userDetailsService.updateAc(account) == true) {
+                    r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                    return "redirect:/admin/account";
                 } else {
-                    if (this.userDetailsService.updateAc(account) == true) {
+                    model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                }
+            } else {
+                if (acNow.getAdmin().getSuperAdmin() == 1) {
+                    if (!accountOld.getUsername().equals(account.getUsername())) {
+                        if (this.userDetailsService.getAcUserNameList(account.getUsername()).size() > 0) {
+                            model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+                        } else {
+                            if (this.userDetailsService.updateAc(account) == true) {
+                                r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                                return "redirect:/admin/account";
+                            } else {
+                                model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                            }
+                        }
+                    } else if (this.userDetailsService.updateAc(account) == true) {
                         r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
                         return "redirect:/admin/account";
                     } else {
                         model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
                     }
+                } else if (acNow.getAdmin().getSuperAdmin() != 1 && accountOld.getAdmin().getSuperAdmin() == 0) {
+                    if (!acNow.getId().equals(accountOld.getId())) {
+                        r.addFlashAttribute("errMessage", String.format("Bạn không thể chỉnh sửa tài khoản của admin khác!!"));
+                        return "redirect:/admin/account";
+                    } else {
+                        if (!accountOld.getUsername().equals(account.getUsername())) {
+                            if (this.userDetailsService.getAcUserNameList(account.getUsername()).size() > 0) {
+                                model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
+                            } else {
+                                if (this.userDetailsService.updateAc(account) == true) {
+                                    r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                                    return "redirect:/admin/account";
+                                } else {
+                                    model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                                }
+                            }
+                        } else if (this.userDetailsService.updateAc(account) == true) {
+                            r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
+                            return "redirect:/admin/account";
+                        } else {
+                            model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
+                        }
+                    }
+                } else {
+                    r.addFlashAttribute("errMessage", String.format("Bạn không thể chỉnh sửa tài khoản của admin tối cao!!"));
+                    return "redirect:/admin/account";
                 }
-            } else if (this.userDetailsService.updateAc(account) == true) {
-                r.addFlashAttribute("errMessage", String.format("Chỉnh sửa thành công tài khoản '%s'", account.getUsername()));
-                return "redirect:/admin/account";
-            } else {
-                model.addAttribute("errMessage", "Có lỗi xảy ra không thể chỉnh sửa tài khoản");
             }
         }
         return "admin-account-edit";
@@ -353,13 +402,33 @@ public class AdminController {
 
     @GetMapping("/account/delete")
     public String deleteTK(Model model, @RequestParam(name = "id") int id,
-            RedirectAttributes r) {
+            RedirectAttributes r, Authentication a) {
         String errMessage = "";
         Account ac = this.userDetailsService.getAcById(id);
-        if (this.userDetailsService.deleteAc(ac) == true) {
-            errMessage = String.format("Đã xóa thành công tài khoản: '%s'", ac.getUsername());
+        Account acNow = this.userDetailsService.getAcByUsername(a.getName());
+        if (!acNow.getRole().equals(ac.getRole())) {
+            if (this.userDetailsService.deleteAc(ac) == true) {
+                errMessage = String.format("Đã xóa thành công tài khoản: '%s'", ac.getUsername());
+            } else {
+                errMessage = String.format("Có lỗi xảy ra không thể xóa tài khoản: '%s'", ac.getUsername());
+            }
         } else {
-            errMessage = String.format("Có lỗi xảy ra không thể xóa tài khoản: '%s'", ac.getUsername());
+            if(acNow.getAdmin().getSuperAdmin() == 1){
+                if (this.userDetailsService.deleteAc(ac) == true) {
+                    errMessage = String.format("Đã xóa thành công tài khoản: '%s'", ac.getUsername());
+                } else {
+                    errMessage = String.format("Có lỗi xảy ra không thể xóa tài khoản: '%s'", ac.getUsername());
+                }
+            } else {
+                errMessage = "Bạn không thể xóa tài khoản của admin tối cao!!";
+            } 
+            if(acNow.getAdmin().getSuperAdmin() != 1 && ac.getAdmin().getSuperAdmin() == 0){
+                if (!acNow.getId().equals(ac.getId())) {
+                    errMessage = "Bạn không thể xóa tài khoản của admin khác!!";
+                } else {
+                    errMessage = "Bạn không thể xóa tài khoản của chính mình!!";
+                }
+            }
         }
         r.addFlashAttribute("errMessage", errMessage);
         return "redirect:/admin/account";

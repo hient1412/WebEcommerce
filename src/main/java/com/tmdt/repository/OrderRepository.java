@@ -16,4 +16,6 @@ import java.util.Map;
 public interface OrderRepository {
     List<Orders> getOrderBySellerId(Map<String,String> params,int sellerId, int page);
     List<Orders> getOrderByCusId(Map<String, String> params, int cusId, int page);
+    Orders getOrderById(int id);
+    boolean addReceipt(Map<Integer, Cart> cart);
 }

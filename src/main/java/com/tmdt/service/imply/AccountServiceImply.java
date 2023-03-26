@@ -93,5 +93,11 @@ public class AccountServiceImply implements AccountService{
         return this.accountRepository.getAcUserNameList(username);
     }
 
+    @Override
+    public int changePassword(Account ac) {
+        ac.setPassword(this.passwordEncoder.encode(ac.getPasswordNew()));
+        return this.accountRepository.changePassword(ac);
+    }
+
 
 }

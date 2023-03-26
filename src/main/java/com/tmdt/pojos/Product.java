@@ -69,31 +69,27 @@ public class Product implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 4, max = 50)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
-    @Null
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "description")
     private String description;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "price")
     private Double price;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 4, max = 50)
     @Column(name = "manufacturer")
     private String manufacturer;
     @Basic(optional = false)
-    @Null
     @Column(name = "created_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate = new Date();
     @Basic(optional = false)
-    @Null
     @Column(name = "active")
     private int active;
     @Basic(optional = false)

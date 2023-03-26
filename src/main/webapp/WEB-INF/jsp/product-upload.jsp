@@ -5,15 +5,14 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:url value="/seller/product" var="action"/>
+
 <div class="row container d-flex justify-content-center p-4">
     <div class="card">
         <div class="card-body">
             <h1 class="center">ĐĂNG SẢN PHẨM</h1>
-            <form:form action="${action}" method="post" modelAttribute="product"  enctype="multipart/form-data">
+            <form:form action="" method="post" modelAttribute="product" enctype="multipart/form-data">
                 <div class="form-group row">
                     <div class="col">
                         <label>Tên sản phẩm</label>
@@ -43,9 +42,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="image">Hình ảnh</label>
+                    <label>Hình ảnh</label>
                     <br>(Chỉ upload file hình ảnh)<span style="color: red">*</span><br>
-                    <form:input type="file" accept="image/*, .jpg,.png" multiple="multiple" path="file" id="image" class="form-control" required="required"/>
+                    <form:input type="file" accept="image/*, .jpg,.png" multiple="multiple" path="file" class="form-control" required="required"/>
                 </div>
                 <div>
                     <label>Mô tả chi tiết</label>

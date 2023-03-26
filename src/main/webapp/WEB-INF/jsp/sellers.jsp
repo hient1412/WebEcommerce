@@ -20,6 +20,19 @@
     </div>
 </div>
 
+<div class="row">
+    <c:if test="${!kw.isEmpty()}">
+        <div class="title-center">
+            <h1>Kết quả tìm kiếm</h1>
+            <span style="color: blue">"${kw}"</span>
+        </div>
+    </c:if>
+    <c:if test="${counterS != 0 && !kw.isEmpty()}">
+        <div style="text-align: center">
+            <span>Tìm thấy <span style="color: red">${counterS}</span> kết quả phù hợp</span>
+        </div>
+    </c:if>
+</div>
 <div>
     <c:choose>
         <c:when test="${sellers.size() != 0}">
@@ -41,23 +54,23 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="row">
-                                            <div>
-                                                <b><a class="link-dark" href="<c:url value="/seller-detail/${s[0]}"/>">${s[1]}</a></b>
-                                            </div>
+                                                <div>
+                                                    <b><a class="link-dark" href="<c:url value="/seller-detail/${s[0]}"/>">${s[1]}</a></b>
+                                                </div>
                                                 <a class="btn btn-info" href="/WebEcommerce/seller-detail/${s[0]}">Xem shop</a>
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-6">
                                             <div class="row">
-                                            <div class="col-md-6 center" style="border-left: 1px solid #000000">
-                                                <h4><i class="fa-solid fa-location-dot"></i> ${s[3]}</h4>
-                                                <span>Địa chỉ</span>
-                                            </div>
-                                            <div class="col-md-6 center" style="border-left: 1px solid #000000">
-                                                <h4><i class="fa-solid fa-box"></i> ${s[4]}</h4>
-                                                <span>Sản phẩm</span>
-                                            </div>
+                                                <div class="col-md-6 center" style="border-left: 1px solid #000000">
+                                                    <h4><i class="fa-solid fa-location-dot"></i> ${s[3]}</h4>
+                                                    <span>Địa chỉ</span>
+                                                </div>
+                                                <div class="col-md-6 center" style="border-left: 1px solid #000000">
+                                                    <h4><i class="fa-solid fa-box"></i> ${s[4]}</h4>
+                                                    <span>Sản phẩm</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

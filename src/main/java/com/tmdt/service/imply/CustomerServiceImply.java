@@ -8,6 +8,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.ShipAdress;
 import com.tmdt.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 import com.tmdt.service.CustomerService;
@@ -76,5 +77,52 @@ public class CustomerServiceImply implements CustomerService {
     public List<Customer> getCusPhone(String phone) {
         return this.customerRepository.getCusPhone(phone);
     }
+
+    @Override
+    public List<ShipAdress> getShipAdress(int customerId) {
+        return this.customerRepository.getShipAdress(customerId);
+    }
+
+    @Override
+    public ShipAdress addShipAdress(String name, String phone, String address, String ward, String district, int city, int customerId) {
+        return this.customerRepository.addShipAdress(name,phone,address,ward,district,city,customerId);
+    }
+
+    @Override
+    public boolean addShip(ShipAdress s) {
+        return this.customerRepository.addShip(s);
+    }
+
+    @Override
+    public boolean deleteS(ShipAdress s) {
+        return this.customerRepository.deleteS(s);
+    }
+
+    @Override
+    public ShipAdress getShipById(int id) {
+        return this.customerRepository.getShipById(id);
+    }
+
+    @Override
+    public boolean updateS(ShipAdress s) {
+        return this.customerRepository.updateS(s);
+    }
+
+    @Override
+    public List<ShipAdress> getShipAdressPriority(int priority,int idCustomer){
+        return this.customerRepository.getShipAdressPriority(priority,idCustomer);
+    }
+
+    @Override
+    public int setdefaultShip(ShipAdress s) {
+        s.setPriority(1);
+        return this.customerRepository.setdefaultShip(s);
+    }
+
+    @Override
+    public ShipAdress findShipPriority(Customer c) {
+        return this.customerRepository.findShipPriority(c);
+    }
+
 
 }

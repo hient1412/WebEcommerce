@@ -41,9 +41,7 @@ public class Image implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Null
     @Lob
-    @Size(min = 1, max = 65535)
     @Column(name = "image")
     private String image;
     @JoinColumn(name = "id_product", referencedColumnName = "id")

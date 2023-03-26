@@ -152,7 +152,7 @@ public class SellerRepositoryImply implements SellerRepository {
         
         return (Object[]) query.getSingleResult();
     }
-
+    
     @Override
     public List<Seller> getSelByEmail(String email) {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();

@@ -19,15 +19,21 @@
                         <button class="flipkart-navbar-button col-md-1"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>
-                <c:if test="${pageContext.request.userPrincipal.name != null}">
-                    <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_CUSTOMER')}">
-                        <div class="col-sm-1">
-                            <a class="cart-button" href="<c:url value="/cart"/>">
-                                <i class="fa fa-shopping-cart i-cart" aria-hidden="true"></i>
-                                <div class="badge badge-danger" id="cartCounter">${cartCounter}</div>
-                            </a>
-                        </div>
-                    </c:if>
+                <c:if test="${pageContext.request.userPrincipal.name == null}">
+                    <div class="col-sm-1">
+                        <a class="cart-button" href="<c:url value="/cart"/>">
+                            <i class="fa fa-shopping-cart i-cart" aria-hidden="true"></i>
+                            <div class="badge badge-danger" id="cartCounter">${cartCounter}</div>
+                        </a>
+                    </div>
+                </c:if>
+                <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_CUSTOMER')}">
+                    <div class="col-sm-1">
+                        <a class="cart-button" href="<c:url value="/cart"/>">
+                            <i class="fa fa-shopping-cart i-cart" aria-hidden="true"></i>
+                            <div class="badge badge-danger" id="cartCounter">${cartCounter}</div>
+                        </a>
+                    </div>
                 </c:if>
             </div>
         </div>

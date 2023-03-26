@@ -86,4 +86,5 @@ public class SellerServiceImply implements SellerService{
     public List<Seller> getSelByPhone(String phone) {
         return this.sellerRepository.getSelByPhone(phone);
     }
+
 }

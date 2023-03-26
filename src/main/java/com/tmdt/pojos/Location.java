@@ -4,12 +4,14 @@
  */
 package com.tmdt.pojos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,6 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Location.findById", query = "SELECT l FROM Location l WHERE l.id = :id"),
     @NamedQuery(name = "Location.findByName", query = "SELECT l FROM Location l WHERE l.name = :name")})
 public class Location implements Serializable {
+    @JsonIgnore
+    @OneToMany(mappedBy = "city",fetch = FetchType.EAGER)
+    private Collection<ShipAdress> shipAdressCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,8 +51,10 @@ public class Location implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idLocation")
     private Collection<Seller> sellerCollection;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     private Collection<Customer> customerCollection;
 
@@ -120,6 +127,15 @@ public class Location implements Serializable {
     @Override
     public String toString() {
         return "com.tmdt.pojos.Location[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<ShipAdress> getShipAdressCollection() {
+        return shipAdressCollection;
+    }
+
+    public void setShipAdressCollection(Collection<ShipAdress> shipAdressCollection) {
+        this.shipAdressCollection = shipAdressCollection;
     }
     
 }

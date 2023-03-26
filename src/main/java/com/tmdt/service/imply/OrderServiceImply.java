@@ -4,6 +4,7 @@
  */
 package com.tmdt.service.imply;
 
+import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Orders;
 import com.tmdt.repository.OrderRepository;
 import com.tmdt.service.OrderService;
@@ -28,5 +29,19 @@ public class OrderServiceImply implements OrderService{
     @Override
     public List<Orders> getOrderByCusId(Map<String, String> params, int cusId, int page) {
         return this.orderRepository.getOrderByCusId(params, cusId, page);
+    }
+
+    @Override
+    public Orders getOrderById(int id) {
+        return this.orderRepository.getOrderById(id);
+    }
+
+    @Override
+    public boolean addReceipt(Map<Integer, Cart> cart) {
+        if (cart != null) {
+            return this.orderRepository.addReceipt(cart);
+        } else {
+            return false;
+        }
     }
 }

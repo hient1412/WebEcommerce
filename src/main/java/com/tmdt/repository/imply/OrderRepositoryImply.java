@@ -4,20 +4,24 @@
  */
 package com.tmdt.repository.imply;
 
+import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
-import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Seller;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.repository.AccountRepository;
 import com.tmdt.repository.OrderRepository;
 import com.tmdt.repository.ProductRepository;
-import com.tmdt.service.AccountService;
-import com.tmdt.service.ProductService;
+import com.tmdt.service.CustomerService;
+import com.tmdt.service.SellerService;
 import com.tmdt.utils.Utils;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -44,6 +48,10 @@ import org.springframework.transaction.annotation.Transactional;
 @PropertySource("classpath:messages.properties")
 public class OrderRepositoryImply implements OrderRepository {
 
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private SellerService sellerService;
     @Autowired
     private LocalSessionFactoryBean sessionFactoryBean;
     @Autowired
@@ -136,5 +144,101 @@ public class OrderRepositoryImply implements OrderRepository {
             query.setFirstResult((page - 1) * size);
         }
         return query.getResultList();
+    }
+
+    @Override
+    public Orders getOrderById(int id) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        return s.get(Orders.class, id);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean addReceipt(Map<Integer, Cart> cart) {
+        try {
+            Set<Seller> selList = new HashSet<>();
+            for (Cart c : cart.values()) {
+                selList.add(c.getSeller());
+            }
+            Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+            if (selList.size() != 1) {
+                for (Seller s : selList) {
+                    Orders order = new Orders();
+
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    Account account = this.accountRepository.getAcByUsername(authentication.getName());
+                    order.setIdCustomer(account.getCustomer());
+
+                    order.setOrderDate(new Date());
+                    Date requiredDate = new Date();
+                    requiredDate.setDate(requiredDate.getDate() + 7);
+                    order.setRequiredDate(requiredDate);
+                    order.setActive(1);
+                    order.setIsPayment(0);
+                    order.setPaymentType(0);
+                    order.setShipFee(0);
+                    order.setIdVoucher(null);
+
+                    Map<String, String> amount = Utils.cartAmountSeller(cart, s);
+                    order.setAmount(Long.parseLong(amount.get("amountSel")));
+                    session.save(order);
+
+                    SellerOrder sellerOrder = new SellerOrder();
+                    sellerOrder.setIdOrder(order);
+                    sellerOrder.setIdSeller(s);
+                    session.save(sellerOrder);
+
+                    for (Cart c : cart.values()) {
+                        if (s.equals(c.getSeller())) {
+                            OrderDetail detail = new OrderDetail();
+                            detail.setIdOrder(order);
+                            detail.setIdProduct(this.productRepository.getProductById(c.getProductId()));
+                            detail.setUnitPrice(c.getPrice());
+                            detail.setQuantity(c.getCount());
+                            detail.setDiscount(0);
+                            session.save(detail);
+                        }
+                    }
+                }
+            } else {
+                Orders order = new Orders();
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                Account account = this.accountRepository.getAcByUsername(authentication.getName());
+                order.setIdCustomer(account.getCustomer());
+                order.setIdShipAdress(this.customerService.findShipPriority(account.getCustomer()));
+                order.setOrderDate(new Date());
+                Date requiredDate = new Date();
+                requiredDate.setDate(requiredDate.getDate() + 7);
+                order.setRequiredDate(requiredDate);
+                order.setActive(1);
+                order.setIsPayment(0);
+                order.setPaymentType(0);
+                order.setShipFee(0);
+                order.setIdVoucher(null);
+
+                Map<String, String> amount = Utils.cartAmount(cart);
+                order.setAmount(Long.parseLong(amount.get("amount")));
+
+                session.save(order);
+
+                SellerOrder sellerOrder = new SellerOrder();
+                for (Cart c : cart.values()) {
+                    OrderDetail detail = new OrderDetail();
+                    detail.setIdOrder(order);
+                    detail.setIdProduct(this.productRepository.getProductById(c.getProductId()));
+                    detail.setUnitPrice(c.getPrice());
+                    detail.setQuantity(c.getCount());
+                    detail.setDiscount(0);
+                    session.save(detail);
+                    sellerOrder.setIdOrder(order);
+                    sellerOrder.setIdSeller(c.getSeller());
+                    session.save(sellerOrder);
+                }
+            }
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }

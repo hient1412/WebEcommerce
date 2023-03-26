@@ -28,6 +28,7 @@ import org.hibernate.annotations.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -68,6 +69,8 @@ public class HomeController {
     private ImageService imageService;
     @Autowired
     private Environment env;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @ModelAttribute
     public void common(Model model) {
@@ -125,22 +128,25 @@ public class HomeController {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         model.addAttribute("categories", this.categoryService.getCates());
 
+        String kw = params.getOrDefault("kw", "");
+        
+        model.addAttribute("sellers", this.sellerService.getSellers(kw, page));
+        model.addAttribute("sellerCounterS", this.sellerService.getSellers(kw, 0).size());
         Map<String, String> pre = new HashMap<>();
-
-        pre.put("kw", params.getOrDefault("kw", ""));
+        
+        pre.put("kw", kw);
         pre.put("fp", params.getOrDefault("fp", ""));
         pre.put("tp", params.getOrDefault("tp", ""));
         pre.put("id", params.getOrDefault("id", ""));
         pre.put("sort", params.getOrDefault("sort", "desc"));
-        pre.put("seller", params.getOrDefault("seller", ""));
         pre.put("cat", params.getOrDefault("cat", ""));
         pre.put("location", params.getOrDefault("location", ""));
 
         List<Product> lp = this.productService.getProducts(pre, page);
         model.addAttribute("listProduct", lp);
         model.addAttribute("currentPage", page);
-        model.addAttribute("counterS", this.productService.getProducts(pre, 0).size());
-        model.addAttribute("kw", params.getOrDefault("kw", ""));
+        model.addAttribute("productCounterS", this.productService.getProducts(pre, 0).size());
+        model.addAttribute("kw", kw);
         model.addAttribute("count", env.getProperty("page.size"));
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("locations", this.locationService.getLos());
@@ -167,6 +173,7 @@ public class HomeController {
         model.addAttribute("counterS", this.sellerService.getSellers(kw, 0).size());
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("kw", kw);
         return "sellers";
     }
 
@@ -226,8 +233,38 @@ public class HomeController {
     }
 
     @GetMapping("/change-password")
-    public String changePass() {
-        
+    public String changePass(Model model,Authentication a,HttpSession s) {
+        model.addAttribute("ac", this.userDetailsService.getAcByUsername(a.getName()));
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+        return "change-password";
+    }
+    @PostMapping("/change-password")
+    public String change(Authentication a,Model model,RedirectAttributes r, @ModelAttribute(value = "ac") Account ac) {
+        Account acOld = this.userDetailsService.getAcByUsername(a.getName());
+        if(this.passwordEncoder.matches(ac.getPasswordOld(),acOld.getPassword())){
+            if(ac.getPasswordNew().equals(ac.getConfirmPassword())){
+                ac.setId(acOld.getId());
+                if (ac.getPasswordNew().length() < 8)
+                    model.addAttribute("errMessage", "Mật khẩu cần có tối thiểu 8 ký tự!!");
+                else if (ac.getPasswordNew().length() > 25)
+                    model.addAttribute("errMessage", "Mật khẩu không được quá 25 ký tự!!");  
+                else if(this.passwordEncoder.matches(ac.getPasswordNew(),acOld.getPassword()))
+                    model.addAttribute("errMessage", "Mật khẩu mới không được trùng mật khẩu cũ!!");  
+                else if(this.userDetailsService.changePassword(ac) > 0){
+                    r.addFlashAttribute("errMessage", "Đổi mật khẩu thành công!!");
+                    return "redirect:/";
+                }
+                else{
+                    model.addAttribute("errMessage", "Có lỗi xảy ra đổi mật khẩu không thành công!!");
+                }
+            }
+            else {
+                model.addAttribute("errMessage", "Mật khẩu không khớp!!");
+            }
+        }
+        else{
+            model.addAttribute("errMessage", "Sai mật khẩu cũ!!");
+        }
         return "change-password";
     }
     
@@ -294,4 +331,13 @@ public class HomeController {
         model.addAttribute("action", "/registry/sel");
         return "registry-sel";
     }
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+    @GetMapping("/test2")
+    public String test2() {
+        return "test2";
+    }
+    
 }
