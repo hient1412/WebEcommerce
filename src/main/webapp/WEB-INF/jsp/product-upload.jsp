@@ -24,15 +24,15 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col">
+                    <div class="col-6 col-lg-4">
                         <label>Số lượng</label>
                         <form:input type="number" value="1" path="quantity" class="form-control" autocomplete="off"/>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-lg-4">
                         <label>Thương hiệu</label>
                         <form:input type="text" path="manufacturer" class="form-control" autocomplete="off"/>
                     </div>
-                    <div class="col">
+                    <div class="col-12 col-lg-4">
                         <label>Loại sản phẩm</label>
                         <form:select class="form-control" path="idCategory">
                             <c:forEach items="${categories}" var="c">

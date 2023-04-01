@@ -248,10 +248,10 @@ public class CustomerController {
         return "redirect:/customer/ship-address";
     }
     @GetMapping("/order-detail/{orderId}")
-    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId) {
+    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId,HttpSession s) {
         model.addAttribute("order", this.orderService.getOrderById(orderId));
         model.addAttribute("orderDetail", this.orderDetailService);
-
+        model.addAttribute("seller", this.sellerService);
         return "customer-order-detail";
     }
     

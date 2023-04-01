@@ -81,16 +81,16 @@
                             ${errMessage}
                         </div>
                     </c:if>
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="product-list">
-                            <div class="row mr-1">
+                            <div class="row m-1">
                                 <c:forEach items="${sellers}" var="s">
                                     <div class="white-box-2 mt-2">
-                                        <div class="row p-2">
-                                            <div class="col-md-2">
+                                        <div class="row p-2 align-items-center">
+                                            <div class="col-md-1 p-0 m-0 col-sm-3 col-3">
                                                 <a class="link-dark" href="<c:url value="/seller-detail/${s[0]}"/>"><img class="product-img-2 img-fluid rounded-circle" src="${s[2]}"/></a>
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-2 ps-5 col-sm-3 col-3">
                                                 <div class="row">
                                                     <div>
                                                         <b><a class="link-dark" href="<c:url value="/seller-detail/${s[0]}"/>">${s[1]}</a></b>
@@ -98,14 +98,13 @@
                                                     <a class="btn btn-info" href="/WebEcommerce/seller-detail/${s[0]}">Xem shop</a>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2"></div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-8 col-sm-6 col-6">
                                                 <div class="row">
-                                                    <div class="col-md-6 center" style="border-left: 1px solid #000000">
+                                                    <div class="col-md-6 col-sm-6 col-6 center" >
                                                         <h4><i class="fa-solid fa-location-dot"></i> ${s[3]}</h4>
                                                         <span>Địa chỉ</span>
                                                     </div>
-                                                    <div class="col-md-6 center" style="border-left: 1px solid #000000">
+                                                    <div class="col-md-6 col-sm-6 col-6 center" >
                                                         <h4><i class="fa-solid fa-box"></i> ${s[4]}</h4>
                                                         <span>Sản phẩm</span>
                                                     </div>
@@ -119,21 +118,26 @@
                     </c:if>
                 </c:if>
             </div>
-            <div class="row">
-                <c:if test="${productCounterS != 0 && !kw.isEmpty()}">
+            <c:if test="${productCounterS != 0 && !kw.isEmpty()}">
+                <div class="row">
                     <br>
                     <b>Tìm trong sản phẩm</b>
                     <div>
                         <span>Có <span style="color: red">${productCounterS}</span> kết quả phù hợp</span>
                     </div>
-                </c:if>
-                <c:if test="${productCounterS == 0}">
+                </div>
+            </c:if>
+            <c:if test="${productCounterS == 0}">
+                <div class="row">
                     <div style="text-align: center">
                         <i>Không tìm thấy sản phẩm phù hợp với yêu cầu tìm kiếm của bạn</i>
                     </div>
-                </c:if>
+                </div>
+            </c:if>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
                 <c:forEach items="${listProduct}" var="p">
-                    <div class="col-md-3 col-sm-6 p-1">
+                    <div class="col p-1">
                         <div class="white-box">
                             <div class="product-img">
                                 <img src="${p.imageCollection.get(0).image}">
@@ -152,7 +156,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12">
+<div class="row">
     <div class="pagination justify-content-center mt-4">
         <ul class="pagination">
             <c:forEach begin="1" end="${Math.ceil(productCounterS/count)}" var="i">

@@ -10,7 +10,7 @@
     <div class="col-md-12"><h2>THỐNG KÊ LOẠI TÀI KHOẢN</h2></div>
 </div>
 <div class="row pb-4">
-    <div class="col-5"> 
+    <div class="col-12 col-lg-5"> 
         <br>
         <table class="table table-bordered center">
             <thead>
@@ -29,7 +29,7 @@
             </tbody>
         </table> 
     </div>
-    <div class="col-7">
+    <div class="col-12 col-lg-7">
         <canvas id="myChart"></canvas>
     </div>
 </div>

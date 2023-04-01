@@ -27,15 +27,15 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col">
+                    <div class="col-6 col-lg-3">
                         <label>Số lượng</label>
                         <form:input type="number" path="quantity" class="form-control" autocomplete="off" required="required"/>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-lg-3">
                         <label>Thương hiệu</label>
                         <form:input type="text" path="manufacturer" class="form-control" autocomplete="off"/>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-lg-3">
                         <label>Loại sản phẩm</label>
                         <form:select class="form-control" path="idCategory">
                             <c:forEach items="${categories}" var="c">
@@ -43,7 +43,7 @@
                             </c:forEach>
                         </form:select>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-lg-3">
                         <label>Trạng thái</label>
                         <form:select class="form-control" path="active">
                             <form:option value="1"> Hiện</form:option>>

@@ -168,19 +168,19 @@ public class OrderRepositoryImply implements OrderRepository {
                     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                     Account account = this.accountRepository.getAcByUsername(authentication.getName());
                     order.setIdCustomer(account.getCustomer());
-
+                    order.setIdShipAdress(this.customerService.findShipPriority(account.getCustomer()));
                     order.setOrderDate(new Date());
                     Date requiredDate = new Date();
                     requiredDate.setDate(requiredDate.getDate() + 7);
                     order.setRequiredDate(requiredDate);
                     order.setActive(1);
                     order.setIsPayment(0);
-                    order.setPaymentType(0);
+                    order.setPaymentType(1);
                     order.setShipFee(0);
                     order.setIdVoucher(null);
 
                     Map<String, String> amount = Utils.cartAmountSeller(cart, s);
-                    order.setAmount(Long.parseLong(amount.get("amountSel")));
+                    order.setAmount(Long.parseLong(amount.get("amount")));
                     session.save(order);
 
                     SellerOrder sellerOrder = new SellerOrder();

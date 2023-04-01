@@ -8,22 +8,22 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div>
     <div class="p-4 mt-4 bg-light">
-        <div class="row">
-            <div class="col-md-1">
+        <div class="row justify-content-center center">
+            <div class="col-12 col-lg-2 my-2">
                 <div class="product-img-2">
                     <img class="rounded-circle img-fluid" src="${general[1]}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-12 col-lg-2 my-2">
                 <h4>${general[0]}</h4>
                 <a href="#" class="btn btn-dark">Nhắn tin</a>
             </div>
-            <div class="col-md-4">
-                <h3 class="center text-uppercase">Mô tả shop</h3>
+            <div class="col-12 col-lg-4 my-2">
+                <h4 class="text-uppercase">Mô tả shop</h4>
                 <span class="center">${seller.description}</span>
             </div>
-            <div class="col-md-4">
-                <h4 class="center text-uppercase">Sản phẩm: <span style="font-size: 30px" class="text-danger">${general[2]}</span> </h4>
+            <div class="col-12 col-lg-4 my-2">
+                <h4 class="text-uppercase">Sản phẩm: <span class="text-danger">${general[2]}</span> </h4>
             </div>
         </div>
     </div>
@@ -32,7 +32,6 @@
             <c:if test="${productBySeller.size() != 0}">
                 <h2 class="center pb-4 pt-4">Tất cả sản phẩm</h2>
                 <div class="row">
-                    <div>
                         <form action="">
                             <div class="mt-4">
                                 <label for="cateId">Danh mục: </label>
@@ -61,9 +60,8 @@
                                 <label for="pde">Giá giảm dần</label>
                             </div>
                         </form>
-                    </div>
                     <c:forEach items="${productBySeller}" var="p">
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-4 col-sm-6 col-lg-3">
                             <div class="white-box mt-3">
                                 <div class="product-img">
                                     <img src="${p.imageCollection.get(0).image}">

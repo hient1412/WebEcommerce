@@ -59,7 +59,7 @@ public class Utils {
         }
         Map<String, String> r = new HashMap<>();
         r.put("counter", String.valueOf(quantity));
-        r.put("amountSel", String.valueOf(sum));
+        r.put("amount", String.valueOf(sum));
         return r;
     }
 }

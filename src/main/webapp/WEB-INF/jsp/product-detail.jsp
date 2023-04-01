@@ -79,19 +79,19 @@
         </div>
     </div>
     <div class="p-4 m-4 bg-light">
-        <div class="row">
-            <div class="col-md-1">
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-1">
                 <div class="product-img-2">
                     <img class="rounded-circle img-fluid" src="${seller.avatar}">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-6 col-lg-3">
                 <h4>${seller.name}</h4>
                 <a href="#" class="btn btn-dark">Nhắn tin</a>
                 <a class="btn btn-info" href="<c:url value="/seller-detail/${seller.id}"/>">Xem shop</a>
             </div>
-            <div class="col-md-4 center">
-                <h4><i class="fa fa-map-marker" aria-hidden="true"></i> ${seller.idLocation.name}</h4>
+            <div class="col-6 col-lg-4 center">
+                <h5><i class="fa fa-map-marker" aria-hidden="true"></i> ${seller.idLocation.name}</h5>
                 <span>Địa chỉ</span>
             </div>
         </div>

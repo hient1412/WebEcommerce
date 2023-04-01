@@ -13,39 +13,41 @@
         </div>
     </div>
     <c:if test="${listTK.size() != 0}">
-        <table class="table table-bordered center">
-            <thead>
-                <tr>
-                    <th>Mã tài khoản</th>
-                    <th>Tên đăng nhập</th>
-                    <th>Loại tài khoản</th>
-                    <th>Trạng thái</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${list}" var="ac">
+        <div  style="overflow-x:auto;"> 
+            <table class="table table-bordered center">
+                <thead>
                     <tr>
-                        <td>${ac.id}</td>
-                        <td>${ac.username}</td>
-                        <td>${ac.role}</td>
-                        <c:if test="${ac.active == 1}">
-                            <td>Đã được duyệt</td>
-                        </c:if>
-                        <c:if test="${ac.active == 0}">
-                            <td>Chưa được duyệt</td>
-                        </c:if>
-                        <td>
-                            <a title="Sửa" href="<c:url value="/admin/account/edit"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
-                            <a title="Xóa" href="<c:url value="/admin/account/delete"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
-                        </td>
+                        <th>Mã tài khoản</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Loại tài khoản</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
                     </tr>
-                </c:forEach>
-            <td colspan="5">
-                <a class="nav-link" title="Thêm tài khoản" href="<c:url value="/admin/account/add"/>" data-toggle="tooltip">Thêm tài khoản</a>
-            </td>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach items="${list}" var="ac">
+                        <tr>
+                            <td>${ac.id}</td>
+                            <td>${ac.username}</td>
+                            <td>${ac.role}</td>
+                            <c:if test="${ac.active == 1}">
+                                <td>Đã được duyệt</td>
+                            </c:if>
+                            <c:if test="${ac.active == 0}">
+                                <td>Chưa được duyệt</td>
+                            </c:if>
+                            <td>
+                                <a title="Sửa" href="<c:url value="/admin/account/edit"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
+                                <a title="Xóa" href="<c:url value="/admin/account/delete"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                <td colspan="5">
+                    <a class="nav-link" title="Thêm tài khoản" href="<c:url value="/admin/account/add"/>" data-toggle="tooltip">Thêm tài khoản</a>
+                </td>
+                </tbody>
+            </table>
+        </div>
     </c:if>
     <c:if test="${list.size() == 0}">
         <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">

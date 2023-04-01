@@ -35,19 +35,18 @@
                                                         <a class="link-dark" href="http://localhost:8080/WebEcommerce/seller-detail/${seller.getSellerById(c.seller.id).id}"><label>${seller.getSellerById(c.seller.id).name}</label></a> <i class="fa fa-comments" aria-hidden="true"></i>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                                <div class="col">
                                                     <img
                                                         src="${c.img}"
-                                                        class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                                        class="img-fluid rounded-3">
                                                 </div>
-                                                <div class="col-md-3 col-lg-3 col-xl-3">
-                                                    <h6 class="text-muted">Sản phẩm</h6>
+                                                <div class="col">
                                                     <h6 class="text-black mb-0">${c.productName}</h6>
                                                 </div>
-                                                <div class="col-md-3 col-lg-3 col-xl-2">
+                                                <div class="col">
                                                     <span style="text-decoration: underline">đ</span> <fmt:formatNumber type="number" maxFractionDigits="3" value="${c.price}" />
                                                 </div>
-                                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex product-count">
+                                                <div class="col d-flex product-count">
                                                     <form action="# " style="display: flex;">
                                                         <input type="number" id="quantity" class="qty" onblur="updateCart(this, ${c.productId})" value="${c.count}" min="1">
                                                     </form>
@@ -66,8 +65,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 bg-grey">
-                                    <div class="p-5">
+                                <div class="col-lg-4">
+                                    <div class="p-5 bg-grey">
                                         <h4 class="fw-bold mb-5 mt-2 pt-1">HÓA ĐƠN</h4>
                                         <hr class="my-4">
 
@@ -138,8 +137,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 bg-grey">
-                                    <div class="p-5">
+                                <div class="col-lg-4 ">
+                                    <div class="p-5 bg-grey">
                                         <h3 class="fw-bold mb-5 mt-2 pt-1">HÓA ĐƠN</h3>
                                         <hr class="my-4">
 
@@ -202,8 +201,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 bg-grey">
-                                <div class="p-5">
+                            <div class="col-lg-4">
+                                <div class="p-5 bg-grey">
                                     <h3 class="fw-bold mb-5 mt-2 pt-1">HÓA ĐƠN</h3>
                                     <hr class="my-4">
 

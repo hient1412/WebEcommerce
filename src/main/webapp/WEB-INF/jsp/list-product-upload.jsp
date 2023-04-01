@@ -13,18 +13,16 @@
     <h1 class="center p-4">TÌM KIẾM</h1>
     <div class="p-4" style="background-color: #ccc">
         <form action="" >
-            <div class="row">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-sm-2">
                 <div class="col">
                     <label>Từ khóa</label>
-                    <input type="text" name="kw"/>
-                    <div class="row">
-                        <div class="col">
-                            <label>Số lượng</label>
-                            <input style="width: 70px "type="number" name="quantityMin" placeholder="Min"/>
-                            <label>-</label>
-                            <input style="width: 70px" type="number" name="quantityMax" placeholder="Max"/>
-                        </div>
-                    </div>
+                    <input class="w-50" type="text" name="kw"/>
+                </div>
+                <div class="col">
+                    <label>Số lượng</label>
+                    <input class="w-25" type="number" name="quantityMin" placeholder="Min"/>
+                    <label>-</label>
+                    <input class="w-25" type="number" name="quantityMax" placeholder="Max"/>
                 </div>
                 <div class="col">
                     <label for="cat">Danh mục</label>
@@ -34,16 +32,14 @@
                             <option value="${c.id}">${c.name}</option>
                         </c:forEach>
                     </select>
-                    <div class="row">
-                        <div class="col">
-                            <label for="active">Trạng thái</label>
-                            <select id="active"name="active">
-                                <option value="" selected>Tất cả</option>
-                                <option value="1">Đang hoạt động</option>
-                                <option value="0">Đã ẩn</option>
-                            </select>
-                        </div>
-                    </div>
+                </div>
+                <div class="col">
+                    <label for="active">Trạng thái</label>
+                    <select id="active"name="active">
+                        <option value="" selected>Tất cả</option>
+                        <option value="1">Đang hoạt động</option>
+                        <option value="0">Đã ẩn</option>
+                    </select>
                 </div>
             </div>
             <div class="center"> 
@@ -63,9 +59,9 @@
                 </div>
             </c:if>
             <div class="product-list">
-                <div class="row">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3">
                     <c:forEach items="${product}" var="p">
-                        <div class="col-md-4">
+                        <div class="col">
                             <div class="white-box mt-3">
                                 <div class="product-img">
                                     <img src="${p.imageCollection.get(0).image}">
