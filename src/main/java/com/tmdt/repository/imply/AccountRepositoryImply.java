@@ -170,4 +170,13 @@ public class AccountRepositoryImply  implements AccountRepository{
         query.setParameter("id", ac.getId());
         return query.executeUpdate();
     }
+
+    @Override
+    public int renewPassword(Account ac, String password) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        Query query = s.createQuery("UPDATE Account SET password = :pw WHERE id = :id");
+        query.setParameter("pw", password);
+        query.setParameter("id", ac.getId());
+        return query.executeUpdate();
+    }
 }

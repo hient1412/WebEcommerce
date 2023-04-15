@@ -7,7 +7,9 @@ package com.tmdt.controllers;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Image;
+import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
 import com.tmdt.pojos.Seller;
@@ -15,6 +17,7 @@ import com.tmdt.service.AccountService;
 import com.tmdt.service.CategoryService;
 import com.tmdt.service.ImageService;
 import com.tmdt.service.LocationService;
+import com.tmdt.service.MailService;
 import com.tmdt.service.OrderDetailService;
 import com.tmdt.service.OrderService;
 import com.tmdt.service.ProductService;
@@ -22,6 +25,7 @@ import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
 import com.tmdt.validator.SellerValidator;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,9 +33,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.bytebuddy.utility.RandomString;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,6 +86,8 @@ public class SellerController {
     private Environment env;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -359,8 +368,152 @@ public class SellerController {
     public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId) {
         model.addAttribute("order", this.orderService.getOrderById(orderId));
         model.addAttribute("orderDetail", this.orderDetailService);
-
+        model.addAttribute("cancel", new Cancel());
         return "sel-order-detail";
+    }
+    
+    
+    @PostMapping("/order-detail/{orderId}")
+    public String orderDetailPost(Model model, @PathVariable(value = "orderId") int orderId, Authentication a, @ModelAttribute(value = "cancel") Cancel cancels, RedirectAttributes r) {
+        String errMessage = "";
+        Orders o = this.orderService.getOrderById(orderId);
+        o.setActive(0);
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        cancels.setIdOrder(o);
+        cancels.setIdAccount(ac);
+        if (this.orderService.addCancel(cancels) == true) {
+            if (this.orderService.updateActive(o) == 1) {
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                DecimalFormat df = new DecimalFormat("###,###,###,###");
+                r.addFlashAttribute("errMessage", String.format("Đã hủy thành công đơn hàng!!"));
+                String sendTo = o.getIdCustomer().getEmail();
+                String subject = "WEBECOMMERCE THÔNG BÁO - HỦY ĐƠN HÀNG THÀNH CÔNG " + RandomString.make(4);
+                String content = "<div style=\"text-align:center;\">\n"
+                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px\">\n"
+                        + "        <h3 style=\"color:red\">Đã hủy đơn hàng</h3>\n"
+                        + "        <p>vào lúc " + dt.format(cancels.getCancelDate()) + "</p>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "\n"
+                        + "<div >"
+                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
+                        + "        <div style=\"padding:10px\">\n"
+                        + "            <div style=\"display: flex;\">"
+                        + "                <div style=\"display:flex;\">\n"
+                        + "                    <div>\n"
+                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + this.sellerService.getSeller(o.getId())[1] + "\"></a>\n"
+                        + "                    </div>\n"
+                        + "                    <div style=\"font-size: 24px;\">\n"
+                        + "                        <label>" + this.sellerService.getSeller(o.getId())[0] + "</label></a>\n"
+                        + "                    </div>\n"
+                        + "                </div>\n"
+                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
+                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + this.sellerService.getSeller(o.getId())[2] + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
+                        + "                </div>\n"
+                        + "            </div>"
+                        + "<div style=\"margin-bottom:10px\">\n"
+                        + "                <div >\n"
+                        + "                    <table style=\"width:100%\" >\n";
+                for (OrderDetail od : this.orderDetailService.getOrderDetail(o.getId())) {
+                    content += "<tbody>\n"
+                            + "                            <tr >\n"
+                            + "                                <td><img style='width:60px; height:50px;margin-right:10px; border:1px solid' src=\"";
+                    List<Image> l = (List<Image>) od.getIdProduct().getImageCollection();
+                    content += l.get(0).getImage() + "\"</td><td ><b>" + od.getIdProduct().getName() + "</b></td><td><b>x " + od.getQuantity() + "</b></td>"
+                            + "                                <td style='text-align:right'><b> <span style='text-decoration:underline'>đ</span> " + df.format(od.getUnitPrice()) + "</b></td></tr>"
+                            + "                        </tbody>\n";
+                }
+                content += "                    </table>\n"
+                        + "                </div>\n"
+                        + "            </div> "
+                        + "</div>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "<div style=\"margin-bottom:10px\">\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px;\" >\n"
+                        + "        <table style=\"width: 100%;\">\n"
+                        + "            <tbody style=\"background-color: #f8f9fa;\">\n"
+                        + "               <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Yêu cầu bởi</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\">\n";
+                if (cancels.getIdAccount().getRole().equals("ROLE_CUSTOMER")) {
+                    content += "<span>Người mua</span>";
+                } else if (cancels.getIdAccount().getRole().equals("ROLE_SELLER")) {
+                    content += "<span>Người bán</span>";
+                } else {
+                    content += "<span>Admin</span>";
+                }
+
+                content += "</td>\n"
+                        + "                </tr>\n"
+                        + "                <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Yêu cầu vào</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + dt.format(cancels.getCancelDate()) + "</td>\n"
+                        + "                </tr>\n"
+                        + "                <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Lý do</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span>" + cancels.getCancelDescription() + "</span> </td>\n"
+                        + "                </tr>\n"
+                        + "                <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Phương thức thanh toán</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"> \n";
+
+                if (o.getPaymentType() == 1) {
+                    content += "<span>Thanh toán tại nhà</span>";
+                } else if (o.getPaymentType() == 2) {
+                    content += "<span>Thanh toán online</span>";
+                }
+                content += "                    </td>\n"
+                        + "                </tr>\n"
+                        + "            </tbody>\n"
+                        + "        </table>\n"
+                        + "    </div>\n"
+                        + "</div>";
+                mailService.sendMail(sendTo, subject, content);
+                return "redirect:/seller/cancel/" + o.getId();
+            } else {
+                model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể hủy đơn hàng"));
+            }
+        } else {
+            model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể hủy đơn hàng"));
+        }
+        return "sel-order-detail";
+    }
+    
+    
+    @GetMapping("/cancel/{orderId}")
+    public String cancel(Model model, @PathVariable(value = "orderId") int orderId ) {
+        model.addAttribute("orderDetail", this.orderDetailService);
+        model.addAttribute("seller", this.sellerService);
+        model.addAttribute("order",this.orderService.getOrderById(orderId));
+        model.addAttribute("cancel",this.orderService.getCancel(this.orderService.getOrderById(orderId)));
+        return "cancel";
+    }
+    
+    @GetMapping("/order-detail/{orderId}/send")
+    public String send(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r, @RequestParam(name = "daySend")@DateTimeFormat(pattern="yyyy-MM-dd") Date day) {
+        Orders o = this.orderService.getOrderById(orderId);
+        o.setActive(3);
+        o.setDaySend(day);
+        if(this.orderService.updateActiveAndSend(o) == 1){
+            r.addFlashAttribute("errMessage", String.format("Xác nhận ngày gửi hàng thành công"));
+            return "redirect:/seller/order-detail/" + o.getId();
+        } else {
+            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể hủy đơn hàng"));
+        }
+        return "redirect:/seller/order-detail/" + o.getId();
+    }
+    @GetMapping("/order-detail/{orderId}/confirm")
+    public String confirm(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
+        Orders o = this.orderService.getOrderById(orderId);
+        o.setActive(2);
+        if(this.orderService.updateActive(o) == 1){
+            r.addFlashAttribute("errMessage", String.format("Xác nhận đơn hàng thành công"));
+            return "redirect:/seller/order-detail/" + o.getId();
+        } else {
+            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể xác nhận đơn hàng"));
+        }
+        return "redirect:/seller/order-detail/" + o.getId();
     }
     
 }

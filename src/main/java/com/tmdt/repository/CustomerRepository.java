@@ -27,4 +27,6 @@ public interface CustomerRepository {
     List<ShipAdress> getShipAdressPriority(int priority,int idCustomer);
     int setdefaultShip(ShipAdress s);
     ShipAdress findShipPriority (Customer c);
+    Customer getCusByEmail (String email);
+
 }

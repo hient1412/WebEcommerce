@@ -28,4 +28,5 @@ public interface ProductRepository {
     List<Review> getReview(int productId);
     Review addReview(String review, int productId, int rating);
     List<Product> getProductBySeller(Map<String,String> params,int sellerId,int page);
+    List getRating(int productId);
 }

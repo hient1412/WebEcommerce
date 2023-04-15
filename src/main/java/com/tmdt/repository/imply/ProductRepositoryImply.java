@@ -380,4 +380,19 @@ public class ProductRepositoryImply implements ProductRepository {
         query.setParameter("id", p.getId());
         return query.executeUpdate();
     }
+    
+    @Override
+    public List getRating(int productId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Review> query = builder.createQuery(Review.class);
+        Root root = query.from(Review.class);
+        query.select(root.get("rating"));
+        query.where(builder.equal(root.get("idProduct"), productId));
+
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
+
+    
 }

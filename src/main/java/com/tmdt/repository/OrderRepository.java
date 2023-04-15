@@ -4,8 +4,10 @@
  */
 package com.tmdt.repository;
 
+import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Orders;
+import com.tmdt.pojos.Product;
 import java.util.List;
 import java.util.Map;
 
@@ -18,4 +20,10 @@ public interface OrderRepository {
     List<Orders> getOrderByCusId(Map<String, String> params, int cusId, int page);
     Orders getOrderById(int id);
     boolean addReceipt(Map<Integer, Cart> cart);
+    boolean addCancel(Cancel cancel);
+    int updateActive(Orders o);
+    Cancel getCancel(Orders o);
+    int updateQuantityProduct(Product p);
+    int updateActiveAndSend(Orders o);
+    int updateActiveAndReceived(Orders o);
 }

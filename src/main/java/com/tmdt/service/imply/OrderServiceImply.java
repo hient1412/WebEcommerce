@@ -4,10 +4,12 @@
  */
 package com.tmdt.service.imply;
 
+import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Orders;
 import com.tmdt.repository.OrderRepository;
 import com.tmdt.service.OrderService;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +46,32 @@ public class OrderServiceImply implements OrderService{
             return false;
         }
     }
+
+    @Override
+    public boolean addCancel(Cancel cancel) {
+        cancel.setCancelDate(new Date());
+        return this.orderRepository.addCancel(cancel);
+    }
+
+    @Override
+    public int updateActive(Orders o) {
+        return this.orderRepository.updateActive(o);
+    }
+
+    @Override
+    public Cancel getCancel(Orders o) {
+        return this.orderRepository.getCancel(o);
+    }
+
+    @Override
+    public int updateActiveAndSend(Orders o) {
+        return this.orderRepository.updateActiveAndSend(o);
+    }
+
+    @Override
+    public int updateActiveAndReceived(Orders o) {
+        o.setOrderReceived(new Date());
+        return this.orderRepository.updateActiveAndReceived(o);
+    }
+
 }

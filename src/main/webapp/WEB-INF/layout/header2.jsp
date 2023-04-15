@@ -39,8 +39,8 @@
         </div>
     </div>
 </nav>
-<nav class="navbar navbar-expand-lg navbar-dark nav-reponse">
-    <div class="collapse navbar-collapse">
+<nav class="navbar navbar-expand-lg navbar-expand-md navbar-dark nav-reponse" >
+    <div class="collapse navbar-collapse" id="navbar-main-collapse">
         <div class="container">
             <ul class="navbar-nav">
                 <c:forEach items="${categories}" var="i">

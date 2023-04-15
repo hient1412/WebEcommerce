@@ -23,4 +23,5 @@ public interface AccountService extends UserDetailsService {
     boolean deleteAc(Account ac);
     List<Account> getAcUserNameList(String username);
     int changePassword(Account ac);
+    int renewPassword(Account ac, String password);
 }

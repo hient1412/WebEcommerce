@@ -20,6 +20,9 @@
                 font-size: 17px;
                 padding: 8px;
             }
+            .text2 {
+                text-transform: capitalize;
+            }
 
             * {
                 box-sizing: border-box;
@@ -131,13 +134,13 @@
                             <div class="col-50">
                                 <h3>Thông tin khách hàng</h3>
                                 <label for="fname"><i class="fa fa-user"></i> Tên khách hàng</label>
-                                <input type="text" id="fname" name="firstname" value="${cus.lastName} ${cus.firstName}" disabled>
+                                <input type="text" id="fname" name="firstname" value="${shipAddress.name}" disabled>
                                 <label for="email"><i class="fa fa-phone"></i> Số điện thoại</label>
-                                <input type="text" id="phone" name="phone" value="${cus.phone}" disabled>
+                                <input type="text" id="phone" name="phone" value="${shipAddress.phone}" disabled>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
                                 <input type="text" id="email" name="email" value="${cus.email}" disabled>
                                 <label for="adr"><i class="fa fa-address-card-o"></i> Địa chỉ</label>
-                                <input type="text" id="adr" name="address" value=""> 
+                                <input type="text" class="text2" id="adr" name="address" value="${shipAddress.address}, ${shipAddress.ward}, ${shipAddress.district}, ${shipAddress.city.name} " disabled > 
                             </div>
                         </div>
                     </form>
@@ -158,8 +161,9 @@
                 </div>
             </div>
         </div>
-
     </body>
 </html>
+
+
 
 <script src="<c:url value="/js/cart.js" />"></script>

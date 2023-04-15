@@ -16,17 +16,23 @@ import com.tmdt.service.CategoryService;
 import com.tmdt.service.CustomerService;
 import com.tmdt.service.ImageService;
 import com.tmdt.service.LocationService;
+import com.tmdt.service.MailService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.utils.Utils;
 import com.tmdt.validator.AccountValidator;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import net.bytebuddy.utility.RandomString;
 import org.hibernate.annotations.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -37,6 +43,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -49,6 +56,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class HomeController {
 
+    @Autowired
+    private MailService mailService;
     @Autowired
     private AccountService userDetailsService;
     @Autowired
@@ -73,7 +82,7 @@ public class HomeController {
     private BCryptPasswordEncoder passwordEncoder;
 
     @ModelAttribute
-    public void common(Model model) {
+    public void common(Model model, HttpSession s) {
         model.addAttribute("categories", this.categoryService.getCates());
     }
 
@@ -129,11 +138,11 @@ public class HomeController {
         model.addAttribute("categories", this.categoryService.getCates());
 
         String kw = params.getOrDefault("kw", "");
-        
+
         model.addAttribute("sellers", this.sellerService.getSellers(kw, page));
         model.addAttribute("sellerCounterS", this.sellerService.getSellers(kw, 0).size());
         Map<String, String> pre = new HashMap<>();
-        
+
         pre.put("kw", kw);
         pre.put("fp", params.getOrDefault("fp", ""));
         pre.put("tp", params.getOrDefault("tp", ""));
@@ -159,9 +168,9 @@ public class HomeController {
         model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
         model.addAttribute("image", this.imageService.getImageByProductId(productId));
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
-        model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")),
-                this.productService.getProductById(productId).getIdSeller().getId()));
-
+        model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")), this.productService.getProductById(productId).getIdSeller().getId()));
+        model.addAttribute("avgRating", Utils.avgRating(this.productService.getRating(productId)));
+        model.addAttribute("countRating", this.productService.getRating(productId).size());
         return "product-detail";
     }
 
@@ -209,7 +218,7 @@ public class HomeController {
         if (br.hasErrors()) {
             return new ModelAndView("registry");
         }
-        if(this.userDetailsService.getAccount(ac.getUsername()).size() > 0){
+        if (this.userDetailsService.getAccount(ac.getUsername()).size() > 0) {
             model.addAttribute("errMessage", "Tên đăng nhập đã tồn tại!!");
         } else if (ac.getPassword().equals(ac.getConfirmPassword())) {
             if (ac.getRole().equals("ROLE_SELLER")) {
@@ -233,41 +242,39 @@ public class HomeController {
     }
 
     @GetMapping("/change-password")
-    public String changePass(Model model,Authentication a,HttpSession s) {
+    public String changePass(Model model, Authentication a, HttpSession s) {
         model.addAttribute("ac", this.userDetailsService.getAcByUsername(a.getName()));
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         return "change-password";
     }
+
     @PostMapping("/change-password")
-    public String change(Authentication a,Model model,RedirectAttributes r, @ModelAttribute(value = "ac") Account ac) {
+    public String change(Authentication a, Model model, RedirectAttributes r, @ModelAttribute(value = "ac") Account ac) {
         Account acOld = this.userDetailsService.getAcByUsername(a.getName());
-        if(this.passwordEncoder.matches(ac.getPasswordOld(),acOld.getPassword())){
-            if(ac.getPasswordNew().equals(ac.getConfirmPassword())){
+        if (this.passwordEncoder.matches(ac.getPasswordOld(), acOld.getPassword())) {
+            if (ac.getPasswordNew().equals(ac.getConfirmPassword())) {
                 ac.setId(acOld.getId());
-                if (ac.getPasswordNew().length() < 8)
+                if (ac.getPasswordNew().length() < 8) {
                     model.addAttribute("errMessage", "Mật khẩu cần có tối thiểu 8 ký tự!!");
-                else if (ac.getPasswordNew().length() > 25)
-                    model.addAttribute("errMessage", "Mật khẩu không được quá 25 ký tự!!");  
-                else if(this.passwordEncoder.matches(ac.getPasswordNew(),acOld.getPassword()))
-                    model.addAttribute("errMessage", "Mật khẩu mới không được trùng mật khẩu cũ!!");  
-                else if(this.userDetailsService.changePassword(ac) > 0){
+                } else if (ac.getPasswordNew().length() > 25) {
+                    model.addAttribute("errMessage", "Mật khẩu không được quá 25 ký tự!!");
+                } else if (this.passwordEncoder.matches(ac.getPasswordNew(), acOld.getPassword())) {
+                    model.addAttribute("errMessage", "Mật khẩu mới không được trùng mật khẩu cũ!!");
+                } else if (this.userDetailsService.changePassword(ac) > 0) {
                     r.addFlashAttribute("errMessage", "Đổi mật khẩu thành công!!");
                     return "redirect:/";
-                }
-                else{
+                } else {
                     model.addAttribute("errMessage", "Có lỗi xảy ra đổi mật khẩu không thành công!!");
                 }
-            }
-            else {
+            } else {
                 model.addAttribute("errMessage", "Mật khẩu không khớp!!");
             }
-        }
-        else{
+        } else {
             model.addAttribute("errMessage", "Sai mật khẩu cũ!!");
         }
         return "change-password";
     }
-    
+
     @GetMapping("/registry/cus")
     public String cusView(Model model, @RequestParam(name = "id", required = false) String id) {
         model.addAttribute("customer", new Customer());
@@ -331,13 +338,126 @@ public class HomeController {
         model.addAttribute("action", "/registry/sel");
         return "registry-sel";
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotView(Model model, HttpSession s) {
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+        return "forgot-password";
+    }
+    String token = RandomString.make(8);
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(HttpServletRequest request, Model model) {
+        String errMessage = "";
+        String email = request.getParameter("email");
+        String role = request.getParameter("role");
+        if (role.equals("ROLE_CUSTOMER")) {
+            try {
+                Customer c = this.customerService.getCusByEmail(email);
+                String content = "<h3>WebEcommerce gửi mã xác thực để cấp lại mật khẩu</h3>"
+                        + "<br><br><span>Mã xác thực:<span><strong>" + token + "</strong>";
+                this.mailService.sendMail(email, "Xác nhận mã xác thực", content);
+                return "redirect:/confirm-token?email=" + email + "&role=" + role;
+            } catch (Exception e) {
+                errMessage = "Không có mail hợp lệ hoặc chọn nhầm vai trò (Khách hàng / Người bán)";
+            }
+        } else {
+            try {
+                Seller s = this.sellerService.getSelByEmail(email).get(0);
+                String content = "<h3>WebEcommerce gửi mã xác thực để cấp lại mật khẩu</h3>"
+                        + "<br><br><span>Mã xác thực:<span><h5> " + token + "</h5>";
+                this.mailService.sendMail(email, "Xác nhận mã xác thực", content);
+                return "redirect:/confirm-token?email=" + email + "&role=" + role;
+            } catch (Exception e) {
+                errMessage = "Không có mail hợp lệ hoặc chọn nhầm vai trò (Khách hàng / Người bán)";
+            }
+
+        }
+        model.addAttribute("errMessage", errMessage);
+        return "forgot-password";
+    }
+
+    @GetMapping("/confirm-token")
+    public String confirmTokenView(Model model, HttpSession s) {
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+        return "confirm-token";
+    }
+
+    @PostMapping("/confirm-token")
+    public String confirmToken(Model model, HttpServletRequest request, @RequestParam(name = "email") String email, @RequestParam(name = "role") String role) {
+        String errMessage = "";
+        String sendtoken = request.getParameter("sendtoken");
+        if (token.equals(sendtoken)) {
+            return "redirect:/renew-password?email=" + email + "&role=" + role;
+        } else {
+            errMessage = "Sai mã xác thực. Một email mới sẽ gửi đến bạn. Yêu cầu nhập lại!";
+            token = RandomString.make(8);
+            String content = "<h3>WebEcommerce gửi mã xác thực để cấp lại mật khẩu</h3>"
+                    + "<br><br><span>Mã xác thực:<span><h5> " + token + "</h5>";
+            this.mailService.sendMail(email, "Xác nhận mã xác thực", content);
+            model.addAttribute("errMessage", errMessage);
+        }
+        return "confirm-token";
+    }
+    
+    @GetMapping("/renew-password")
+    public String renewPass(Model model, HttpSession s) {
+        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+        return "renew-password";
+    }
+
+    @PostMapping("/renew-password")
+    public String renewPass(Model model, RedirectAttributes r, 
+            HttpServletRequest request, @RequestParam(name = "role") String role, @RequestParam(name = "email") String email) {
+        token = RandomString.make(8);
+        String passwordNew = request.getParameter("passwordNew");
+        String confirmPassword = request.getParameter("confirmPassword");
+        if (role.equals("ROLE_CUSTOMER")) {
+            Customer cus = this.customerService.getCusByEmail(email);
+            Account acOld = cus.getIdAccount();
+            if (passwordNew.equals(confirmPassword)) {
+                if (passwordNew.length() < 8) {
+                    model.addAttribute("errMessage", "Mật khẩu cần có tối thiểu 8 ký tự!!");
+                } else if (passwordNew.length() > 25) {
+                    model.addAttribute("errMessage", "Mật khẩu không được quá 25 ký tự!!");
+                } else if (this.userDetailsService.renewPassword(acOld,passwordNew) > 0) {
+                    r.addFlashAttribute("errMessage", "Tạo mật khẩu thành công!!");
+                    return "redirect:/login";
+                } else {
+                    model.addAttribute("errMessage", "Có lỗi xảy ra tạo mật khẩu không thành công!!");
+                }
+            } else {
+                model.addAttribute("errMessage", "Mật khẩu không khớp!!");
+            }
+        } else if (role.equals("ROLE_SELLER")) {
+            Seller sel = this.sellerService.getSelByEmail(email).get(0);
+            Account acOld = sel.getIdAccount();
+            if (passwordNew.equals(confirmPassword)) {
+                if (passwordNew.length() < 8) {
+                    model.addAttribute("errMessage", "Mật khẩu cần có tối thiểu 8 ký tự!!");
+                } else if (passwordNew.length() > 25) {
+                    model.addAttribute("errMessage", "Mật khẩu không được quá 25 ký tự!!");
+                } else if (this.userDetailsService.renewPassword(acOld,passwordNew) > 0) {
+                    r.addFlashAttribute("errMessage", "Tạo mật khẩu thành công!!");
+                    return "redirect:/login";
+                } else {
+                    model.addAttribute("errMessage", "Có lỗi xảy ra tạo mật khẩu không thành công!!");
+                }
+            } else {
+                model.addAttribute("errMessage", "Mật khẩu không khớp!!");
+            }
+        }
+        return "renew-password";
+    }
+
     @GetMapping("/test")
     public String test() {
         return "test";
     }
+
     @GetMapping("/test2")
     public String test2() {
         return "test2";
     }
-    
+
 }

@@ -99,5 +99,9 @@ public class AccountServiceImply implements AccountService{
         return this.accountRepository.changePassword(ac);
     }
 
+    @Override
+    public int renewPassword(Account ac, String password) {
+        return this.accountRepository.renewPassword(ac,this.passwordEncoder.encode(password));
+    }
 
 }

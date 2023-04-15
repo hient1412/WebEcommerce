@@ -108,7 +108,16 @@ public class Orders implements Serializable {
     @JoinColumn(name = "id_shipadress", referencedColumnName = "id")
     @ManyToOne
     private ShipAdress idShipAdress;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idOrder")
+    private Collection<Cancel> cancelCollection;
+    @Column(name = "daySend")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date daySend;
+    @Column(name = "order_received")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date orderReceived;
     public Orders() {
     }
 
@@ -267,6 +276,48 @@ public class Orders implements Serializable {
      */
     public void setIdShipAdress(ShipAdress idShipAdress) {
         this.idShipAdress = idShipAdress;
+    }
+
+    /**
+     * @return the cancelCollection
+     */
+    public Collection<Cancel> getCancelCollection() {
+        return cancelCollection;
+    }
+
+    /**
+     * @param cancelCollection the cancelCollection to set
+     */
+    public void setCancelCollection(Collection<Cancel> cancelCollection) {
+        this.cancelCollection = cancelCollection;
+    }
+
+    /**
+     * @return the daySend
+     */
+    public Date getDaySend() {
+        return daySend;
+    }
+
+    /**
+     * @param daySend the daySend to set
+     */
+    public void setDaySend(Date daySend) {
+        this.daySend = daySend;
+    }
+
+    /**
+     * @return the orderReceived
+     */
+    public Date getOrderReceived() {
+        return orderReceived;
+    }
+
+    /**
+     * @param orderReceived the orderReceived to set
+     */
+    public void setOrderReceived(Date orderReceived) {
+        this.orderReceived = orderReceived;
     }
 
     

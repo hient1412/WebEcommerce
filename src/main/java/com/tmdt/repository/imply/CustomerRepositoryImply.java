@@ -215,5 +215,19 @@ public class CustomerRepositoryImply implements CustomerRepository {
         return (ShipAdress) q.getSingleResult();
     }
 
+    @Override
+    public Customer getCusByEmail(String email) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
+        CriteriaQuery<Customer> q = builder.createQuery(Customer.class);
+        Root root = q.from(Customer.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("email"), email));
+       
+        Query query = s.createQuery(q);
+        return (Customer) query.getSingleResult();
+    }
+
 
 }

@@ -13,7 +13,7 @@
 <div class="p-4" style="background-color: #ccc">
     <form action="" >
         <div class="row row-cols-1 row-cols-md-2 row-cols-sm-2">
-                <div class="col">
+            <div class="col">
                 <label>Mã đơn hàng</label>
                 <input type="number" name="idOrder" class="form-control" autocomplete="off"/>
             </div>
@@ -30,6 +30,10 @@
                 <select class="form-control" id="active"name="active">
                     <option value="" selected>Tất cả</option>
                     <option value="1">Đã đặt hàng</option>
+                    <option value="2">Chờ lấy hàng</option>
+                    <option value="3">Chờ vận chuyển</option>
+                    <option value="4">Đang giao</option>
+                    <option value="5">Đã hoàn thành</option>
                     <option value="0">Đã hủy</option>
                 </select>
             </div>
@@ -82,7 +86,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="row">
                                     <c:forEach items="${orderDetail.getOrderDetail(o.id)}" var="od">
-                                       <div class="col-4 col-md-2">
+                                        <div class="col-4 col-md-2">
                                             <div class="product-img-3">
                                                 <a href="<c:url value="/product-detail/${od.idProduct.id}"/>">
                                                     <div>
@@ -106,7 +110,7 @@
                                     </c:forEach>
                                 </div>
                             </div>
-                             <div class="col-12 col-lg-6">
+                            <div class="col-12 col-lg-6">
                                 <div class="row">
                                     <div class="col-12 col-lg-4 text-end">
                                         <div>
@@ -123,6 +127,18 @@
                                         <div>
                                             <c:if test="${o.active == 1}">
                                                 <label>Đã đặt hàng</label>
+                                            </c:if>
+                                                <c:if test="${o.active == 2}">
+                                                <label>Chờ lấy hàng</label>
+                                            </c:if>
+                                            <c:if test="${o.active == 3}">
+                                                <label>Chờ vận chuyển</label>
+                                            </c:if>
+                                            <c:if test="${o.active == 4}">
+                                                <label>Đang giao</label>
+                                            </c:if>
+                                            <c:if test="${o.active == 5}">
+                                                <label>Đã hoàn thành</label>
                                             </c:if>
                                             <c:if test="${o.active == 0}">
                                                 <label>Đã hủy</label>

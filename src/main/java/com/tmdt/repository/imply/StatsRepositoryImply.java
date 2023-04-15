@@ -141,6 +141,7 @@ public class StatsRepositoryImply implements StatsRepository {
         predicates.add(builder.equal(rootOd.get("idOrder"), rootO.get("id")));
         predicates.add(builder.equal(rootSO.get("idSeller"), rootS.get("id")));
         predicates.add(builder.equal(rootSO.get("idOrder"), rootO.get("id")));
+        predicates.add(builder.equal(rootO.get("active"), 5));
         predicates.add(builder.equal(rootS.get("id"), seller));
         
         query.multiselect(root.get("id"), root.get("name"),

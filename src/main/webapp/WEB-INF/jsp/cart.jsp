@@ -91,7 +91,7 @@
                                         </div>
                                         <sec:authorize access="isAuthenticated()">
                                             <sec:authorize access="hasRole('ROLE_CUSTOMER')">
-                                                <a class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark" href="<c:url value="/checkout"/>">Thanh toán </a>
+                                                <a class="btn btn-dark btn-block btn-lg" data-mdb-ripple-color="dark" href="<c:url value="/customer/checkout"/>">Thanh toán </a>
                                             </sec:authorize>
                                             <sec:authorize access="!hasRole('ROLE_CUSTOMER')">
                                                 <div  class="center text-danger">

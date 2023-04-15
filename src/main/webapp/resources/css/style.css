@@ -480,18 +480,3 @@ input:checked+span{
         display: none;
     }
 }
-@media screen and (min-width: 1024px) {
-    .bld-cat{
-        display: none
-    }
-}
-.scrollable-x {
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-@media screen and (max-width: 1023px) {
-    .nav-reponse{
-        display:none;
-    }
-}

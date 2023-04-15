@@ -31,6 +31,12 @@
                 <div class="row product p-4" style="height: 635px;">
                     <div class="mt-4 mb-4">
                         <h3 class="text-uppercase">${product.name}</h3>
+                        <c:if test="${countRating != 0}">
+                            <span>${avgRating} <label style="color: yellow; font-size: 20px">&#9733;</label></span>
+                        </c:if>
+                        <c:if test="${countRating == 0}">
+                            <span><i>(Chưa có lượt đánh giá)</i></span>
+                        </c:if>
                         <div class="price d-flex flex-row align-items-center"> <span class="act-price"><span style="text-decoration: underline">đ</span><fmt:formatNumber value="${product.price}" maxFractionDigits="3" type="number"/></span>
                         </div>
                         <!--                        <h3 class="text-uppercase">product.name</h3>
@@ -96,6 +102,17 @@
             </div>
         </div>
     </div>
+    <h3>ĐÁNH GIÁ SẢN PHẨM</h3>
+    <c:if test="${countRating != 0}">
+        <div class="py-2">
+            <span>${avgRating}/5 <label style="color: yellow; font-size: 20px">&#9733;</label></span> <span>(${countRating} lượt đánh giá)</span>
+        </div>
+    </c:if>
+    <c:if test="${countRating == 0}">
+        <div class="py-2">
+            <span><i>(Chưa có lượt đánh giá)</i></span>
+        </div>
+    </c:if>
     <c:url value="/api/product/${product.id}/review" var="endpoint"/>
     <sec:authorize access="isAuthenticated()">
         <sec:authorize access="hasRole('ROLE_CUSTOMER')">
@@ -151,13 +168,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
 <script>
-    window.onload = function () {
-        loadReview('${endpoint}');
-    };
-    var today = new Date();
-    var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-    var time = today.getHours() + ":" + today.getMinutes();
+                        window.onload = function () {
+                            loadReview('${endpoint}');
+                        };
+                        var today = new Date();
+                        var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+                        var time = today.getHours() + ":" + today.getMinutes();
 
-    document.getElementById("clock").innerHTML = time;
-    document.getElementById("calendar").innerHTML = date;
+                        document.getElementById("clock").innerHTML = time;
+                        document.getElementById("calendar").innerHTML = date;
 </script>

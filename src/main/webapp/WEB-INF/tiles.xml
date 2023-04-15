@@ -219,4 +219,20 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Chi tiết sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/sel-order-detail.jsp" />
     </definition>
+    <definition name="cancel" extends="baseLayout">
+        <put-attribute name="title" value="Hủy sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/jsp/cancel.jsp" />
+    </definition>
+    <definition name="forgot-password" extends="baseLayout">
+        <put-attribute name="title" value="Quên mật khẩu" />
+        <put-attribute name="content" value="/WEB-INF/jsp/forgot-password.jsp" />
+    </definition>
+    <definition name="confirm-token" extends="baseLayout">
+        <put-attribute name="title" value="Xác nhận mã xác thực" />
+        <put-attribute name="content" value="/WEB-INF/jsp/confirm-token.jsp" />
+    </definition>
+    <definition name="renew-password" extends="baseLayout">
+        <put-attribute name="title" value="Tạo mật khẩu mới" />
+        <put-attribute name="content" value="/WEB-INF/jsp/renew-password.jsp" />
+    </definition>
 </tiles-definitions>

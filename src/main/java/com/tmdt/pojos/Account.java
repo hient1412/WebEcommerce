@@ -103,6 +103,9 @@ public class Account implements Serializable {
     @OneToOne(mappedBy = "idAccount")
     private Customer customer;
     @JsonIgnore
+    @OneToMany(cascade = javax.persistence.CascadeType.ALL, mappedBy = "idAccount")
+    private Collection<Cancel> cancelCollection;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "idAccount")
     private Set<Review> reviewSet;
 
@@ -268,4 +271,19 @@ public class Account implements Serializable {
     public void setPasswordOld(String passwordOld) {
         this.passwordOld = passwordOld;
     }
+
+    /**
+     * @return the cancelCollection
+     */
+    public Collection<Cancel> getCancelCollection() {
+        return cancelCollection;
+    }
+
+    /**
+     * @param cancelCollection the cancelCollection to set
+     */
+    public void setCancelCollection(Collection<Cancel> cancelCollection) {
+        this.cancelCollection = cancelCollection;
+    }
+
 }

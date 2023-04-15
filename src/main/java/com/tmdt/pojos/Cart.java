@@ -5,7 +5,6 @@
 package com.tmdt.pojos;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  *

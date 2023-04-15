@@ -49,27 +49,4 @@ public class CartController {
         model.addAttribute("seller", this.sellerService);
         return "cart";
     }
-
-    @GetMapping("/checkout")
-    public String checkout(Model model, Authentication authentication, HttpSession session) {
-        Account ac = this.userDetailsService.getAcByUsername(authentication.getName());
-        model.addAttribute("ac", ac);
-        try {
-            model.addAttribute("cus", this.customerService.getCusById(ac.getCustomer().getId()));
-        } catch (Exception e) {
-            return "redirect:/";
-        }
-
-        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) session.getAttribute("cartProduct")));
-        Map<Integer, Cart> cartProduct = (Map<Integer, Cart>) session.getAttribute("cartProduct");
-
-        if (cartProduct != null) {
-            model.addAttribute("cartProducts", cartProduct.values());
-        } else {
-            model.addAttribute("cartProducts", null);
-        }
-
-        model.addAttribute("cartAmount", Utils.cartAmount(cartProduct));
-        return "checkout";
-    }
 }

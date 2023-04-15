@@ -39,7 +39,7 @@
         </form>
         <div class="text-center p-2">
             <p>Bạn chưa có tài khoản? <a href="${registry}">Đăng ký ngay</a></p>
-            <a href="#">Quên mật khẩu</a>
+            <a href="<c:url value="/forgot-password"/>">Quên mật khẩu</a>
         </div>
         <c:if test="${param.error != null}">
             <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">

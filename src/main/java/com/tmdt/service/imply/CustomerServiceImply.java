@@ -124,5 +124,10 @@ public class CustomerServiceImply implements CustomerService {
         return this.customerRepository.findShipPriority(c);
     }
 
+    @Override
+    public Customer getCusByEmail(String email) {
+        return this.customerRepository.getCusByEmail(email);
+    }
+
 
 }

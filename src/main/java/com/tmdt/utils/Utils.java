@@ -62,4 +62,15 @@ public class Utils {
         r.put("amount", String.valueOf(sum));
         return r;
     }
+    public static Double avgRating(List<Integer> review) {
+        double pAvgRating = 0;
+        double pRating = 0;
+        if (review.size() != 0) {
+            for(Integer r : review){
+                pRating += r;
+            }
+            pAvgRating = pRating / review.size();
+        }
+      return Math.ceil(pAvgRating * 100 ) / 100;
+    }
 }

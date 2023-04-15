@@ -30,6 +30,10 @@
                     <select class="form-control" id="active"name="active">
                         <option value="" selected>Tất cả</option>
                         <option value="1">Đã đặt hàng</option>
+                        <option value="2">Chờ lấy hàng</option>
+                        <option value="3">Chờ vận chuyển</option>
+                        <option value="4">Đang giao</option>
+                        <option value="5">Đã hoàn thành</option>
                         <option value="0">Đã hủy</option>
                     </select>
                 </div>
@@ -122,6 +126,18 @@
                                             <div>
                                                 <c:if test="${o.active == 1}">
                                                     <label>Đã đặt hàng</label>
+                                                </c:if>
+                                                    <c:if test="${o.active == 2}">
+                                                    <label>Chờ lấy hàng</label>
+                                                </c:if>
+                                                <c:if test="${o.active == 3}">
+                                                    <label>Chờ vận chuyển</label>
+                                                </c:if>
+                                                <c:if test="${o.active == 4}">
+                                                    <label>Đang giao</label>
+                                                </c:if>
+                                                <c:if test="${o.active == 5}">
+                                                    <label>Đã hoàn thành</label>
                                                 </c:if>
                                                 <c:if test="${o.active == 0}">
                                                     <label>Đã hủy</label>

@@ -8,20 +8,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
-<div class="bld-cat">
-    <div class="d-flex align-items-center justify-content-center layout-filter">
-        <div class="d-flex align-items-center scrollable-x">
-            <c:forEach items="${categories}" var="i">
-                <c:url value="/" var="cate">
-                    <c:param name="cateId" value="${i.id}"></c:param>
-                </c:url>
-                <a href="${cate}" class="btn btn-warning rounded-pill mx-1 mt-5 mb-1" >${i.name}</a>
-            </c:forEach>
-        </div>
-    </div>
-</div>
-
 <div class="product-list">
     <c:if test="${errMessage != null}">
         <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
