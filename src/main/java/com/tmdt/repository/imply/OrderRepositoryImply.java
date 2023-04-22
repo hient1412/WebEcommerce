@@ -452,7 +452,7 @@ public class OrderRepositoryImply implements OrderRepository {
                         + "            <tbody style=\"background-color: #f8f9fa;\">\n"
                         + "               <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tổng tiền hàng</b></td>\n"
-                        + "                    <td style=\"border: 1px solid #dee2e6\"><span style='text-decoration:underline'>đ</span> " + order.getAmount() + "</td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"><span style='text-decoration:underline'>đ</span> " + df.format(order.getAmount()) + "</td>\n"
                         + "                </tr>\n"
                         + "                <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Phí ship</b></td>\n"

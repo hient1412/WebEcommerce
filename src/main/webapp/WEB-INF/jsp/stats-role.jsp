@@ -6,8 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="center p-4">
-    <div class="col-md-12"><h2>THỐNG KÊ LOẠI TÀI KHOẢN</h2></div>
+    <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.stats.role"/></h2></div>
 </div>
 <div class="row pb-4">
     <div class="col-12 col-lg-5"> 
@@ -15,8 +16,8 @@
         <table class="table table-bordered center">
             <thead>
                 <tr>
-                    <th>Loại tài khoản</th>
-                    <th>Số lượng</th>
+                    <th><spring:message code="label.role"/></th>
+                    <th><spring:message code="label.quantity"/></th>
                 </tr>
             </thead>
             <tbody>

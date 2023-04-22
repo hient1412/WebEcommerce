@@ -66,10 +66,11 @@ public class SellerRepositoryImply implements SellerRepository {
         Session session = this.sessionFactoryBean.getObject().getCurrentSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
-        Root root = q.from(Product.class);
+        Root root = q.from(Seller.class);
+        Root rootP = q.from(Product.class);
 
-        q.where(builder.equal(root.get("idSeller"), sellerId),builder.equal(root.get("isDelete"), 0));
-        q.multiselect(root.get("idSeller").get("name"), root.get("idSeller").get("avatar"), builder.count(root.get("id")));
+        q.where(builder.equal(root.get("id"), sellerId),builder.equal(rootP.get("idSeller"), sellerId));
+        q.multiselect(root.get("name"), root.get("avatar"), builder.count(rootP.get("id")));
         Query query = session.createQuery(q);
 
         return (Object[]) query.getSingleResult();

@@ -9,6 +9,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -125,21 +126,21 @@
     </head>
     <body>
 
-        <h2>THÔNG TIN THANH TOÁN</h2>
+        <h2 class="text-uppercase"><spring:message code="label.billing.information"/></h2>
         <div class="row">
             <div class="col-75">
                 <div class="container">
                     <form>
                         <div class="row">
                             <div class="col-50">
-                                <h3>Thông tin khách hàng</h3>
-                                <label for="fname"><i class="fa fa-user"></i> Tên khách hàng</label>
+                                <h3><spring:message code="label.customer.information"/></h3>
+                                <label for="fname"><i class="fa fa-user"></i> <spring:message code="label.customer.firstname"/></label>
                                 <input type="text" id="fname" name="firstname" value="${shipAddress.name}" disabled>
-                                <label for="email"><i class="fa fa-phone"></i> Số điện thoại</label>
+                                <label for="email"><i class="fa fa-phone"></i> <spring:message code="label.phone"/></label>
                                 <input type="text" id="phone" name="phone" value="${shipAddress.phone}" disabled>
-                                <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                                <label for="email"><i class="fa fa-envelope"></i> <spring:message code="label.email"/></label>
                                 <input type="text" id="email" name="email" value="${cus.email}" disabled>
-                                <label for="adr"><i class="fa fa-address-card-o"></i> Địa chỉ</label>
+                                <label for="adr"><i class="fa fa-address-card-o"></i> <spring:message code="label.address"/></label>
                                 <input type="text" class="text2" id="adr" name="address" value="${shipAddress.address}, ${shipAddress.ward}, ${shipAddress.district}, ${shipAddress.city.name} " disabled > 
                             </div>
                         </div>
@@ -148,15 +149,15 @@
             </div>
             <div class="col-25">
                 <div class="container">
-                    <h4><i class="fa fa-shopping-cart"></i> Giỏ hàng</h4>
+                    <h4><i class="fa fa-shopping-cart"></i> <spring:message code="label.cart"/></h4>
                     <c:forEach items="${cartProducts}" var="c">
                         <p><a href="#">${c.productName}</a> <fmt:formatNumber type="number" maxFractionDigits="3" value="${c.price}" /> <span style="text-decoration: underline">đ</span> x ${c.count}</p>
                     </c:forEach>
-                    <p>Phí vận chuyển</a> 0 <span style="text-decoration: underline">đ</span></p>
+                    <p><spring:message code="label.trans.fee"/> 0 <span style="text-decoration: underline">đ</span></p>
                     <hr>
-                    <p>Tổng <span id="cartAmount"><fmt:formatNumber type="number" maxFractionDigits="3" value="${cartAmount.amountWithShip}"/></span> VNĐ</p>
+                    <p><spring:message code="label.total.amount"/> <fmt:formatNumber type="number" maxFractionDigits="3" value="${cartAmount.amountWithShip}"/> <span id="cartAmount"><span style="text-decoration: underline">đ</span></p>
                     <div>
-                        <input type="button" onclick="pay()" value="THANH TOÁN" class="btn">
+                        <input type="button" onclick="pay()" value="<spring:message code="label.pay"/>" class="btn">
                     </div>
                 </div>
             </div>

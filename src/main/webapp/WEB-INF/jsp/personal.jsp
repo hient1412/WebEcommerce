@@ -9,6 +9,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@taglib  prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="container">
     <c:if test="${ac.role == 'ROLE_ADMIN'}">
         <div class="row">
@@ -19,17 +20,17 @@
                     </div>
                     <div>
                         <c:if test="${!ad.email.isEmpty() == true}">
-                            <p>Email: ${ad.email} </p>
+                            <p><spring:message code="label.email"/>: ${ad.email} </p>
                         </c:if>
                     </div>
                     <div>
                         <c:if test="${!ad.phone.isEmpty() == true}">
-                            <p>Số điện thoại: ${ad.phone} </p>
+                            <p><spring:message code="label.phone"/>: ${ad.phone} </p>
                         </c:if>
                     </div>
                     <div>
                         <div >
-                            <p>Giới tính: ${ad.gender} </p>
+                            <p><spring:message code="label.gender"/>: ${ad.gender} </p>
                         </div>
                     </div>
                 </div>
@@ -45,26 +46,26 @@
                             </div>
                             <div >
                                 <c:if test="${!cus.email.isEmpty() == true}">
-                                    <p><h5>Email</h5> ${cus.email} </p>
+                                    <p><h5><spring:message code="label.email"/></h5> ${cus.email} </p>
                                 </c:if>
                             </div>
                             <div >
                                 <c:if test="${!cus.phone.isEmpty() == true}">
-                                    <p><h5>Số điện thoại</h5> ${cus.phone} </p>
+                                    <p><h5><spring:message code="label.phone"/></h5> ${cus.phone} </p>
                                 </c:if>
                             </div>
                             <div >
-                                <p><h5>Quê quán</h5> ${cus.location.name} </p>
+                                <p><h5><spring:message code="label.hometown"/></h5> ${cus.location.name} </p>
                             </div>
                             <div>
-                                <p><h5>Ngày sinh</h5> <fmt:formatDate value="${cus.dob}" type="date" pattern="dd-MM-yyyy"/> </p>
+                                <p><h5><spring:message code="label.dob"/></h5> <fmt:formatDate value="${cus.dob}" type="date" pattern="dd-MM-yyyy"/> </p>
                             </div>
                             <div >
-                                <p><h5>Giới tính</h5> ${cus.gender} </p>
+                                <p><h5><spring:message code="label.gender"/></h5> ${cus.gender} </p>
                             </div>
                             <div>
                                 <c:if test="${!cus.description.isEmpty() == true}">
-                                    <p><h5>Mô tả chi tiết</h5> ${cus.description} </p>
+                                    <p><h5><spring:message code="label.description"/></h5> ${cus.description} </p>
                                 </c:if>
                             </div>
                         </c:when>
@@ -76,24 +77,24 @@
                                             <h4>${sel.name}</h4>
                                         </div>
                                         <div>
-                                            <p><h5>Địa chỉ:</h5> ${sel.address}</p>
+                                            <p><h5><spring:message code="label.address"/>:</h5> ${sel.address}</p>
                                         </div>
                                         <div>
-                                            <p><h5>Nơi bán:</h5>${sel.idLocation.name}</p>
+                                            <p><h5><spring:message code="label.location"/>:</h5>${sel.idLocation.name}</p>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.email.isEmpty() == true}">
-                                                <p><h5>Email</h5> ${sel.email} </p>
+                                                <p><h5><spring:message code="label.email"/></h5> ${sel.email} </p>
                                             </c:if>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.phone.isEmpty() == true}">
-                                                <p><h5>Số điện thoại</h5> ${sel.phone} </p>
+                                                <p><h5><spring:message code="label.phone"/></h5> ${sel.phone} </p>
                                             </c:if>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.description.isEmpty() == true}">
-                                                <p><h5>Mô tả chi tiết</h5> ${sel.description} </p>
+                                                <p><h5><spring:message code="label.description"/></h5> ${sel.description} </p>
                                             </c:if>
                                         </div>
                                     </c:when>

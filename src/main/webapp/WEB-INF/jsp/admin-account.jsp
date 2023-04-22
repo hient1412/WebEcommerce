@@ -6,10 +6,11 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-5">
     <div class="center">
         <div class="row">
-            <div class="col-md-12"><h2>QUẢN LÝ TÀI KHOẢN</h2></div>
+            <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.account.management"/></h2></div>
         </div>
     </div>
     <c:if test="${listTK.size() != 0}">
@@ -17,11 +18,11 @@
             <table class="table table-bordered center">
                 <thead>
                     <tr>
-                        <th>Mã tài khoản</th>
-                        <th>Tên đăng nhập</th>
-                        <th>Loại tài khoản</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th><spring:message code="label.account.id"/></th>
+                        <th><spring:message code="label.username"/></th>
+                        <th><spring:message code="label.account.type"/></th>
+                        <th><spring:message code="label.active"/></th>
+                        <th><spring:message code="label.action"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,19 +32,19 @@
                             <td>${ac.username}</td>
                             <td>${ac.role}</td>
                             <c:if test="${ac.active == 1}">
-                                <td>Đã được duyệt</td>
+                                <td><spring:message code="label.approved"/></td>
                             </c:if>
                             <c:if test="${ac.active == 0}">
-                                <td>Chưa được duyệt</td>
+                                <td><spring:message code="label.not.approved"/></td>
                             </c:if>
                             <td>
-                                <a title="Sửa" href="<c:url value="/admin/account/edit"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
-                                <a title="Xóa" href="<c:url value="/admin/account/delete"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
+                                <a title="<spring:message code="label.edit"/>" href="<c:url value="/admin/account/edit"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
+                                <a title="<spring:message code="label.delete"/>" href="<c:url value="/admin/account/delete"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
                 <td colspan="5">
-                    <a class="nav-link" title="Thêm tài khoản" href="<c:url value="/admin/account/add"/>" data-toggle="tooltip">Thêm tài khoản</a>
+                    <a class="nav-link" title="<spring:message code="label.add.account"/>" href="<c:url value="/admin/account/add"/>" data-toggle="tooltip"><spring:message code="label.add.account"/></a>
                 </td>
                 </tbody>
             </table>
@@ -51,7 +52,7 @@
     </c:if>
     <c:if test="${list.size() == 0}">
         <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-            Chưa có tài khoản nào
+            <spring:message code="label.not.account"/>
         </div>
     </c:if>
 

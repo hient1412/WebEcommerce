@@ -44,7 +44,6 @@
         <script src="<c:url value="/js/cart.js"/>"></script>
         <script src="<c:url value="/js/main.js"/>"></script>
         <script src="<c:url value="/js/stats.js"/>"></script>
-        <!--<script src="<c:url value="/js/chat.js"/>"></script>-->
         <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
     </body>

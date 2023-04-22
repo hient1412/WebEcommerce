@@ -116,10 +116,6 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Giỏ hàng" />
         <put-attribute name="content" value="/WEB-INF/jsp/cart.jsp" />
     </definition>
-    <definition name="chat" extends="baseLayout">
-        <put-attribute name="title" value="Nhắn tin" />
-        <put-attribute name="content" value="/WEB-INF/jsp/chat.jsp" />
-    </definition>
     <definition name="base2" template="/WEB-INF/layout/base2.jsp">
         <put-attribute name="title" value="WebEcommerce" />
         <put-attribute name="header" value="/WEB-INF/layout/header.jsp" />
@@ -235,4 +231,9 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Tạo mật khẩu mới" />
         <put-attribute name="content" value="/WEB-INF/jsp/renew-password.jsp" />
     </definition>
+    <definition name="access-denied" extends="baseLayout">
+        <put-attribute name="title" value="Truy cập bị từ chối" />
+        <put-attribute name="content" value="/WEB-INF/jsp/access-denied.jsp" />
+    </definition>
+    
 </tiles-definitions>

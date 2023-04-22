@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="row container d-flex justify-content-center p-4">
     <div class="card">
         <div class="card-body">
@@ -17,49 +18,48 @@
                         ${errMessage}
                     </div>
                 </c:if>
-                <h1 class="p-4 center text-uppercase">CHỈNH SỬA THÔNG TIN CÁ NHÂN</h1>
+                <h1 class="p-4 center text-uppercase"><spring:message code="label.edit.personal"/></h1>
                 <form:input hidden="true" path="id" value="${customer.id}"/>
                 <div class="form-group row">
                     <div class="col">
-                        <label for="inputLastName">Họ</label>
+                        <label for="inputLastName"><spring:message code="label.lastname"/></label>
                         <form:input autocomplete="off" type="text" class="form-control" path="lastName" required="required"/>
                     </div>
                     <div class="col">
-                        <label for="inputFirstName">Tên</label>
+                        <label for="inputFirstName"><spring:message code="label.firstname"/></label>
                         <form:input autocomplete="off" type="text" class="form-control" path="firstName" required="required"/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="dob">Ngày sinh</label>
+                    <label for="dob"><spring:message code="label.dob"/></label>
                     <form:input type="date" class="form-control" path="dob"/>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail">Email</label>
+                    <label for="inputEmail"><spring:message code="label.email"/></label>
                     <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
                 </div>
                 <div class="form-group">
-                    <label for="inputPhone">Số điện thoại</label>
+                    <label for="inputPhone"><spring:message code="label.phone"/></label>
                     <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone" required="required"/>
                 </div>
                 <div class="form-group">
-                    <label for="avatar">Avatar</label>
+                    <label for="avatar"><spring:message code="label.avatar"/></label>
                     <form:input type="file" path="file" id="avatar" class="form-control"/>
                 </div>
                 <div class="form-group">
-                    <label for="description">Mô tả bản thân</label>
+                    <label for="description"><spring:message code="label.description"/></label>
                     <form:textarea type="text" class="form-control" path="description"/>
                 </div>
                 <div class="form-group row">
                     <div class="col">
-                        <label for="gender">Giới tính của bạn:</label>
+                        <label for="gender"><spring:message code="label.gender"/>:</label>
                         <form:select path="gender" >
                             <form:option value="Nam" label="Nam"/>
                             <form:option value="Nữ" label="Nữ"/>
-                            <form:option value="Khác" label="Khác"/>
                         </form:select>
                     </div>
                     <div class="col">
-                        <label for="location">Quê quán</label>
+                        <label for="location"><spring:message code="label.hometown"/></label>
                         <form:select path="location" >
                             <c:forEach items="${locations}" var="l">
                                 <form:option value="${l.id}" label="${l.name}" />
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Xong</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block login-btn"><spring:message code="label.done"/></button>
                 </div>
             </form:form>
         </div>

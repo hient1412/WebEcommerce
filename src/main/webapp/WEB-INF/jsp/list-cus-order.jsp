@@ -7,40 +7,41 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
-<h1 class="center p-4">TÌM KIẾM</h1>
+<h1 class="center p-4 text-uppercase"><spring:message code="label.search"/></h1>
 <div class="p-4" style="background-color: #ccc">
     <form action="" >
         <div class="row row-cols-1 row-cols-md-2 row-cols-sm-2">
             <div class="col">
-                <label>Mã đơn hàng</label>
+                <label><spring:message code="label.order.id"/></label>
                 <input type="number" name="idOrder" class="form-control" autocomplete="off"/>
             </div>
             <div class="col">
-                <label>Tên sản phẩm</label>
+                <label><spring:message code="label.product.name"/></label>
                 <input type="text" name="namePro" class="form-control" autocomplete="off"/>
             </div>
             <div class="col">
-                <label>Tên người bán</label>
+                <label><spring:message code="label.seller.name"/></label>
                 <input type="text" name="nameSel" class="form-control" autocomplete="off"/>
             </div>
             <div class="col">
-                <label  for="active">Trạng thái</label>
+                <label  for="active"><spring:message code="label.active"/></label>
                 <select class="form-control" id="active"name="active">
-                    <option value="" selected>Tất cả</option>
-                    <option value="1">Đã đặt hàng</option>
-                    <option value="2">Chờ lấy hàng</option>
-                    <option value="3">Chờ vận chuyển</option>
-                    <option value="4">Đang giao</option>
-                    <option value="5">Đã hoàn thành</option>
-                    <option value="0">Đã hủy</option>
+                    <option value="" selected><spring:message code="label.all"/></option>
+                    <option value="1"><spring:message code="label.order.status.one"/></option>
+                    <option value="2"><spring:message code="label.order.status.two"/></option>
+                    <option value="3"><spring:message code="label.order.status.three"/></option>
+                    <option value="4"><spring:message code="label.order.status.four"/></option>
+                    <option value="5"><spring:message code="label.order.status.five"/></option>
+                    <option value="0"><spring:message code="label.order.status.six"/></option>
                 </select>
             </div>
         </div>
         <div class="center">
-            <input type="submit" class="mt-4 p-1" value="Tìm kiếm"/>
-            <input type="button" class="p-1" onclick="clearFilter()" value="Nhập lại"/>
+            <input type="submit" class="mt-4 p-1" value='<spring:message code="label.search"/>'/>
+            <input type="button" class="p-1" onclick="clearFilter()" value='<spring:message code="label.clear"/>'/>
         </div>
     </form>
 </div>
@@ -51,16 +52,16 @@
                 <div class="white-box bg-light p-1 center media-white-none">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Sản phẩm</label>
+                            <label><spring:message code="label.product"/></label>
                         </div>
                         <div class="col-md-2 center">
-                            <label>Số lượng</label>
+                            <label><spring:message code="label.quantity"/></label>
                         </div>
-                        <div class="col-md-2 center">
-                            <label>Tổng đơn</label>
+                        <div class="col-md-2 text-end">
+                            <label><spring:message code="label.total.amount"/></label>
                         </div>
-                        <div class="col-md-2 center">
-                            <label>Trạng thái</label>
+                        <div class="col-md-2 text-end">
+                            <label><spring:message code="label.active"/></label>
                         </div>
                         <div class="col-md-2 center">
                             <label></label>
@@ -79,7 +80,7 @@
                                 </div>
                             </div>
                             <div class="col-6 col-lg-4" style="text-align: right">
-                                <label>Mã đơn: ${o.id}</label>
+                                <label><spring:message code="label.order.id"/>: ${o.id}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -116,37 +117,37 @@
                                         <div>
                                             <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/><br>
                                             <c:if test="${o.paymentType == 1}">
-                                                <span style="font-size: 10px;color: #ccc">Thanh toán tại nhà</span>
+                                                <span style="font-size: 10px;color: #ccc"><spring:message code="label.payment.home"/></span>
                                             </c:if>
                                             <c:if test="${o.paymentType == 2}">
-                                                <span style="font-size: 10px;color: #ccc">Thanh toán qua thẻ</span>
+                                                <span style="font-size: 10px;color: #ccc"><spring:message code="label.payment.online"/></span>
                                             </c:if>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-4 text-end  media-active">
                                         <div>
                                             <c:if test="${o.active == 1}">
-                                                <label>Đã đặt hàng</label>
+                                                <label><spring:message code="label.order.status.one"/></label>
                                             </c:if>
                                                 <c:if test="${o.active == 2}">
-                                                <label>Chờ lấy hàng</label>
+                                                <label><spring:message code="label.order.status.two"/></label>
                                             </c:if>
                                             <c:if test="${o.active == 3}">
-                                                <label>Chờ vận chuyển</label>
+                                                <label><spring:message code="label.order.status.three"/></label>
                                             </c:if>
                                             <c:if test="${o.active == 4}">
-                                                <label>Đang giao</label>
+                                                <label><spring:message code="label.order.status.four"/></label>
                                             </c:if>
                                             <c:if test="${o.active == 5}">
-                                                <label>Đã hoàn thành</label>
+                                                <label><spring:message code="label.order.status.five"/></label>
                                             </c:if>
                                             <c:if test="${o.active == 0}">
-                                                <label>Đã hủy</label>
+                                                <label><spring:message code="label.order.status.six"/></label>
                                             </c:if>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-4 text-end">
-                                        <a href="<c:url value="/customer/order-detail/${o.id}"/>">Xem chi tiết</a>
+                                        <a href="<c:url value="/customer/order-detail/${o.id}"/>"><spring:message code="label.product.see.detail"/></a>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +168,7 @@
     </c:when>
     <c:when test="${orders.size() == 0}">
         <h3 class="center p-3">
-            <i class="text-danger">Không có đơn hàng</i>
+            <i class="text-danger"><spring:message code="label.not.order"/></i>
         </h3>
     </c:when>
 </c:choose>

@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="product-list">
     <c:if test="${errMessage != null}">
@@ -26,9 +27,9 @@
                             <div class="product-bottom">
                                 <div class="product-name">${p.name}</div>
                                 <div class="price">
-                                    <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
                                 </div>
-                                <a class="blue-btn" href="<c:url value="/product-detail/${p.id}"/>">Xem chi tiết</a>
+                                <a class="blue-btn" href="<c:url value="/product-detail/${p.id}"/>"><spring:message code="label.product.see.detail"/></a>
                             </div>
                         </div>
                     </div>
@@ -46,7 +47,7 @@
             <c:if test="${cateId == null}">
                 <c:if test="${buyALot.size() != 0}">
                     <div class="row">
-                        <h1 class="center"> SẢN PHẨM ĐƯỢC KHÁCH HÀNG ƯA CHUỘNG </h1>
+                        <h1 class="center text-uppercase"><spring:message code="label.product.favorite"/></h1>
                     </div>
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
                         <c:forEach items="${buyALot}" var="p">
@@ -58,10 +59,10 @@
                                     <div class="product-bottom">
                                         <div class="product-name">${p[1]}</div>
                                         <div class="price">
-                                            <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                            <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
                                         </div>
-                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>">Xem chi tiết</a>
-                                        <div class="pt-4"><span class="text-danger">Số lượt bán: ${p[4]}</span></div>
+                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>"><spring:message code="label.product.see.detail"/></a>
+                                        <div class="pt-4"><span class="text-danger"><spring:message code="label.number.sale"/>: ${p[4]}</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +73,7 @@
         </c:when>
         <c:when test="${product.size() == 0}">
             <h3 class="center">
-                <i>Không có sản phẩm nào thuộc loại này </i>
+                <i><spring:message code="label.not.product.cate"/></i>
             </h3>
         </c:when>
     </c:choose>

@@ -6,25 +6,26 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="container-fluid padding">
     <div id="footer" class="row text-center">
         <div class="col-md-4">
-            <p><h5>Liên hệ hỗ trợ</h5></p>
-            <p><i class="fa fa-phone" aria-hidden="true"></i> Ho Chi Minh: (+84) 385 620 489</p>
-            <p><i class="fa fa-phone" aria-hidden="true"></i> Ha Noi: (+84) 024 650 449</p>
+            <p><h5><spring:message code="label.contact"/></h5></p>
+            <p><i class="fa fa-phone" aria-hidden="true"></i> <spring:message code="label.hcm"/>: (+84) 385 620 489</p>
+            <p><i class="fa fa-phone" aria-hidden="true"></i> <spring:message code="label.hn"/>: (+84) 024 650 449</p>
         </div>
         <div class="col-md-4">
-            <p><h5>Kết nối với chúng tôi</h5></p>
+            <p><h5><spring:message code="label.connect"/></h5></p>
             <a href="#"><img class="social" src="<c:url value="/images/fb.png"/>"/></a>
             <a href="#"><img class="social" src="<c:url value="/images/ins.png"/>"/></a>
             <a href="#"><img class="social" src="<c:url value="/images/twitter.png"/>"/></a>
             <a href="#"><img class="social" src="<c:url value="/images/youtube.png"/>"/></a>
         </div>
         <div class="col-md-4">
-            <p><h5>Địa Điểm</h5></p>
-            <p><i class="fa fa-map-marker" aria-hidden="true"></i> 72 Nguyen Kiem, Go Vap, Ho Chi Minh</p>
-            <p><i class="fa fa-map-marker" aria-hidden="true"></i> 152 Nguyen Tuan, Thanh Xuan, Ha Noi</p>
+            <p><h5><spring:message code="label.location"/></h5></p>
+            <p><i class="fa-solid fa-location-dot"></i> <spring:message code="label.location.one"/></p>
+            <p><i class="fa-solid fa-location-dot"></i> <spring:message code="label.location.two"/></p>
         </div>
     </div>
     <div id="sign" class="row text-center">

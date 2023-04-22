@@ -6,21 +6,22 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib  prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-4">
 <c:choose>
     <c:when test="${listAc.size() > 0}">
         <div class="center">
             <div class="row">
-                <div class="col-md-12"><h2>Xác nhận người bán</h2></div>
+                <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.confirm.seller"/></h2></div>
             </div>
         </div>
         <table class="table table-bordered center">
             <thead>
                 <tr>
-                    <th>Mã tài khoản</th>
-                    <th>Tên đăng nhập</th>
-                    <th>Loại tài khoản</th>
-                    <th>Hành động</th>
+                    <th><spring:message code="label.account.id"/></th>
+                    <th><spring:message code="label.username"/></th>
+                    <th><spring:message code="label.role"/></th>
+                    <th><spring:message code="label.action"/></th>
                 </tr>
             </thead>
             <tbody>
@@ -30,14 +31,14 @@
                         <td>${ac.username}</td>
                         <td>${ac.role}</td>
                         <td>
-                            <a title="Xác nhận" href="<c:url value="/admin/seller-confirm/1"/>?id=${ac.id}"
+                            <a title="<spring:message code="label.confirm"/>" href="<c:url value="/admin/seller-confirm/1"/>?id=${ac.id}"
                                data-toggle="tooltip"><i style="font-size:24px" class="fa">&#xf00c;</i></a>
                         </td>
                     </tr>
                 </c:forEach>
                 <tr>
                     <td colspan="4">
-                        <a class="nav-link" title="Xác nhận tất cả" href="<c:url value="/admin/seller-confirm/all"/>"data-toggle="tooltip">Xác nhận tất cả</a>
+                        <a class="nav-link" title="<spring:message code="label.confirm.all"/>" href="<c:url value="/admin/seller-confirm/all"/>"data-toggle="tooltip"><spring:message code="label.confirm.all"/></a>
                     </td>
                 </tr>
             </tbody>
@@ -58,8 +59,8 @@
         </ul>
     </c:when>
     <c:otherwise>
-        <div class="center p-4">
-            <h2>TẤT CẢ NGƯỜI BÁN ĐÃ ĐƯỢC XÁC NHẬN</h2>
+        <div class="center p-4 border border-dark">
+            <h2 class="text-uppercase"><spring:message code="label.confirm.success"/></h2>
         </div>
     </c:otherwise>
 </c:choose>

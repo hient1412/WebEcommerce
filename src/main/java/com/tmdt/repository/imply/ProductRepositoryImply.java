@@ -356,9 +356,11 @@ public class ProductRepositoryImply implements ProductRepository {
         Predicate p1 = builder.equal(root.get("active"), 1);
         Predicate p2 = builder.equal(root.get("idSeller"), sellerId);
         Predicate p3 = builder.equal(root.get("isDelete"), 0);
+        Predicate p4 = builder.equal(root.get("idSeller").get("idAccount").get("active"), 1);
         predicates.add(p1);
         predicates.add(p2);
         predicates.add(p3);
+        predicates.add(p4);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         Query query = session.createQuery(q);
@@ -394,5 +396,19 @@ public class ProductRepositoryImply implements ProductRepository {
         return q.getResultList();
     }
 
+    @Override
+    public List getRatingSeller(int sellerId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root rootR = query.from(Review.class);
+        Root rootP = query.from(Product.class);
+        query.select(rootR.get("rating"));
+        query.where(builder.and(builder.equal(rootR.get("idProduct"), rootP.get("id")))
+                    ,builder.equal(rootP.get("idSeller"), sellerId));
+
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
     
 }

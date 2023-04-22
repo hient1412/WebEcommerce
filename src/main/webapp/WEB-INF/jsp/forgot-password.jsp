@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-5">
     <div class="white-box">
         <form action="" method="post">
@@ -14,18 +15,18 @@
                     ${errMessage}
                 </div>
             </c:if>
-            <h1 class="text-center">Quên mật khẩu</h1>
-            <label for="role"> Bạn là </label>
+            <h1 class="text-center"><spring:message code="label.forgot.password"/></h1>
+            <label for="role"><spring:message code="label.role"/> </label>
             <select name="role" >
-                <option value="ROLE_CUSTOMER" label="Khách hàng"/>
-                <option value="ROLE_SELLER" label="Người bán" />
+                <option value="ROLE_CUSTOMER"><spring:message code="label.role.customer"/></option>
+                <option value="ROLE_SELLER"><spring:message code="label.role.seller"/></option>
             </select>
             <div class="form-group">
-                <label>Nhập tài khoản mail</label>
+                <label><spring:message code="label.enter.email"/></label>
                 <input autocomplete="off" type="email" class="form-control" name="email" required="required"/>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Gửi</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn"><spring:message code="label.done"/></button>
             </div>
         </form>
     </div>

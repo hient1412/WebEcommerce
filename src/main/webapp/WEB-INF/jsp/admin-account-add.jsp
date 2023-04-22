@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-5">
     <div class="white-box">
         <form:form action="${action}" modelAttribute="ac" method="post">
@@ -16,32 +17,32 @@
                     ${errMessage}
                 </div>
             </c:if>
-            <h1 class="text-center">Thêm tài khoản</h1>
+            <h1 class="text-center"><spring:message code="label.add.account" /></h1>
             <div class="form-group">
-                <label>Tên đăng nhập</label>
+                <label><spring:message code="label.username" /></label>
                 <form:input autocomplete="off" type="text" class="form-control" path="username" required="required"/>
             </div>
             <div class="form-group">
-                <label>Mật khẩu</label>
+                <label><spring:message code="label.password" /></label>
                 <form:input autocomplete="off" type="password" class="form-control" path="password" required="required"/>
             </div>
             <div class="form-group">
-                <label>Vai trò </label>
+                <label><spring:message code="label.role" /></label>
                 <form:select path="role" >
-                    <form:option value="ROLE_CUSTOMER" label="Khách hàng"/>
-                    <form:option value="ROLE_SELLER" label="Người bán" />
-                    <form:option value="ROLE_ADMIN" label="Admin"/>
+                    <form:option value="ROLE_CUSTOMER"><spring:message code="label.role.customer"/></form:option>
+                    <form:option value="ROLE_SELLER"><spring:message code="label.role.seller"/></form:option>
+                    <form:option value="ROLE_ADMIN"><spring:message code="label.role.admin"/></form:option>
                 </form:select>
             </div>
             <div class="form-group">
-                <label>Trạng thái</label>
+                <label><spring:message code="label.active" /></label>
                 <form:select path="active" >
-                    <form:option value="1" label="Đã được duyệt"/>
-                    <form:option value="0" label="Chưa duyệt" />
+                    <form:option value="1" label="${labelApproved}"><spring:message code="label.approved"/></form:option>
+                    <form:option value="0" label="${labelNotApproved}"><spring:message code="label.not.approved"/></form:option>
                 </form:select>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn">Thêm tài khoản</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block login-btn"><spring:message code="label.add.account" /></button>
             </div>
         </form:form>
     </div>

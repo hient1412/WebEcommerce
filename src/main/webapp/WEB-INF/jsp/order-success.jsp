@@ -6,10 +6,14 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div class="text-center">
+<%@taglib  prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<div class="p-5 text-center">
+    <div class="border border-success p-5 m-5">
     <div class="pt-4"><img src="<c:url value="/images/check.png"/>"/></div>
 
-    <h2>Đặt hàng thành công</h2>
+    <h2><spring:message code="label.order.success"/></h2>
     
-    <p>* Đơn hàng của bạn sẽ được giao trong thời gian sớm nhất.*</p>
+    <p>* <spring:message code="label.ship.soon"/>. *</p>
+    </div>
 </div>

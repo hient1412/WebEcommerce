@@ -7,9 +7,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<spring:message code="label.recipient.name" var="recipient"/>
+<spring:message code="label.phone" var="phone"/>
+<spring:message code="label.wards" var="wards"/>
+<spring:message code="label.district" var="district"/>
+<spring:message code="label.address.example" var="AddressEx"/>
 <div class="p-5">
     <div class="white-box">
-        <h1 class="text-center">Thêm địa chỉ mới</h1>
+        <h1 class="text-center text-uppercase"><spring:message code="label.add.new.address"/></h1>
         <form:form action="" modelAttribute="ship" method="post">
             <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
             <c:if test="${errMessage != null}">
@@ -19,22 +25,22 @@
             </c:if>
             <div class="form-group row">
                 <div class="col">
-                    <form:input  type="text" class="form-control" path="name" autocomplete="off" placeholder="Họ tên người nhận"/>
+                    <form:input  type="text" class="form-control" path="name" autocomplete="off" placeholder="${recipient}"/>
                 </div>
                 <div class="col">
-                    <form:input type="number" class="form-control" path="phone" autocomplete="off" placeholder="Số điện thoại"/>
+                    <form:input type="number" class="form-control" path="phone" autocomplete="off" placeholder="${phone}"/>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col">
-                    <form:input type="text" class="form-control" path="ward" autocomplete="off" placeholder="Phường/Xã"/>
+                    <form:input type="text" class="form-control" path="ward" autocomplete="off" placeholder="${wards}"/>
                 </div>
                 <div class="col">
-                    <form:input type="text" class="form-control" path="district" autocomplete="off" placeholder="Quận/Huyện"/>
+                    <form:input type="text" class="form-control" path="district" autocomplete="off" placeholder="${district}"/>
                 </div>
                 <div class="col">
                     <form:select path="city" class="form-control" required="required">
-                        <option value="">Tỉnh/Thành</option>
+                        <option value=""><spring:message code="label.p.c"/></option>
                         <c:forEach items="${locations}" var="l">
                             <option  value="${l.id}"> ${l.name}</option>
                         </c:forEach>
@@ -43,18 +49,18 @@
             </div>
             <div class="form-group row">
                 <div class="col">
-                    <form:input type="text" class="form-control" path="address" autocomplete="off" placeholder="Địa chỉ cụ thể (Vd: 123/23/3 Phạm Thế Hiển)"/>         
+                    <form:input type="text" class="form-control" path="address" autocomplete="off" placeholder="${AddressEx}"/>         
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col">
-                    <form:radiobutton path="priority"  value="1" checked="checked"/> Chọn làm địa chỉ mặc định
+                    <form:radiobutton path="priority"  value="1" checked="checked"/> <spring:message code="label.address.default"/>
                     <br>
-                    <form:radiobutton path="priority" value="2"/> Không chọn làm địa chỉ mặc định
+                    <form:radiobutton path="priority" value="2"/> <spring:message code="label.address.no.default"/>
                 </div>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Thêm</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block"><spring:message code="label.done"/></button>
             </div>
         </form:form>
     </div>

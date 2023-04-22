@@ -90,7 +90,9 @@ public class SellerController {
     private MailService mailService;
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model,Authentication authentication) {
+        Account ac = this.accountService.getAcByUsername(authentication.getName());
+        model.addAttribute("seller", ac.getSeller());
         return "dashboard-seller";
     }
 
@@ -160,6 +162,7 @@ public class SellerController {
         pre.put("quantityMax", params.getOrDefault("quantityMax", ""));
         pre.put("cat", params.getOrDefault("cat", ""));
         pre.put("active", params.getOrDefault("active", ""));
+        model.addAttribute("seller", ac.getSeller());
         model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
         model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("listProduct.size"));
@@ -177,6 +180,7 @@ public class SellerController {
         pre.put("nameCus", params.getOrDefault("nameCus", ""));
         pre.put("namePro", params.getOrDefault("namePro", ""));
         pre.put("active", params.getOrDefault("active", ""));
+        model.addAttribute("seller", ac.getSeller());
         model.addAttribute("orderDetail", this.orderDetailService);
         model.addAttribute("orders", this.orderService.getOrderBySellerId(pre, id, page));
         model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre, id, 0).size());
@@ -185,7 +189,9 @@ public class SellerController {
     }
 
     @GetMapping("/product")
-    public String productView(Model model) {
+    public String productView(Model model,Authentication a) {
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("seller", ac.getSeller());
         model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("product", new Product());
         return "product-upload";
@@ -223,7 +229,9 @@ public class SellerController {
     }
 
     @GetMapping("/product-edit")
-    public String productEditView(Model model,@RequestParam(name = "id") int id) {
+    public String productEditView(Model model,@RequestParam(name = "id") int id,Authentication a) {
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("seller", ac.getSeller());
         model.addAttribute("categories", this.categoryService.getCates());
         model.addAttribute("product", this.productService.getProductById(id));
         return "product-edit";
@@ -337,6 +345,7 @@ public class SellerController {
     @GetMapping("/stats/categories")
     public String statsCategories(Model model, Authentication a ) {
         Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("seller",ac.getSeller());
         model.addAttribute("countcate", this.statsService.countCategories(ac.getSeller().getId()));
         return "stats-categories";
     }
@@ -344,6 +353,7 @@ public class SellerController {
     @GetMapping("/stats/turnover/product")
     public String turnoverProduct(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) throws ParseException {
         Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("seller",ac.getSeller());
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         String kw = params.getOrDefault("kw", null);
         Date fromDate = null;
@@ -365,7 +375,9 @@ public class SellerController {
     }
     
     @GetMapping("/order-detail/{orderId}")
-    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId) {
+    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId,Authentication a) {
+       Account ac = this.accountService.getAcByUsername(a.getName());
+        model.addAttribute("seller",ac.getSeller());
         model.addAttribute("order", this.orderService.getOrderById(orderId));
         model.addAttribute("orderDetail", this.orderDetailService);
         model.addAttribute("cancel", new Cancel());

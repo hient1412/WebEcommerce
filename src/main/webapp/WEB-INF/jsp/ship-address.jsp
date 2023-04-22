@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="p-5">
     <div class="white-box">
         <c:if test="${errMessage != null}">
@@ -14,10 +15,10 @@
                 ${errMessage}
             </div>
         </c:if>
-        <h1 class="text-center">Danh sách địa chỉ của tôi</h1>
+        <h1 class="text-center text-uppercase"><spring:message code="label.address.list"/></h1>
         <c:if test="${listShip == 0}">
             <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                Không có sẳn địa chỉ nào!!
+                <spring:message code="label.no.address"/>!!
             </div>
         </c:if>
         <c:if test="${listShip != 0}">
@@ -28,7 +29,7 @@
         </div>
         </c:if>
         <div class="form-group center mt-4">
-            <a class="btn btn-link" href="<c:url value="/customer/ship-address-add"/>"><p><i class="fa-regular fa-square-plus"></i> Thêm địa chỉ khác</p></a>
+            <a class="btn btn-link" href="<c:url value="/customer/ship-address-add"/>"><p><i class="fa-regular fa-square-plus"></i> <spring:message code="label.add.other.address"/></p></a>
         </div>
     </div>
 </div>

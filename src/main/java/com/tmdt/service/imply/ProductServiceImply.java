@@ -95,5 +95,10 @@ public class ProductServiceImply implements ProductService{
     public List getRating(int productId) {
         return this.productRepository.getRating(productId);
     }
+
+    @Override
+    public List getRatingSeller(int sellerId) {
+        return this.productRepository.getRatingSeller(sellerId);
+    }
     
 }

@@ -132,3 +132,19 @@ function loadShipAddress(endpoint) {
         ship.innerHTML = h;
         }});
 }
+const changeLang = (link,lang) => {
+  fetch(`${link}api/lang/?lang=${lang}`, {
+    method: "GET",
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log(res.ok);
+        location.reload();
+      } else {
+        Promise.reject("Error");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};

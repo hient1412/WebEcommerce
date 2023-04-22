@@ -6,8 +6,10 @@ package com.tmdt.controllers;
 
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Cart;
+import com.tmdt.pojos.Product;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CustomerService;
+import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.utils.Utils;
 import java.util.Map;
@@ -32,6 +34,8 @@ public class CartController {
     @Autowired
     private CustomerService customerService;
     @Autowired
+    private ProductService productService;
+    @Autowired
     private SellerService sellerService;
     
     @GetMapping("/cart")
@@ -47,6 +51,7 @@ public class CartController {
          model.addAttribute("cart", cartProduct);
         model.addAttribute("cartAmount", Utils.cartAmount(cartProduct));
         model.addAttribute("seller", this.sellerService);
+        model.addAttribute("product", this.productService);
         return "cart";
     }
 }

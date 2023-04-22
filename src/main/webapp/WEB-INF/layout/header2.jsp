@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <nav>
     <div id="flipkart-navbar">
         <div class="container">
@@ -15,7 +16,7 @@
                 </div>
                 <div class="col-8 col-md-6 col-lg-6">
                     <form action="<c:url value="/search" />" class="d-flex">
-                        <input class="flipkart-navbar-input w-100" id="kw" autocomplete="off" name="kw"type="text" placeholder="Tìm sản phẩm phù hợp">
+                        <input class="flipkart-navbar-input w-100" id="kw" autocomplete="off" name="kw"type="text" placeholder="<spring:message code="label.search"/>">
                         <button class="flipkart-navbar-button"><i class="fa fa-search" aria-hidden="true"></i></button>
                     </form>
                 </div>

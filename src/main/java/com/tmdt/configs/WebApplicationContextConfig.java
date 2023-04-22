@@ -9,6 +9,7 @@ import com.tmdt.formatters.CategoryFormatter;
 import com.tmdt.formatters.CustomerFormatter;
 import com.tmdt.formatters.LocationFormatter;
 import com.tmdt.formatters.ProductFormatter;
+import java.util.Locale;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,10 +20,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -83,6 +88,33 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         return resolver;
     }
     
+    @Bean
+    public LocaleResolver localeResolver() {
+        CookieLocaleResolver resolver = new CookieLocaleResolver();
+        resolver.setCookiePath("/");
+        resolver.setCookieMaxAge(30 * 24 * 60 * 60);
+        resolver.setDefaultLocale(new Locale("vi"));
+        return resolver;
+    }
+    
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");
+        registry.addInterceptor(localeChangeInterceptor);
+    }
+    
+    
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource m = new ResourceBundleMessageSource();
+        m.setBasenames("lang", "currency");
+        m.setDefaultEncoding("UTF-8");
+
+        return m;
+    }
+    
+    
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new AccountFormatter());
@@ -92,12 +124,4 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new ProductFormatter());
 
     }
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource m = new ResourceBundleMessageSource();
-        m.setBasename("messages");
-        m.setDefaultEncoding("UTF-8");
-
-        return m;
-    }
-    
 }

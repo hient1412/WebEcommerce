@@ -85,10 +85,24 @@ public class HomeController {
     public void common(Model model, HttpSession s) {
         model.addAttribute("categories", this.categoryService.getCates());
     }
+    
+    @GetMapping("/login")
+    public String login() {
+
+        return "login";
+    }
+
+    
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+
+        return "access-denied";
+    }
 
     @GetMapping("/seller-detail/{sellerId}")
     public String sellerDetail(Model model, @PathVariable(value = "sellerId") int sellerId,
-            @RequestParam(required = false) Map<String, String> params, HttpSession s) {
+            @RequestParam(required = false) Map<String, String> params, HttpSession s,Authentication a) {
+        Account ac = this.userDetailsService.getAcByUsername(a.getName());
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Map<String, String> pre = new HashMap<>();
         pre.put("sort", params.getOrDefault("sort", ""));
@@ -96,11 +110,13 @@ public class HomeController {
         pre.put("kw", params.getOrDefault("kw", ""));
         model.addAttribute("general", this.sellerService.getgeneral(sellerId));
         model.addAttribute("seller", this.sellerService.getSellerById(sellerId));
+        model.addAttribute("sellerAuthentication", ac.getSeller());
         model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(sellerId));
         model.addAttribute("productBySeller", this.productService.getProductBySeller(pre, sellerId, page));
         model.addAttribute("counterS", this.productService.getProductBySeller(pre, sellerId, 0).size());
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(sellerId)));
         return "seller-detail";
     }
 
@@ -166,11 +182,13 @@ public class HomeController {
     public String productDetail(Model model, @PathVariable(value = "productId") int productId, HttpSession s) {
         model.addAttribute("product", this.productService.getProductById(productId));
         model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
+        model.addAttribute("general", this.sellerService.getgeneral(this.productService.getProductById(productId).getIdSeller().getId()));
         model.addAttribute("image", this.imageService.getImageByProductId(productId));
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")), this.productService.getProductById(productId).getIdSeller().getId()));
         model.addAttribute("avgRating", Utils.avgRating(this.productService.getRating(productId)));
         model.addAttribute("countRating", this.productService.getRating(productId).size());
+        model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(this.productService.getProductById(productId).getIdSeller().getId())));
         return "product-detail";
     }
 
@@ -183,6 +201,8 @@ public class HomeController {
         model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
         model.addAttribute("count", env.getProperty("page.size"));
         model.addAttribute("kw", kw);
+        model.addAttribute("productService",this.productService);
+        model.addAttribute("sellerRating", new Utils());
         return "sellers";
     }
 
@@ -448,16 +468,6 @@ public class HomeController {
             }
         }
         return "renew-password";
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
-
-    @GetMapping("/test2")
-    public String test2() {
-        return "test2";
     }
 
 }
