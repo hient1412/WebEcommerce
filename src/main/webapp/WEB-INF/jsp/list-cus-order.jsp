@@ -8,8 +8,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-
+<c:if test="${errMessage != null}">
+    <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+        ${errMessage}
+    </div>
+</c:if>
 <h1 class="center p-4 text-uppercase"><spring:message code="label.search"/></h1>
 <div class="p-4" style="background-color: #ccc">
     <form action="" >
@@ -115,7 +118,17 @@
                                 <div class="row">
                                     <div class="col-12 col-lg-4 text-end">
                                         <div>
-                                            <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/><br>
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice">
+                                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice" >
+                                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(o.amount)}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                            <br>
                                             <c:if test="${o.paymentType == 1}">
                                                 <span style="font-size: 10px;color: #ccc"><spring:message code="label.payment.home"/></span>
                                             </c:if>
@@ -129,7 +142,7 @@
                                             <c:if test="${o.active == 1}">
                                                 <label><spring:message code="label.order.status.one"/></label>
                                             </c:if>
-                                                <c:if test="${o.active == 2}">
+                                            <c:if test="${o.active == 2}">
                                                 <label><spring:message code="label.order.status.two"/></label>
                                             </c:if>
                                             <c:if test="${o.active == 3}">
@@ -168,7 +181,7 @@
     </c:when>
     <c:when test="${orders.size() == 0}">
         <h3 class="center p-3">
-            <i class="text-danger"><spring:message code="label.not.order"/></i>
+            <i class="text-danger"><spring:message code="label.no.order"/></i>
         </h3>
     </c:when>
 </c:choose>

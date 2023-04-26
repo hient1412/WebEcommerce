@@ -8,16 +8,22 @@ import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Admin;
 import com.tmdt.pojos.Category;
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.Seller;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.AdminService;
 import com.tmdt.service.CategoryService;
 import com.tmdt.service.CustomerService;
+import com.tmdt.service.ImageService;
+import com.tmdt.service.MailService;
+import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
 import com.tmdt.validator.AccountValidator;
 import com.tmdt.validator.AdminValidator;
 import com.tmdt.validator.CategoryValidator;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +57,7 @@ public class AdminController {
     @Autowired
     private AccountService userDetailsService;
     @Autowired
-    private CustomerService customerService;
+    private ImageService imageService;
     @Autowired
     private CategoryValidator categoryValidator;
     @Autowired
@@ -59,9 +65,13 @@ public class AdminController {
     @Autowired
     private AccountValidator accountValidator;
     @Autowired
-    private SellerService sellerService;
+    private ProductService productService;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private SellerService sellerService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -80,6 +90,13 @@ public class AdminController {
         model.addAttribute("size", listSize.size());
         model.addAttribute("count", env.getProperty("page.size"));
         return "seller-confirm";
+    }
+
+    @GetMapping("/seller-confirm/see")
+    public String sellerConfirmSee(Model model, @RequestParam(name = "id") int id) {
+        Seller s = this.userDetailsService.getAcById(id).getSeller();
+        model.addAttribute("sel", s);
+        return "seller-confirm-see";
     }
 
     @GetMapping("/seller-confirm/1")
@@ -285,6 +302,25 @@ public class AdminController {
         return "admin-account";
     }
 
+    @GetMapping("/account/see")
+    public String accountSee(Model model, @RequestParam(name = "id") int id) {
+        Account ac = this.userDetailsService.getAcById(id);
+        model.addAttribute("ac", ac);
+        if (ac.getRole().equals(Account.ADMIN)) {
+            Admin ad = ac.getAdmin();
+            model.addAttribute("ad", ad);
+        } else if (ac.getRole().equals(Account.SELLER)) {
+            Seller s = ac.getSeller();
+            model.addAttribute("sel", s);
+        } else if (ac.getRole().equals(Account.CUSTOMER)) {
+            Customer c = ac.getCustomer();
+            model.addAttribute("cus", c);
+        } else {
+            model.addAttribute("errMessage", "Có lỗi xảy ra");
+        }
+        return "admin-account-see";
+    }
+
     @GetMapping("/account/add")
     public String addAccountView(Model model) {
         model.addAttribute("ac", new Account());
@@ -413,7 +449,7 @@ public class AdminController {
                 errMessage = String.format("Có lỗi xảy ra không thể xóa tài khoản: '%s'", ac.getUsername());
             }
         } else {
-            if(acNow.getAdmin().getSuperAdmin() == 1){
+            if (acNow.getAdmin().getSuperAdmin() == 1) {
                 if (this.userDetailsService.deleteAc(ac) == true) {
                     errMessage = String.format("Đã xóa thành công tài khoản: '%s'", ac.getUsername());
                 } else {
@@ -421,8 +457,8 @@ public class AdminController {
                 }
             } else {
                 errMessage = "Bạn không thể xóa tài khoản của admin tối cao!!";
-            } 
-            if(acNow.getAdmin().getSuperAdmin() != 1 && ac.getAdmin().getSuperAdmin() == 0){
+            }
+            if (acNow.getAdmin().getSuperAdmin() != 1 && ac.getAdmin().getSuperAdmin() == 0) {
                 if (!acNow.getId().equals(ac.getId())) {
                     errMessage = "Bạn không thể xóa tài khoản của admin khác!!";
                 } else {
@@ -432,6 +468,221 @@ public class AdminController {
         }
         r.addFlashAttribute("errMessage", errMessage);
         return "redirect:/admin/account";
+    }
+
+    @GetMapping("/report")
+    public String report(Model model, @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        List<Report> report = this.adminService.getReportWithProduct(page);
+        List<Report> size = this.adminService.getReportWithProduct(0);
+        model.addAttribute("report", report);
+        model.addAttribute("counterS", size.size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "report";
+    }
+
+    @GetMapping("/report/seller")
+    public String reportSeller(Model model, @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        List<Object[]> report = this.adminService.getReportProductSeller(page);
+        List<Object[]> size = this.adminService.getReportProductSeller(0);
+        model.addAttribute("report", report);
+        model.addAttribute("counterS", size.size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "report-seller";
+    }
+
+    @GetMapping("/report/seller/see")
+    public String reportSellerSee(Model model, @RequestParam(required = false) Map<String, String> params, @RequestParam(name = "id") int id) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        List<Product> product = this.adminService.getReportSeller(id, page);
+        List<Product> size = this.adminService.getReportSeller(id, 0);
+        model.addAttribute("seller", this.sellerService.getSellerById(id));
+        model.addAttribute("product", product);
+        model.addAttribute("counterS", size.size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "report-seller-see";
+    }
+
+    @GetMapping("/report/see")
+    public String reportProduct(Model model, @RequestParam(required = false) Map<String, String> params, @RequestParam(name = "id") int id) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        List<Report> report = this.adminService.getReport(id, page);
+        List<Report> size = this.adminService.getReport(id, 0);
+        model.addAttribute("img", this.imageService.getImageByProductId(id).get(0).getImage());
+        model.addAttribute("product", this.productService.getProductById(id));
+        model.addAttribute("report", report);
+        model.addAttribute("counterS", size.size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        return "report-product";
+    }
+
+    @GetMapping("/report/skip")
+    public String skip(Model model, RedirectAttributes r,
+            @RequestParam(name = "id") int id) {
+        String errMessage = "";
+
+        List<Report> rp = this.adminService.getReportCheckAll(id, 0);
+        rp.forEach(i -> {
+            i.setActive(1);
+            this.adminService.updateSkip(i);
+        });
+
+        int size = this.adminService.getReportCheckAll(id, 0).size();
+
+        if (size != 0) {
+            errMessage = "Có lỗi xảy ra không thể xét qua";
+        }
+        r.addFlashAttribute("errMessage", errMessage);
+        return "redirect:/admin/report";
+    }
+
+    @GetMapping("/report/ban")
+    public String ban(Model model, RedirectAttributes r,
+            @RequestParam(name = "id") int id) {
+        String errMessage = "";
+        this.skip(model, r, id);
+        Product p = this.productService.getProductById(id);
+        p.setAdminBan(1);
+        if (this.productService.updateProductBan(p) == 1) {
+            if (p.getAdminBan() == 1) {
+                errMessage = String.format("Đã cấm thành công sản phẩm: '%s'", p.getName());
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                String sendTo = p.getIdSeller().getEmail();
+                String subject = "WEBECOMMERCE THÔNG BÁO CẤM SẢN PHẨM '" + p.getName() + "' DO VI PHẠM CHÍNH SÁCH CỘNG ĐỒNG";
+                String content
+                        = "<div style=\"text-align:center;\">\n"
+                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px\">\n"
+                        + "        <h3 style=\"color:red;text-transform: uppercase\">Tố cáo chi tiết</h3>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
+                        + "        <div style=\"padding:10px\">\n"
+                        + "            <div style=\"display: flex;\">"
+                        + "                <div style=\"display:flex;\">\n"
+                        + "                    <div>\n"
+                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + p.getIdSeller().getAvatar() + "\"></a>\n"
+                        + "                    </div>\n"
+                        + "                    <div style=\"font-size: 24px;\">\n"
+                        + "                        <label>" + p.getIdSeller().getName() + "</label></a>\n"
+                        + "                    </div>\n"
+                        + "                </div>\n"
+                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
+                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + p.getIdSeller().getId() + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
+                        + "                 </div>\n"
+                        + "            </div>"
+                        + "       </div>"
+                        + "   </div>"
+                        + "<div style=\"display: flex;align-items: center;justify-content: center\">\n"
+                        + "    <div style=\"text-align: center;width:100%\">\n"
+                        + "        <div >\n"
+                        + "            <div style=\"margin-bottom: 10px\">\n"
+                        + "                <a href=\"http://localhost:8080/WebEcommerce/product-detail/" + p.getId() + "\" style=\"text-decoration: none\"><img style=\"width:50%;height:50%\" src=\"" + this.imageService.getImageByProductId(id).get(0).getImage() + "\"></a>\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "        <div style=\"margin-top 15px\">\n"
+                        + "            <div style=\"margin-bottom: 15px\">\n"
+                        + "                <label>" + p.getName() + "</label>\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</div>"
+                        + "<div style=\"margin-bottom:10px\">\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px;\" >\n"
+                        + "        <table style=\"width: 100%;\">\n"
+                        + "            <tbody style=\"background-color: #f8f9fa;\">\n"
+                        + " <tr style=\"text-align: right;\">\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Mã tố cáo</b></td>\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Vào lúc</b></td>\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tố cáo</b></td>\n"
+                        + "           </tr>\n";
+                for (Report i : this.adminService.getReport(id, 0)) {
+                    content += "<tr style=\"text-align: right;\">\n"
+                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + i.getId() + "</td>\n"
+                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + dt.format(i.getReportDate()) + "</td>\n"
+                            + "                <td style=\"border: 1px solid #dee2e6\"> <span>" + i.getReportDescription() + "</span> </td>\n"
+                            + "           </tr>\n";
+                }
+                content += "            </tbody>\n"
+                        + "        </table>\n"
+                        + "    </div>\n"
+                        + "</div>";
+                mailService.sendMail(sendTo, subject, content);
+            } else {
+                errMessage = String.format("Có lỗi xảy ra khi cấm sản phẩm: '%s'", p.getName());
+            }
+        }
+        r.addFlashAttribute("errMessage", errMessage);
+        return "redirect:/admin/report";
+    }
+
+    @GetMapping("/report/seller/ban")
+    public String banSeller(Model model, RedirectAttributes r,
+            @RequestParam(name = "id") int id, @RequestParam(required = false) Map<String, String> params) {
+        String errMessage = "";
+        Seller s = this.sellerService.getSellerById(id);
+        s.setAdminBan(1);
+        if (this.sellerService.updateSellerBan(s) == 1) {
+            if (s.getAdminBan() == 1) {
+                errMessage = String.format("Đã cấm thành công cửa hàng: '%s'", s.getName());
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                String sendTo = s.getEmail();
+                String subject = "WEBECOMMERCE THÔNG BÁO CẤM CỬA HÀNG '" + s.getName() + "' DO VI PHẠM CHÍNH SÁCH CỘNG ĐỒNG";
+                String content
+                        = "<div style=\"text-align:center;\">\n"
+                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px;padding:10px\">\n"
+                        + "        <h3 style=\"color:red;text-transform: uppercase\">Cấm shop hoạt động</h3>\n"
+                        + "         <p><strong>Lý do: Bán nhiều sản phẩm bị vi phạm</strong></p>"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
+                        + "        <div style=\"padding:10px\">\n"
+                        + "            <div style=\"display: flex;\">"
+                        + "                <div style=\"display:flex;\">\n"
+                        + "                    <div>\n"
+                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + s.getAvatar() + "\"></a>\n"
+                        + "                    </div>\n"
+                        + "                    <div style=\"font-size: 24px;\">\n"
+                        + "                        <label>" + s.getName() + "</label></a>\n"
+                        + "                    </div>\n"
+                        + "                </div>\n"
+                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
+                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + s.getId() + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
+                        + "                 </div>\n"
+                        + "            </div>"
+                        + "       </div>"
+                        + "   </div>"
+                        + "<div style=\"border: 1px solid;margin: 10px\">\n"
+                        + "        <div style=\"padding:10px\">\n"
+                        + "<table style=\"width:100%;text-align:center;\">"
+                        + "     <thead>"
+                        + "         <tr>"
+                        + "             <th>Mã sản phẩm</th>"
+                        + "             <th>Tên sản phẩm</th>"
+                        + "             <th>Hình ảnh</th>"
+                        + "         </tr>"
+                        + "     </thead>"
+                        + "     <tbody>";
+                for (Product i : this.adminService.getReportSeller(s.getId(), 0)) {
+                    content += "         <tr>"
+                            + "             <td>" + i.getId() + "</td>"
+                            + "             <td>" + i.getName() + "</td>"
+                            + "             <td><a href=\"http://localhost:8080/WebEcommerce/product-detail/" + i.getId() + "\" style=\"text-decoration: none\"><img style=\"width:100px;height:100px\" src=\"" + this.imageService.getImageByProductId(i.getId()).get(0).getImage() + "\"></a>\n</td>"
+                            + "         </tr>";
+                }
+                content += "     </tbody>"
+                        + "</table>"
+                        + "       </div>"
+                        + "   </div>";
+                mailService.sendMail(sendTo, subject, content);
+            }
+        } else {
+            errMessage = String.format("Có lỗi xảy ra khi cấm cửa hàng: '%s'", s.getName());
+        }
+
+        r.addFlashAttribute("errMessage", errMessage);
+
+        return "redirect:/admin/report/seller";
     }
 
 }

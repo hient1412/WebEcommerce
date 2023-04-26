@@ -52,6 +52,7 @@ public class CartController {
         model.addAttribute("cartAmount", Utils.cartAmount(cartProduct));
         model.addAttribute("seller", this.sellerService);
         model.addAttribute("product", this.productService);
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "cart";
     }
 }

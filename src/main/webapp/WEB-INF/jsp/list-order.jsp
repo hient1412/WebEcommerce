@@ -93,7 +93,7 @@
                                             <div class="col-4 col-md-2">
                                                 <div class="product-img-3">
                                                     <div class="mb-2">
-                                                        <img src="${od.idProduct.imageCollection.get(0).image}">
+                                                        <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -114,7 +114,17 @@
                                     <div class="row">
                                         <div class="col-12 col-lg-4 text-end">
                                             <div>
-                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/><br>
+                                                <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                    <span id="vndPrice" name="vndPrice">
+                                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${o.amount}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                                <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                    <span id="usdPrice" name="usdPrice" >
+                                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(o.amount)}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                                <br>
                                                 <c:if test="${o.paymentType == 1}">
                                                     <span style="font-size: 10px;color: #ccc"><spring:message code="label.payment.home"/></span>
                                                 </c:if>

@@ -86,7 +86,7 @@
                         <div class="col text-center">
                             <div class="product-img-4">
                                 <div class="mb-2">
-                                    <img src="${od.idProduct.imageCollection.get(0).image}">
+                                    <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
                                 </div>
                             </div>
                             <div class="mt-3">
@@ -102,7 +102,16 @@
                         </div>
                         <div class="col center">
                             <div class="mb-3">
-                                <label><span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/></label>
+                                <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                    <span id="vndPrice" name="vndPrice">
+                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/>
+                                    </span>
+                                </c:if>
+                                <c:if test="${pageContext.response.locale.language == 'en'}">
+                                    <span id="usdPrice" name="usdPrice" >
+                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(od.idProduct.price)}" maxFractionDigits="3" type="number"/>
+                                    </span>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -116,11 +125,35 @@
                 <tbody>
                     <tr class="text-right">
                         <td><b><spring:message code="label.total.amount"/></b></td>
-                        <td> <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/><br></td>
+                        <td> 
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice" >
+                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <br>
+                        </td>
                     </tr>
                     <tr class="text-right">
                         <td><b><spring:message code="label.trans.fee"/></b></td>
-                        <td> <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="0" maxFractionDigits="3" type="number"/><br></td>
+                        <td> 
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> 0
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice" >
+                                    <span>$</span> 0
+                                </span>
+                            </c:if>
+                            <br>
+                        </td>
                     </tr>
 <!--                    <test="${order.amount != 0}">
                         <tr class="text-right">
@@ -129,7 +162,19 @@
                         </tr>-->
                     <tr class="text-right">
                         <td><b><spring:message code="label.total.amount"/></b></td>
-                        <td> <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/><br></td>
+                        <td> 
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice" >
+                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <br>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -176,7 +221,7 @@
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><spring:message code="label.give.reason.order.cancellation"/></h5>
+                <h3 class="modal-title" id="exampleModalLabel"><spring:message code="label.give.reason.order.cancellation"/></h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form:form action="" modelAttribute="cancel" method="post">
@@ -199,7 +244,7 @@
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><spring:message code="label.pick.day.send"/></h5>
+                <h3 class="modal-title" id="exampleModalLabel"><spring:message code="label.pick.day.send"/></h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div  class="pt-2 pb-2"><h6 class="text-danger">* <spring:message code="label.warning.day.send"/> *</h6></div>

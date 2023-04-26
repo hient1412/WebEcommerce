@@ -84,6 +84,9 @@ public class Seller implements Serializable {
     @Size(max = 150)
     @Column(name = "avatar")
     private String avatar;
+    @Basic(optional = false)
+    @Column(name = "admin_ban")
+    private int adminBan;
     @JoinColumn(name = "id_account", referencedColumnName = "id")
     @OneToOne
     private Account idAccount;
@@ -271,5 +274,19 @@ public class Seller implements Serializable {
      */
     public void setSellerOrderCollection(Collection<SellerOrder> sellerOrderCollection) {
         this.sellerOrderCollection = sellerOrderCollection;
+    }
+
+    /**
+     * @return the adminBan
+     */
+    public int getAdminBan() {
+        return adminBan;
+    }
+
+    /**
+     * @param adminBan the adminBan to set
+     */
+    public void setAdminBan(int adminBan) {
+        this.adminBan = adminBan;
     }
 }

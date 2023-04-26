@@ -87,4 +87,9 @@ public class SellerServiceImply implements SellerService{
         return this.sellerRepository.getSelByPhone(phone);
     }
 
+    @Override
+    public int updateSellerBan(Seller s) {
+        return this.sellerRepository.updateSellerBan(s);
+    }
+
 }

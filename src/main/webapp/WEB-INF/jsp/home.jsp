@@ -27,7 +27,16 @@
                             <div class="product-bottom">
                                 <div class="product-name">${p.name}</div>
                                 <div class="price">
-                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                    <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                        <span id="vndPrice" name="vndPrice" class="text-danger">
+                                            <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                        </span>
+                                    </c:if>
+                                    <c:if test="${pageContext.response.locale.language == 'en'}">
+                                        <span id="usdPrice" name="usdPrice"  class="text-danger">
+                                            <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(p.price)}" maxFractionDigits="3" type="number"/>
+                                        </span>
+                                    </c:if>
                                 </div>
                                 <a class="blue-btn" href="<c:url value="/product-detail/${p.id}"/>"><spring:message code="label.product.see.detail"/></a>
                             </div>
@@ -47,7 +56,7 @@
             <c:if test="${cateId == null}">
                 <c:if test="${buyALot.size() != 0}">
                     <div class="row">
-                        <h1 class="center text-uppercase"><spring:message code="label.product.favorite"/></h1>
+                        <h1 class="center text-uppercase"><spring:message code="label.product.buy"/></h1>
                     </div>
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
                         <c:forEach items="${buyALot}" var="p">
@@ -59,10 +68,52 @@
                                     <div class="product-bottom">
                                         <div class="product-name">${p[1]}</div>
                                         <div class="price">
-                                            <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice" class="text-danger">
+                                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice"  class="text-danger">
+                                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(p[2])}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
                                         </div>
                                         <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>"><spring:message code="label.product.see.detail"/></a>
                                         <div class="pt-4"><span class="text-danger"><spring:message code="label.number.sale"/>: ${p[4]}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:if>
+                <c:if test="${likeALot.size() != 0}">
+                    <div class="row mt-4">
+                        <h1 class="center text-uppercase"><spring:message code="label.product.favorite"/></h1>
+                    </div>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+                        <c:forEach items="${likeALot}" var="p">
+                            <div class="col">
+                                <div class="white-box mt-3">
+                                    <div class="product-img">
+                                        <img src="${p[3].imageCollection.get(0).image}">
+                                    </div>
+                                    <div class="product-bottom">
+                                        <div class="product-name">${p[1]}</div>
+                                        <div class="price">
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice" class="text-danger">
+                                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p[2]}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice"  class="text-danger">
+                                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(p[2])}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                        </div>
+                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p[0]}"/>"><spring:message code="label.product.see.detail"/></a>
+                                        <div class="pt-4"><span class="text-danger"><spring:message code="label.number.like"/>: ${p[4]}</span></div>
                                     </div>
                                 </div>
                             </div>

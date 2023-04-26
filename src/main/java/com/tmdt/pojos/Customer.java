@@ -138,6 +138,12 @@ public class Customer implements Serializable {
     @JoinColumn(name = "id_hometown", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Location location;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCustomer")
+    private Collection<Likes> likesCollection;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idCustomer")
+    private Collection<Report> reportCollection;
 
     public Customer() {
     }
@@ -315,6 +321,34 @@ public class Customer implements Serializable {
      */
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * @return the likesCollection
+     */
+    public Collection<Likes> getLikesCollection() {
+        return likesCollection;
+    }
+
+    /**
+     * @param likesCollection the likesCollection to set
+     */
+    public void setLikesCollection(Collection<Likes> likesCollection) {
+        this.likesCollection = likesCollection;
+    }
+
+    /**
+     * @return the reportCollection
+     */
+    public Collection<Report> getReportCollection() {
+        return reportCollection;
+    }
+
+    /**
+     * @param reportCollection the reportCollection to set
+     */
+    public void setReportCollection(Collection<Report> reportCollection) {
+        this.reportCollection = reportCollection;
     }
 
 }

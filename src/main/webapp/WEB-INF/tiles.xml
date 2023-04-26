@@ -219,6 +219,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Hủy sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/jsp/cancel.jsp" />
     </definition>
+    <definition name="liked" extends="baseLayout">
+        <put-attribute name="title" value="Danh sách các sản phẩm đã yêu thích" />
+        <put-attribute name="content" value="/WEB-INF/jsp/liked.jsp" />
+    </definition>
     <definition name="forgot-password" extends="baseLayout">
         <put-attribute name="title" value="Quên mật khẩu" />
         <put-attribute name="content" value="/WEB-INF/jsp/forgot-password.jsp" />
@@ -235,5 +239,34 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Truy cập bị từ chối" />
         <put-attribute name="content" value="/WEB-INF/jsp/access-denied.jsp" />
     </definition>
-    
+    <definition name="report" extends="base2">
+        <put-attribute name="title" value="Danh sách các tố cáo" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/report.jsp" />
+    </definition>
+    <definition name="report-product" extends="base2">
+        <put-attribute name="title" value="Chi tiết tố cáo của sản phẩm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/report-product.jsp" />
+    </definition>
+    <definition name="seller-confirm-see" extends="base2">
+        <put-attribute name="title" value="Chi tiết người bán" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/seller-confirm-see.jsp" />
+    </definition>
+    <definition name="admin-account-see" extends="base2">
+        <put-attribute name="title" value="Xem chi tiết tài khoản" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-account-see.jsp" />
+    </definition>
+    <definition name="report-seller" extends="base2">
+        <put-attribute name="title" value="Danh sách shop có sản phẩm bị cấm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/report-seller.jsp" />
+    </definition>
+    <definition name="report-seller-see" extends="base2">
+        <put-attribute name="title" value="Chi tiết sản phẩm bị cấm" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/report-seller-see.jsp" />
+    </definition>
 </tiles-definitions>

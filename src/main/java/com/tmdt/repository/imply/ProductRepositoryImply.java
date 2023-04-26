@@ -5,8 +5,12 @@
 package com.tmdt.repository.imply;
 
 
+import com.tmdt.pojos.Account;
+import com.tmdt.pojos.Likes;
 import com.tmdt.pojos.OrderDetail;
+import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import com.tmdt.repository.AccountRepository;
@@ -56,7 +60,7 @@ public class ProductRepositoryImply implements ProductRepository {
         CriteriaQuery<Product> q = builder.createQuery(Product.class);
         Root root = q.from(Product.class);
         q = q.select(root);
-        q.where(builder.equal(root.get("isDelete"), 0));
+        q.where(builder.equal(root.get("isDelete"), 0),builder.equal(root.get("adminBan"), 0));
         q.orderBy(builder.desc(root.get("id")));
 
         Query query = session.createQuery(q);
@@ -128,6 +132,10 @@ public class ProductRepositoryImply implements ProductRepository {
         predicates.add(p1);
         Predicate p2 = builder.equal(root.get("isDelete"), 0);
         predicates.add(p2);
+        Predicate p3 = builder.equal(root.get("adminBan"), 0);
+        predicates.add(p3);
+        Predicate p4 = builder.equal(root.get("idSeller").get("adminBan"), 0);
+        predicates.add(p4);
         q = q.where(predicates.toArray(new Predicate[]{}));
         Query query = session.createQuery(q.distinct(true));
         if (page > 0) {
@@ -153,7 +161,7 @@ public class ProductRepositoryImply implements ProductRepository {
         Root root = q.from(Product.class);
         q.select(root);
 
-        q.where(builder.equal(root.get("idCategory"), cateId),builder.equal(root.get("isDelete"), 0));
+        q.where(builder.equal(root.get("idCategory"), cateId),builder.equal(root.get("isDelete"), 0),builder.equal(root.get("adminBan"), 0),builder.equal(root.get("idSeller").get("adminBan"), 0));
 
         q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q);
@@ -217,6 +225,8 @@ public class ProductRepositoryImply implements ProductRepository {
         predicates.add(p1);
         Predicate p2 = builder.equal(root.get("isDelete"), 0);
         predicates.add(p2);
+        Predicate p3 = builder.equal(root.get("adminBan"), 0);
+        predicates.add(p3);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         q.orderBy(builder.desc(root.get("id")));
@@ -250,8 +260,10 @@ public class ProductRepositoryImply implements ProductRepository {
         CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
         Root root = q.from(Product.class);
         Root rootOD = q.from(OrderDetail.class);
-     
-        q = q.where(builder.equal(rootOD.get("idProduct"), root.get("id")),builder.equal(root.get("isDelete"), 0));
+        Root rootO = q.from(Orders.class);
+        q = q.where(builder.equal(rootOD.get("idProduct"), root.get("id")),
+                builder.equal(root.get("isDelete"), 0),builder.equal(rootO.get("id"), rootOD.get("idOrder")),
+                builder.equal(rootO.get("active"), 5),builder.equal(root.get("adminBan"), 0),builder.equal(root.get("idSeller").get("adminBan"), 0));
         q.multiselect(root.get("id"),root.get("name"),
                 root.get("price"),root,builder.count(root.get("id")));
 
@@ -271,9 +283,9 @@ public class ProductRepositoryImply implements ProductRepository {
         CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
         Root root = q.from(Product.class);
         Root rootOD = q.from(OrderDetail.class);
-     
-        q = q.where(builder.and(builder.equal(rootOD.get("idProduct"), root.get("id"))),
-                builder.equal(root.join("idSeller").get("id"), sellerId),builder.equal(root.get("isDelete"), 0));
+        Root rootO = q.from(Orders.class);
+        q = q.where(builder.and(builder.equal(rootOD.get("idProduct"), root.get("id"))),builder.equal(rootO.get("id"), rootOD.get("idOrder")),
+                builder.equal(root.join("idSeller").get("id"), sellerId),builder.equal(root.get("isDelete"), 0),builder.equal(root.get("adminBan"), 0),builder.equal(rootO.get("active"), 5));
         q.multiselect(root.get("id"),root.get("name"),
                 root.get("price"),root,builder.count(root.get("id")));
 
@@ -357,10 +369,12 @@ public class ProductRepositoryImply implements ProductRepository {
         Predicate p2 = builder.equal(root.get("idSeller"), sellerId);
         Predicate p3 = builder.equal(root.get("isDelete"), 0);
         Predicate p4 = builder.equal(root.get("idSeller").get("idAccount").get("active"), 1);
+        Predicate p5 = builder.equal(root.get("adminBan"), 0);
         predicates.add(p1);
         predicates.add(p2);
         predicates.add(p3);
         predicates.add(p4);
+        predicates.add(p5);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         Query query = session.createQuery(q);
@@ -410,5 +424,139 @@ public class ProductRepositoryImply implements ProductRepository {
         Query q = session.createQuery(query);
         return q.getResultList();
     }
+    @Override
+    public List<Likes> getLikesOfProduct(int productId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root root = query.from(Likes.class);
+        query.multiselect(builder.count(root.get("id")));
+        query.where(builder.equal(root.get("idProduct"), productId));
+
+        Query q = session.createQuery(query);
+        return q.getResultList();
+    }
+
     
+    @Override
+    public long checkPermissionAddReview(int productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = this.accountRepository.getAcByUsername(authentication.getName());
+        
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root rootOrder = query.from(Orders.class);
+        Root rootOrderDetail = query.from(OrderDetail.class);
+        
+        query.multiselect(builder.count(rootOrder.get("idCustomer")));
+        query.where(builder.and(builder.equal(rootOrder.get("id"), rootOrderDetail.get("idOrder"))
+                ,builder.equal(rootOrder.get("active"), "5")
+                ,builder.equal(rootOrderDetail.get("idProduct"), productId)
+                ,builder.equal(rootOrder.get("idCustomer"), account.getCustomer())));
+        Query q = session.createQuery(query);
+        return (long) q.getSingleResult();
+    }
+    
+    @Override
+    public int updateProductBan(Product p) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        Query query = s.createQuery("UPDATE Product SET adminBan = :adminBan WHERE id = :id");
+        query.setParameter("adminBan", p.getAdminBan());
+        query.setParameter("id", p.getId());
+        return query.executeUpdate();
+    }
+    
+    @Override
+    public long checkExistReview(int productId, int accountId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root root = query.from(Review.class);
+
+        query.multiselect(builder.count(root.get("id")));
+        query.where(builder.equal(root.get("idProduct"), productId), builder.equal(root.get("idAccount"), accountId));
+        Query q = session.createQuery(query);
+        return (long) q.getSingleResult();
+    }
+    @Override
+    public long checkExistReport(int productId, int customerId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root root = query.from(Report.class);
+
+        query.multiselect(builder.count(root.get("id")));
+        query.where(builder.equal(root.get("idProduct"), productId), builder.equal(root.get("idCustomer"), customerId));
+        Query q = session.createQuery(query);
+        return (long) q.getSingleResult();
+    }
+
+    @Override
+    public long checkExistLike(int productId, int cusId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> query = builder.createQuery(Object[].class);
+        Root root = query.from(Likes.class);
+
+        query.multiselect(builder.count(root.get("id")));
+        query.where(builder.equal(root.get("idProduct"), productId), builder.equal(root.get("idCustomer"), cusId));
+        Query q = session.createQuery(query);
+        return (long) q.getSingleResult();
+    }
+    
+    @Override
+    public boolean addLike(Likes likes) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(likes);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+    @Override
+    public boolean delete(Likes likes) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.delete(likes);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public Likes getLikeByCusId(int productId, int customerId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Likes> query = builder.createQuery(Likes.class);
+        Root root = query.from(Likes.class);
+        query.select(root);
+        
+        query.where(builder.equal(root.get("idProduct"), productId), builder.equal(root.get("idCustomer"), customerId));
+        Query q = session.createQuery(query);
+        return (Likes) q.getSingleResult();
+    }
+    @Override
+    public List<Object[]> getProductLikeALot(int num) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        Root root = q.from(Likes.class);
+        q = q.where(builder.equal(root.get("idProduct").get("isDelete"), 0),builder.equal(root.get("idProduct").get("adminBan"), 0),builder.equal(root.get("idProduct").get("idSeller").get("adminBan"), 0));
+        q.multiselect(root.get("idProduct").get("id"),root.get("idProduct").get("name"),
+                root.get("idProduct").get("price"),root.get("idProduct"),builder.count(root.get("id")));
+
+        q = q.groupBy(root.get("idProduct"));
+        q = q.orderBy(builder.desc(builder.count(root.get("id"))));
+        
+        Query query = session.createQuery(q);
+       
+        query.setMaxResults(num);
+
+        return query.getResultList();
+    }
 }

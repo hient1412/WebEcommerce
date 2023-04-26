@@ -73,5 +73,9 @@ public class Utils {
         }
       return Math.ceil(pAvgRating * 100 ) / 100;
     }
-    
+    public static double convertCurrency(double pVnd) {
+        double pCurrency = 0.000043;
+        double pUsd = pVnd * pCurrency; 
+        return pUsd;
+    }
 }

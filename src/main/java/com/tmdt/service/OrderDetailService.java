@@ -5,6 +5,7 @@
 package com.tmdt.service;
 
 import com.tmdt.pojos.OrderDetail;
+import com.tmdt.pojos.SellerOrder;
 import java.util.List;
 
 /**
@@ -13,4 +14,7 @@ import java.util.List;
  */
 public interface OrderDetailService {
     List<OrderDetail> getOrderDetail(int idOrder);
+    boolean addOrderD(OrderDetail od);
+    boolean addSellerOrder(SellerOrder so);
+    boolean addOrderD(List<OrderDetail> od);
 }

@@ -93,6 +93,9 @@ public class Product implements Serializable {
     @Column(name = "active")
     private int active;
     @Basic(optional = false)
+    @Column(name = "admin_ban")
+    private int adminBan;
+    @Basic(optional = false)
     @NotNull
     @Column(name = "quantity")
     private int quantity;
@@ -116,6 +119,12 @@ public class Product implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
     private Set<Review> reviewSet;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idProduct")
+    private Collection<Likes> likesCollection;
+    @JsonIgnore
+    @OneToMany(mappedBy = "idProduct")
+    private Collection<Report> reportCollection;
 
     public Product() {
     }
@@ -315,6 +324,48 @@ public class Product implements Serializable {
      */
     public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
+    }
+
+    /**
+     * @return the likesCollection
+     */
+    public Collection<Likes> getLikesCollection() {
+        return likesCollection;
+    }
+
+    /**
+     * @param likesCollection the likesCollection to set
+     */
+    public void setLikesCollection(Collection<Likes> likesCollection) {
+        this.likesCollection = likesCollection;
+    }
+
+    /**
+     * @return the reportCollection
+     */
+    public Collection<Report> getReportCollection() {
+        return reportCollection;
+    }
+
+    /**
+     * @param reportCollection the reportCollection to set
+     */
+    public void setReportCollection(Collection<Report> reportCollection) {
+        this.reportCollection = reportCollection;
+    }
+
+    /**
+     * @return the adminBan
+     */
+    public int getAdminBan() {
+        return adminBan;
+    }
+
+    /**
+     * @param adminBan the adminBan to set
+     */
+    public void setAdminBan(int adminBan) {
+        this.adminBan = adminBan;
     }
 
 }

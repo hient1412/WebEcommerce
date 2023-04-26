@@ -6,6 +6,7 @@ package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.repository.OrderDetailRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -27,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class OrderDetailRepositoryImly implements OrderDetailRepository{
+public class OrderDetailRepositoryImly implements OrderDetailRepository {
+
     @Autowired
     private LocalSessionFactoryBean sessionFactoryBean;
 
@@ -41,5 +44,43 @@ public class OrderDetailRepositoryImly implements OrderDetailRepository{
         q.where(builder.equal(root.get("idOrder"), idOrder));
         Query query = session.createQuery(q);
         return query.getResultList();
+    }
+
+    @Override
+    public boolean addOrderD(OrderDetail od) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(od);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addSellerOrder(SellerOrder so) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(so);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addOrderD(List<OrderDetail> od) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            for (OrderDetail i : od) {
+                s.save(i);
+            }
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
     }
 }

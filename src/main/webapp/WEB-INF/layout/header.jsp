@@ -70,6 +70,7 @@
                                 <li><a href="<c:url value="/personal"/>"><i class="fa-solid fa-user"></i> <spring:message code="label.personal"/></a></li>
                                 <li><a href="<c:url value="/customer/edit"/>"><i class="fa-solid fa-pen-to-square"></i> <spring:message code="label.update.personal"/></a></li>
                                 <li><a href="<c:url value="/customer/list-cus-order"/>"><i class="fa-regular fa-file"></i>  <spring:message code="label.order"/></a></li>
+                                <li><a href="<c:url value="/customer/liked"/>"><i class="far fa-heart"></i> <spring:message code="label.liked"/></a></li></a></li>
                                 <li><a href="<c:url value="/customer/ship-address"/>"><i class="fa-solid fa-location-arrow"></i> <spring:message code="label.address"/></a></li></a></li>
                         <li><a href="<c:url value="/change-password"/>"><i class="fa-solid fa-key"></i> <spring:message code="label.change.pass"/></a></li></a></li>
                         <li><a href="<c:url value="/logout"/>"><i class="fa-solid fa-arrow-right-from-bracket"></i> <spring:message code="label.logout"/></a></li></a></li>

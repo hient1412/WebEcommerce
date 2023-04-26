@@ -5,6 +5,8 @@
 package com.tmdt.service;
 
 import com.tmdt.pojos.Admin;
+import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import java.util.List;
 
 /**
@@ -17,4 +19,12 @@ public interface AdminService {
     boolean updateAdmin(Admin ad);
     List<Admin> getAdEmail(String email);
     List<Admin> getAdPhone(String phone);
+    List<Report> getReport(int product, int page);
+    List<Report> getReportWithProduct(int page);
+    Report getReportById(int reportId);
+    int updateSkip(Report r);
+    List<Report> getReportCheckAll(int id, int active);
+    List<Object[]> getReportProductSeller(int page);
+    List<Report> getReportProductSeller(int page,int idSeller);
+    List<Product> getReportSeller(int sellerId, int page);
 }

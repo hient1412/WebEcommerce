@@ -125,7 +125,19 @@
         </style>
     </head>
     <body>
-
+        <c:url var="link" value="/"/>
+        <div class="dropdown-menu" style="width: fit-content;min-width: unset;padding: 0;">
+            <button class="dropdown-item px-2" style="width: 100px;" onclick="changeLang(${link}, 'vi')">
+                <div class="d-flex align-items-center">
+                    <span>VI</span>
+                </div>
+            </button>
+            <button class="px-2" style="width: 100px;" onclick="changeLang(${link}, 'en')">
+                <div class="d-flex">
+                    <span>EN</span>
+                </div>
+            </button>
+        </div>
         <h2 class="text-uppercase"><spring:message code="label.billing.information"/></h2>
         <div class="row">
             <div class="col-75">
@@ -151,11 +163,43 @@
                 <div class="container">
                     <h4><i class="fa fa-shopping-cart"></i> <spring:message code="label.cart"/></h4>
                     <c:forEach items="${cartProducts}" var="c">
-                        <p><a href="#">${c.productName}</a> <fmt:formatNumber type="number" maxFractionDigits="3" value="${c.price}" /> <span style="text-decoration: underline">đ</span> x ${c.count}</p>
-                    </c:forEach>
-                    <p><spring:message code="label.trans.fee"/> 0 <span style="text-decoration: underline">đ</span></p>
+                        <p><a href="#">${c.productName}</a> 
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${c.price}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice" >
+                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(c.price)}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            x ${c.count}</p>
+                        </c:forEach>
+                    <p><spring:message code="label.trans.fee"/> 
+                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                            <span id="vndPrice" name="vndPrice">
+                                <span style="text-decoration: underline">đ</span> 0
+                            </span>
+                        </c:if>
+                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                            <span id="usdPrice" name="usdPrice" >
+                                <span>$</span> 0
+                            </span>
+                        </c:if>
                     <hr>
-                    <p><spring:message code="label.total.amount"/> <fmt:formatNumber type="number" maxFractionDigits="3" value="${cartAmount.amountWithShip}"/> <span id="cartAmount"><span style="text-decoration: underline">đ</span></p>
+                    <p><spring:message code="label.total.amount"/>
+                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                            <span id="vndPrice" name="vndPrice">
+                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${cartAmount.amountWithShip}" maxFractionDigits="3" type="number"/>
+                            </span>
+                        </c:if>
+                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                            <span id="usdPrice" name="usdPrice" >
+                                <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(cartAmount.amountWithShip)}" maxFractionDigits="3" type="number"/>
+                            </span>
+                        </c:if>
+                    </p>
                     <div>
                         <input type="button" onclick="pay()" value="<spring:message code="label.pay"/>" class="btn">
                     </div>
@@ -168,3 +212,4 @@
 
 
 <script src="<c:url value="/js/cart.js" />"></script>
+<script src="<c:url value="/js/main.js" />"></script>

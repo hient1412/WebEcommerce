@@ -38,6 +38,7 @@
                                 <td><spring:message code="label.not.approved"/></td>
                             </c:if>
                             <td>
+                                <a title="<spring:message code="label.see"/>" href="<c:url value="/admin/account/see"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-eye p-1"></i></a>
                                 <a title="<spring:message code="label.edit"/>" href="<c:url value="/admin/account/edit"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-regular fa-pen-to-square p-1"></i></a>
                                 <a title="<spring:message code="label.delete"/>" href="<c:url value="/admin/account/delete"/>?id=${ac.id}" data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-trash-can p-1"></i></a>
                             </td>

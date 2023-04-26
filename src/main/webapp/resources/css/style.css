@@ -158,6 +158,14 @@ nav li a{
     padding: 2px;
     position: relative;
 }
+.white-box-3 {
+border-radius: 5px;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.4);
+    background-color: #ffffff;
+    padding: 10px 15px;
+    transition: all 0.5s ease-in-out;
+    position: relative;
+}
 .product-img {
     min-height: 135px;
 }

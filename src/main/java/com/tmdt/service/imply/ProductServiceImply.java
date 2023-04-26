@@ -6,7 +6,9 @@ package com.tmdt.service.imply;
 
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Image;
+import com.tmdt.pojos.Likes;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import com.tmdt.repository.ProductRepository;
@@ -99,6 +101,57 @@ public class ProductServiceImply implements ProductService{
     @Override
     public List getRatingSeller(int sellerId) {
         return this.productRepository.getRatingSeller(sellerId);
+    }
+
+    @Override
+    public List<Likes> getLikesOfProduct(int productId) {
+        return this.productRepository.getLikesOfProduct(productId);
+    }
+
+    @Override
+    public long checkPermissionAddReview(int productId) {
+        return this.productRepository.checkPermissionAddReview(productId);
+    }
+
+    @Override
+    public int updateProductBan(Product p) {
+        return this.productRepository.updateProductBan(p);
+    }
+
+
+    @Override
+    public boolean addLike(Likes likes) {
+        return this.productRepository.addLike(likes);
+    }
+
+    @Override
+    public boolean delete(Likes likes) {
+        return this.productRepository.delete(likes);
+    }
+
+    @Override
+    public Likes getLikeByCusId(int productId, int customerId) {
+        return this.productRepository.getLikeByCusId(productId,customerId);
+    }
+
+    @Override
+    public long checkExistReview(int productId, int accountId) {
+        return this.productRepository.checkExistReview(productId,accountId);
+    }
+
+    @Override
+    public long checkExistLike(int productId, int cusId) {
+        return this.productRepository.checkExistLike(productId,cusId);
+    }
+
+    @Override
+    public List<Object[]> getProductLikeALot(int num) {
+        return this.productRepository.getProductLikeALot(num);
+    }
+
+    @Override
+    public long checkExistReport(int productId, int customerId) {
+        return this.productRepository.checkExistReport(productId,customerId);
     }
     
 }

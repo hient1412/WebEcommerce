@@ -9,13 +9,13 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-    <div class="center p-4">
-        <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.stats.revenue"/></h2></div>
-    </div>
+<div class="center p-4">
+    <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.stats.revenue"/></h2></div>
+</div>
 
-    <div class="m-4">
-        <form action="">
-            <div class="row">
+<div class="m-4">
+    <form action="">
+        <div class="row">
             <div class="col form-group">
                 <label for="kw"><spring:message code="label.keyword"/></label>
                 <input type="text" autocomplete="off" class="form-control" id="kw" name="kw">
@@ -31,33 +31,44 @@
             <div class="center">
                 <input type="submit" value="<spring:message code="label.done"/>"/>
             </div>
-            </div>
-        </form>
-    </div>
-    <div class="m-4">
-        <canvas id="myChart"></canvas>
-    </div>
-    <div class="row pb-4 m-4">
-        <br>
-        <table class="table table-bordered center">
-            <thead>
+        </div>
+    </form>
+</div>
+<div class="m-4">
+    <canvas id="myChart"></canvas>
+</div>
+<div class="row pb-4 m-4">
+    <br>
+    <table class="table table-bordered center">
+        <thead>
+            <tr>
+                <th><spring:message code="label.product.id"/></th>
+                <th><spring:message code="label.name"/></th>
+                <th><spring:message code="label.price"/></th>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach items="${statsProduct}" var="s">
                 <tr>
-                    <th><spring:message code="label.product.id"/></th>
-                    <th><spring:message code="label.name"/></th>
-                    <th><spring:message code="label.price"/></th>
+                    <td>${s[0]}</td>
+                    <td>${s[1]}</td>
+                    <td>
+                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                            <span id="vndPrice" name="vndPrice">
+                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${s[2]}" maxFractionDigits="3" type="number"/>
+                            </span>
+                        </c:if>
+                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                            <span id="usdPrice" name="usdPrice" >
+                                <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(s[2])}" maxFractionDigits="3" type="number"/>
+                            </span>
+                        </c:if>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${statsProduct}" var="s">
-                    <tr>
-                        <td>${s[0]}</td>
-                        <td>${s[1]}</td>
-                        <td><span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${s[2]}" maxFractionDigits="3" type="number"/></td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table> 
-    </div>
+            </c:forEach>
+        </tbody>
+    </table> 
+</div>
 <c:if test="${seller.idAccount.active == 0}">
     <a id="aclick" href="<c:url value="/access-denied"/>"></a>
 </c:if>

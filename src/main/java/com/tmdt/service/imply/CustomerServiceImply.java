@@ -8,11 +8,14 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Likes;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.ShipAdress;
 import com.tmdt.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 import com.tmdt.service.CustomerService;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +132,14 @@ public class CustomerServiceImply implements CustomerService {
         return this.customerRepository.getCusByEmail(email);
     }
 
+    @Override
+    public boolean addReport(Report r) {
+        r.setReportDate(new Date());
+        return this.customerRepository.addReport(r);
+    }
 
+    @Override
+    public List<Likes> getLikeByCusId(int id) {
+        return this.customerRepository.getLikeByCusId(id);
+    }
 }

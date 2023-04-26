@@ -6,7 +6,9 @@ package com.tmdt.service.imply;
 
 import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Cart;
+import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.repository.OrderRepository;
 import com.tmdt.service.OrderService;
 import java.util.Date;
@@ -72,6 +74,11 @@ public class OrderServiceImply implements OrderService{
     public int updateActiveAndReceived(Orders o) {
         o.setOrderReceived(new Date());
         return this.orderRepository.updateActiveAndReceived(o);
+    }
+
+    @Override
+    public boolean addOrder(Orders o) {
+        return this.orderRepository.addOrder(o);
     }
 
 }

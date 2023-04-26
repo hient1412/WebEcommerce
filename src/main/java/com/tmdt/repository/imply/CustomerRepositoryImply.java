@@ -5,7 +5,9 @@
 package com.tmdt.repository.imply;
 
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Likes;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.Seller;
 import com.tmdt.pojos.ShipAdress;
 import com.tmdt.repository.CustomerRepository;
@@ -229,5 +231,30 @@ public class CustomerRepositoryImply implements CustomerRepository {
         return (Customer) query.getSingleResult();
     }
 
+    @Override
+    public boolean addReport(Report r) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(r);
+            return true;
+        } catch (HibernateException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
 
+    @Override
+    public List<Likes> getLikeByCusId(int id) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = s.getCriteriaBuilder();
+        CriteriaQuery<Likes> q = builder.createQuery(Likes.class);
+        Root root = q.from(Likes.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("idCustomer"), id));
+       
+        Query query = s.createQuery(q);
+        return query.getResultList();
+    }
+    
 }

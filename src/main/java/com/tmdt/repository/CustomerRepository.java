@@ -5,6 +5,8 @@
 package com.tmdt.repository;
 
 import com.tmdt.pojos.Customer;
+import com.tmdt.pojos.Likes;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.ShipAdress;
 import java.util.List;
 
@@ -28,5 +30,7 @@ public interface CustomerRepository {
     int setdefaultShip(ShipAdress s);
     ShipAdress findShipPriority (Customer c);
     Customer getCusByEmail (String email);
-
+    boolean addReport(Report r);
+    List<Likes> getLikeByCusId(int id);
+    
 }

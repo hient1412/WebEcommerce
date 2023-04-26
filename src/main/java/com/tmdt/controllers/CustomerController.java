@@ -9,8 +9,11 @@ import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Customer;
 import com.tmdt.pojos.Image;
+import com.tmdt.pojos.Likes;
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
+import com.tmdt.pojos.Product;
+import com.tmdt.pojos.SellerOrder;
 import com.tmdt.pojos.ShipAdress;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CustomerService;
@@ -18,16 +21,19 @@ import com.tmdt.service.LocationService;
 import com.tmdt.service.MailService;
 import com.tmdt.service.OrderDetailService;
 import com.tmdt.service.OrderService;
+import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.utils.Utils;
 import com.tmdt.validator.CustomerValidator;
 import com.tmdt.validator.ShipAddressValidator;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +58,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/customer")
 public class CustomerController {
 
+    @Autowired
+    private ProductService productService;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -145,6 +153,7 @@ public class CustomerController {
         model.addAttribute("orders", this.orderService.getOrderByCusId(pre, id, page));
         model.addAttribute("counterS", this.orderService.getOrderByCusId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "list-cus-order";
     }
 
@@ -264,6 +273,8 @@ public class CustomerController {
         model.addAttribute("orderDetail", this.orderDetailService);
         model.addAttribute("seller", this.sellerService);
         model.addAttribute("cancel", new Cancel());
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
+        model.addAttribute("shipAddress", this.customerService);
         return "customer-order-detail";
     }
 
@@ -385,14 +396,15 @@ public class CustomerController {
         model.addAttribute("seller", this.sellerService);
         model.addAttribute("order", this.orderService.getOrderById(orderId));
         model.addAttribute("cancel", this.orderService.getCancel(this.orderService.getOrderById(orderId)));
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "cancel";
     }
-    
+
     @GetMapping("/order-detail/{orderId}/confirm")
     public String confirm(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
         Orders o = this.orderService.getOrderById(orderId);
         o.setActive(5);
-        if(this.orderService.updateActiveAndReceived(o) == 1){
+        if (this.orderService.updateActiveAndReceived(o) == 1) {
             r.addFlashAttribute("errMessage", String.format("Xác nhận đã nhận hàng thành công"));
             return "redirect:/customer/order-detail/" + o.getId();
         } else {
@@ -401,11 +413,166 @@ public class CustomerController {
         return "redirect:/customer/order-detail/" + o.getId();
     }
 
+    @GetMapping("/order-detail/{orderId}/buyAgain")
+    public String buyAgain(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
+        Orders o = this.orderService.getOrderById(orderId);
+        Orders o1 = new Orders();
+        o1.setActive(1);
+        o1.setIdCustomer(o.getIdCustomer());
+        o1.setOrderDate(new Date());
+        Date requiredDate = new Date();
+        requiredDate.setDate(requiredDate.getDate() + 7);
+        o1.setRequiredDate(requiredDate);
+        o1.setAmount(o.getAmount());
+        o1.setShipFee(0);
+        o1.setPaymentType(1);
+        o1.setIsPayment(0);
+        o1.setIdShipAdress(o.getIdShipAdress());
+        if (this.orderService.addOrder(o1) == true) {
+            List<OrderDetail> od = this.orderDetailService.getOrderDetail(o.getId());
+            for (OrderDetail i : od) {
+                OrderDetail od11 = new OrderDetail();
+                od11.setUnitPrice(i.getUnitPrice());
+                od11.setQuantity(i.getQuantity());
+                od11.setDiscount(0);
+                od11.setIdProduct(i.getIdProduct());
+                od11.setIdOrder(o1);
+                this.orderDetailService.addOrderD(od11);
+            }
+            Product p = this.productService.getProductById(od.get(0).getIdProduct().getId());
+            SellerOrder so = new SellerOrder();
+            so.setIdOrder(o1);
+            so.setIdSeller(p.getIdSeller());
+            if (this.orderDetailService.addSellerOrder(so) == true) {
+                r.addFlashAttribute("errMessage", "Mua thành công!!");
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                SimpleDateFormat dk = new SimpleDateFormat("dd/MM/yyyy");
+                DecimalFormat df = new DecimalFormat("###,###,###,###");
+
+                String sendTo = o1.getIdCustomer().getEmail();
+                String subject = "WEBECOMMERCE THÔNG BÁO - ĐẶT HÀNG THÀNH CÔNG " + RandomString.make(4);
+                String content = "<div style=\"border:1px solid black;margin-bottom:10px\">\n"
+                        + "<div style=\"text-align:center; padding: 0.5rem\">\n"
+                        + "    <span style=\"font-size:22px\"><b>CHI TIẾT ĐƠN HÀNG </b></span><br>\n"
+                        + "    <span>Mã đơn hàng: " + o1.getId() + "</span><br>\n"
+                        + "    <span>Ngày đặt hàng: " + dt.format(o1.getOrderDate()) + "</span><br>\n"
+                        + "    <span style=\"color:green\">Trạng thái đơn hàng: ";
+
+                switch (o1.getActive()) {
+                    case 1:
+                        content += "Đã đặt hàng";
+                        break;
+                    case 2:
+                        content += "Chờ lấy hàng";
+                        break;
+                    case 3:
+                        content += "Chờ vận chuyển";
+                        break;
+                    case 4:
+                        content += "Đang giao";
+                        break;
+                    case 5:
+                        content += "Đã hoàn thành (vào lúc : " + dt.format(o1.getOrderReceived()) + ")";
+                        break;
+                }
+                content += "</span>\n"
+                        + "    <br><span>Ngày dự kiến giao hàng: " + dk.format(o1.getRequiredDate()) + "<br></span>\n"
+                        + "    <br>\n"
+                        + "</div>\n"
+                        + "</div>\n"
+                        + "<div style=\"margin-top: 1rem;\">\n"
+                        + "    <div style=\"border: 1px solid black\">\n"
+                        + "        <div style=\"padding: 1.5rem\">\n"
+                        + "            <b style=\"font-size:22px\">Địa chỉ nhận hàng</b>\n"
+                        + "            <div style=\"padding-top: 1rem\">\n"
+                        + "                <b> " + o1.getIdShipAdress().getName() + " </b> <span> | </span><label> " + o1.getIdShipAdress().getPhone() + "</label> \n"
+                        + "                <p style=\"text-transform: capitalize\">" + o1.getIdShipAdress().getAddress() + "</p> \n"
+                        + "                <p><span style=\"text-transform: capitalize\"> " + o1.getIdShipAdress().getWard() + "</span><span style=\"text-transform: capitalize\">, " + o1.getIdShipAdress().getDistrict() + "</span><span>, " + o1.getIdShipAdress().getCity().getName() + " </span>\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "<div>\n"
+                        + "    <div style=\"border-left: 1px solid #dee2e6;border-right: 1px solid #dee2e6;border-color: black;\">\n"
+                        + "        <div style=\"padding: 1rem;\">\n"
+                        + "            <div style=\"display:flex;\">\n"
+                        + "                <div style=\"display:flex;\">\n"
+                        + "                    <div>\n"
+                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + this.sellerService.getSeller(o1.getId())[1] + "\"></a>\n"
+                        + "                    </div>\n"
+                        + "                    <div style=\"font-size: 24px;\">\n"
+                        + "                        <label>" + this.sellerService.getSeller(o1.getId())[0] + "</label></a>\n"
+                        + "                    </div>\n"
+                        + "                </div>\n"
+                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
+                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + this.sellerService.getSeller(o1.getId())[2] + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
+                        + "                </div>\n"
+                        + "            </div>\n"
+                        + "<div style=\"margin-bottom:10px\">\n"
+                        + "                <div >\n"
+                        + "                    <table style=\"width:100%\" >\n";
+                for (OrderDetail odetail : this.orderDetailService.getOrderDetail(o1.getId())) {
+                    content += "<tbody>\n"
+                            + "                            <tr >\n"
+                            + "                                <td><img style='width:60px; height:50px;margin-right:10px; border:1px solid' src=\"";
+                    List<Image> l = (List<Image>) odetail.getIdProduct().getImageCollection();
+                    content += l.get(0).getImage() + "\"</td><td ><b>" + odetail.getIdProduct().getName() + "</b></td><td><b>x " + odetail.getQuantity() + "</b></td>"
+                            + "                                <td style='text-align:right'><b> <span style='text-decoration:underline'>đ</span> " + df.format(odetail.getUnitPrice()) + "</b></td></tr>"
+                            + "                        </tbody>\n";
+                }
+                content += "                    </table>\n"
+                        + "                </div>\n"
+                        + "            </div> "
+                        + "</div>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "    <div style=\"border: 1px solid;margin-bottom:10px\" >\n"
+                        + "        <table style=\"width: 100%;\">\n"
+                        + "            <tbody style=\"background-color: #f8f9fa;\">\n"
+                        + "               <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tổng tiền hàng</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"><span style='text-decoration:underline'>đ</span> " + df.format(o1.getAmount()) + "</td>\n"
+                        + "                </tr>\n"
+                        + "                <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Phí ship</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><span style='text-decoration:underline'>đ</span> 0</td>\n"
+                        + "                </tr>\n"
+                        + "                <tr style=\"text-align: right;\">\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Thành tiền</b></td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span style='text-decoration:underline'>đ</span> " + df.format(o1.getAmount()) + "</td>\n"
+                        + "                </tr>\n"
+                        + "            </tbody>\n"
+                        + "        </table>\n"
+                        + "    </div>\n"
+                        + "<div style=\"border: 1px solid black\">\n"
+                        + "    <div style=\"text-align: right;padding:  0.5rem\">\n"
+                        + "         <span style=\"font-weight: 700\">Phương thức thanh toán</span><br>\n";
+                if (o1.getPaymentType() == 1) {
+                    content += "<span style=\"color: #267bd1\">Thanh toán tại nhà";
+                } else if (o1.getPaymentType() == 2) {
+                    content += "<span style=\"color: #267bd1\">Thanh toán online";
+                }
+                content += "</span>\n"
+                        + "        </div>\n"
+                        + "    </div>\n";
+                mailService.sendMail(sendTo, subject, content);
+                return "redirect:/customer/list-cus-order";
+            }
+        } else {
+            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể mua lại đơn hàng"));
+        }
+
+        return "redirect:/customer/list-cus-order";
+    }
+
     @GetMapping("/checkout")
-    public String checkout(Model model, Authentication authentication, HttpSession session) {
+    public String checkout(Model model, Authentication authentication,
+            HttpSession session
+    ) {
         Account ac = this.accountService.getAcByUsername(authentication.getName());
         model.addAttribute("shipAddress", this.customerService.findShipPriority(ac.getCustomer()));
         model.addAttribute("ac", ac);
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         try {
             model.addAttribute("cus", this.customerService.getCusById(ac.getCustomer().getId()));
         } catch (Exception e) {
@@ -424,5 +591,42 @@ public class CustomerController {
         model.addAttribute("cartAmount", Utils.cartAmount(cartProduct));
         return "checkout";
     }
-    
+
+    @GetMapping("/liked")
+    public String liked(Model model, Authentication a,
+            HttpSession s
+    ) {
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        if (ac.getRole().equals(Account.CUSTOMER)) {
+            model.addAttribute("listLike", this.customerService.getLikeByCusId(ac.getCustomer().getId()));
+            model.addAttribute("productService", this.productService);
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        }
+        return "liked";
+    }
+
+    @GetMapping("/liked/like")
+    public String productLike(Model model, RedirectAttributes r,
+            @RequestParam(value = "id") int id, Authentication a
+    ) {
+        String errMessage = "";
+        Likes like = new Likes();
+        like.setIdProduct(this.productService.getProductById(id));
+        like.setIdCustomer(this.accountService.getAcByUsername(a.getName()).getCustomer());
+        this.productService.addLike(like);
+        return "redirect:/customer/liked";
+    }
+
+    @GetMapping("/liked/unlike")
+    public String productUnLike(Model model, RedirectAttributes r,
+            @RequestParam(value = "id") int id, Authentication a
+    ) {
+        String errMessage = "";
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        Likes like = this.productService.getLikeByCusId(id, ac.getCustomer().getId());
+        this.productService.delete(like);
+        r.addFlashAttribute("errMessage", errMessage);
+        return "redirect:/customer/liked";
+    }
+
 }

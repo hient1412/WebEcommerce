@@ -36,7 +36,7 @@
                     <div class="col text-center">
                         <div class="product-img-4">
                             <div class="mb-2">
-                                <img src="${od.idProduct.imageCollection.get(0).image}">
+                                <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
                             </div>
                         </div>
                         <div class="mt-3">
@@ -52,7 +52,16 @@
                     </div>
                     <div class="col center">
                         <div class="mb-3">
-                            <label><span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/></label>
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice">
+                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(od.idProduct.price)}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
                         </div>
                     </div>
                 </div>

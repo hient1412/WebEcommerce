@@ -23,6 +23,7 @@ import com.tmdt.service.OrderService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
+import com.tmdt.utils.Utils;
 import com.tmdt.validator.SellerValidator;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -166,6 +167,7 @@ public class SellerController {
         model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
         model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("listProduct.size"));
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "list-product-upload";
     }
 
@@ -185,6 +187,7 @@ public class SellerController {
         model.addAttribute("orders", this.orderService.getOrderBySellerId(pre, id, page));
         model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "list-order";
     }
 
@@ -370,6 +373,7 @@ public class SellerController {
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         model.addAttribute("statsProduct", this.statsService.statsProduct(kw, fromDate, toDate,ac.getSeller().getId()));
         return "stats-turnover";
     }
@@ -381,6 +385,7 @@ public class SellerController {
         model.addAttribute("order", this.orderService.getOrderById(orderId));
         model.addAttribute("orderDetail", this.orderDetailService);
         model.addAttribute("cancel", new Cancel());
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "sel-order-detail";
     }
     
@@ -499,6 +504,7 @@ public class SellerController {
         model.addAttribute("seller", this.sellerService);
         model.addAttribute("order",this.orderService.getOrderById(orderId));
         model.addAttribute("cancel",this.orderService.getCancel(this.orderService.getOrderById(orderId)));
+        model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "cancel";
     }
     

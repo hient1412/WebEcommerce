@@ -44,7 +44,16 @@
                                                     <h6 class="text-black mb-0">${c.productName}</h6>
                                                 </div>
                                                 <div class="col">
-                                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber type="number" maxFractionDigits="3" value="${c.price}" />
+                                                    <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                        <span id="vndPrice" name="vndPrice">
+                                                            <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${c.price}" maxFractionDigits="3" type="number"/>
+                                                        </span>
+                                                    </c:if>
+                                                    <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                        <span id="usdPrice" name="usdPrice" >
+                                                            <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(c.price)}" maxFractionDigits="3" type="number"/>
+                                                        </span>
+                                                    </c:if>
                                                 </div>
                                                 <div class="col d-flex product-count">
                                                     <form action="# " style="display: flex;">
@@ -72,7 +81,18 @@
 
                                         <div class="d-flex justify-content-between mb-4">
                                             <h6 class="text-uppercase"><spring:message code="label.product.money"/>: </h6>
-                                            <h5><span id="cartAmount"><span style="text-decoration: underline">đ</span> <fmt:formatNumber type="number" maxFractionDigits="3" value="${cartAmount.amount}"/></span></h5>
+                                            <h5>
+                                                <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                    <span id="vndPrice" name="vndPrice">
+                                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${cartAmount.amount}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                                <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                    <span id="usdPrice" name="usdPrice" >
+                                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(cartAmount.amount)}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                            </h5>
                                         </div>
                                         <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
 
@@ -87,7 +107,18 @@
 
                                         <div class="d-flex justify-content-between mb-5">
                                             <h5 class="text-uppercase"><spring:message code="label.total.amount"/>: </h5>
-                                            <h5><span id="cartAmount"><span style="text-decoration: underline">đ</span> <fmt:formatNumber type="number" maxFractionDigits="3" value="${cartAmount.amount}"/></span></h5>
+                                            <h5>
+                                                <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                    <span id="vndPrice" name="vndPrice">
+                                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${cartAmount.amount}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                                <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                    <span id="usdPrice" name="usdPrice" >
+                                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(cartAmount.amount)}" maxFractionDigits="3" type="number"/>
+                                                    </span>
+                                                </c:if>
+                                            </h5>
                                         </div>
                                         <sec:authorize access="isAuthenticated()">
                                             <sec:authorize access="hasRole('ROLE_CUSTOMER')">
@@ -144,7 +175,16 @@
 
                                         <div class="d-flex justify-content-between mb-4">
                                             <h5 class="text-uppercase"><spring:message code="label.product.money"/>: </h5>
-                                            <span style="text-decoration: underline">đ</span> 0
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice">
+                                                    <span style="text-decoration: underline">đ</span> 0
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice" >
+                                                    <span>$</span> 0
+                                                </span>
+                                            </c:if>
                                         </div>
 
 
@@ -161,7 +201,16 @@
 
                                         <div class="d-flex justify-content-between mb-5">
                                             <h5 class="text-uppercase"><spring:message code="label.total.amount"/>:</h5>
-                                            <span style="text-decoration: underline">đ</span> 0
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice">
+                                                    <span style="text-decoration: underline">đ</span> 0
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice" >
+                                                    <span>$</span> 0
+                                                </span>
+                                            </c:if>
                                         </div>
 
                                         <button type="button" class="btn btn-dark btn-block btn-lg"
@@ -188,7 +237,7 @@
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
                                         <h3 class="fw-bold mb-0 text-black text-uppercase"><spring:message code="label.cart"/></h3>
-                                            <h6 class="mb-0 text-muted">0 <spring:message code="label.product"/></h6>
+                                        <h6 class="mb-0 text-muted">0 <spring:message code="label.product"/></h6>
                                     </div>
                                     <hr class="my-4">
                                     <h4 class="text-primary"><spring:message code="label.not.cart"/></h4>
@@ -208,7 +257,16 @@
 
                                     <div class="d-flex justify-content-between mb-4">
                                         <h5 class="text-uppercase"><spring:message code="label.product.money"/>: </h5>
-                                        <span style="text-decoration: underline">đ</span> 0
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> 0
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> 0
+                                            </span>
+                                        </c:if>
                                     </div>
 
                                     <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
@@ -224,7 +282,16 @@
 
                                     <div class="d-flex justify-content-between mb-5">
                                         <h5 class="text-uppercase"><spring:message code="label.total.amount"/>: </h5>
-                                        <span style="text-decoration: underline">đ</span> 0
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> 0
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> 0
+                                            </span>
+                                        </c:if>
                                     </div>
 
                                     <button type="button" class="btn btn-dark btn-block btn-lg"
@@ -242,13 +309,13 @@
 
 <script src="<c:url value="/js/cart.js" />"></script>
 <script>
-   function updateItemCart(pThis, pProductId, pQuantity) { 
-        let pId = 'quantity' + pProductId;
-        let pTempCount = document.getElementById(pId).value;
-        if (pTempCount > pQuantity) {
-            alert("Số lượng hàng bạn đặt vượt quá số lượng hàng còn lại! Vui lòng kiểm tra lại.");
-            document.getElementById(pId).value = pQuantity;  
-        }
-        updateCart(pThis, pProductId);
-    }
+                                                        function updateItemCart(pThis, pProductId, pQuantity) {
+                                                            let pId = 'quantity' + pProductId;
+                                                            let pTempCount = document.getElementById(pId).value;
+                                                            if (pTempCount > pQuantity) {
+                                                                alert("Số lượng hàng bạn đặt vượt quá số lượng hàng còn lại! Vui lòng kiểm tra lại.");
+                                                                document.getElementById(pId).value = pQuantity;
+                                                            }
+                                                            updateCart(pThis, pProductId);
+                                                        }
 </script>

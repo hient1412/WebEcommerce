@@ -69,7 +69,7 @@ public class SellerRepositoryImply implements SellerRepository {
         Root root = q.from(Seller.class);
         Root rootP = q.from(Product.class);
 
-        q.where(builder.equal(root.get("id"), sellerId),builder.equal(rootP.get("idSeller"), sellerId));
+        q.where(builder.equal(root.get("id"), sellerId),builder.equal(root.get("adminBan"),0),builder.equal(rootP.get("idSeller"), sellerId));
         q.multiselect(root.get("name"), root.get("avatar"), builder.count(rootP.get("id")));
         Query query = session.createQuery(q);
 
@@ -89,6 +89,8 @@ public class SellerRepositoryImply implements SellerRepository {
         predicates.add(p1);
         Predicate p2 = builder.equal(rootP.get("isDelete"),0);
         predicates.add(p2);
+        Predicate p3 = builder.equal(root.get("adminBan"),0);
+        predicates.add(p3);
 
         if (!kw.isEmpty()) {
             Predicate p = builder.like(root.get("name").as(String.class), String.format("%%%s%%", kw));
@@ -146,7 +148,7 @@ public class SellerRepositoryImply implements SellerRepository {
         
         q = q.where(builder.and(builder.equal(root.get("id"), rootSO.get("idSeller")),
                 builder.and(builder.equal(rootO.get("id"), rootSO.get("idOrder")),
-                        builder.equal(rootO.get("id"), idOrder))));
+                        builder.equal(rootO.get("id"), idOrder))),builder.equal(root.get("adminBan"),0));
         q.multiselect(root.get("name"), root.get("avatar"),root.get("id"));
 
         Query query = session.createQuery(q);
@@ -179,5 +181,13 @@ public class SellerRepositoryImply implements SellerRepository {
         
         return query.getResultList();
     }
-
+    
+    @Override
+    public int updateSellerBan(Seller s) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        Query query = session.createQuery("UPDATE Seller SET adminBan = :adminBan WHERE id = :id");
+        query.setParameter("adminBan", s.getAdminBan());
+        query.setParameter("id", s.getId());
+        return query.executeUpdate();
+    }
 }

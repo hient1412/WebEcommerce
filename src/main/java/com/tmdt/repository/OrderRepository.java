@@ -6,8 +6,10 @@ package com.tmdt.repository;
 
 import com.tmdt.pojos.Cancel;
 import com.tmdt.pojos.Cart;
+import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.SellerOrder;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +28,5 @@ public interface OrderRepository {
     int updateQuantityProduct(Product p);
     int updateActiveAndSend(Orders o);
     int updateActiveAndReceived(Orders o);
+    boolean addOrder(Orders o);
 }

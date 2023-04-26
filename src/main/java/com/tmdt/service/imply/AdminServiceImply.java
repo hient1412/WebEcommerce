@@ -5,6 +5,8 @@
 package com.tmdt.service.imply;
 
 import com.tmdt.pojos.Admin;
+import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.repository.AdminRepository;
 import com.tmdt.service.AdminService;
 import java.util.List;
@@ -44,5 +46,46 @@ public class AdminServiceImply implements AdminService{
     public List<Admin> getAdPhone(String phone) {
         return this.adminRepository.getAdPhone(phone);
     }
+
+    @Override
+    public List<Report> getReport(int product, int page) {
+        return this.adminRepository.getReport(product,page);
+    }
+
+    @Override
+    public List<Report> getReportWithProduct(int page) {
+        return this.adminRepository.getReportWithProduct(page);
+    }
+
+    @Override
+    public Report getReportById(int reportId) {
+        return this.adminRepository.getReportById(reportId);
+    }
+
+    @Override
+    public int updateSkip(Report r) {
+        return this.adminRepository.updateSkip(r);
+    }
+
+    @Override
+    public List<Report> getReportCheckAll(int id, int active) {
+        return this.adminRepository.getReportCheckAll(id,active);
+    }
+
+    @Override
+    public List<Report> getReportProductSeller(int page, int idSeller) {
+        return this.adminRepository.getReportProductSeller(page,idSeller);
+    }
+
+    @Override
+    public List<Object[]> getReportProductSeller(int page) {
+        return this.adminRepository.getReportProductSeller(page);
+    }
+
+    @Override
+    public List<Product> getReportSeller(int sellerId, int page) {
+        return this.adminRepository.getReportSeller(sellerId,page);
+    }
+
     
 }

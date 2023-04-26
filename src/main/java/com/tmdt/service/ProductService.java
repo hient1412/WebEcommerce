@@ -4,7 +4,9 @@
  */
 package com.tmdt.service;
 
+import com.tmdt.pojos.Likes;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Report;
 import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import java.util.List;
@@ -30,4 +32,14 @@ public interface ProductService {
     List<Product> getProductBySeller(Map<String,String> params,int sellerId,int page);
     List getRating(int productId);
     List getRatingSeller(int sellerId);
+    List<Likes> getLikesOfProduct(int productId);
+    long checkPermissionAddReview(int productId);
+    int updateProductBan(Product p);
+    long checkExistReview(int productId, int accountId);
+    long checkExistLike(int productId, int cusId);
+    boolean addLike(Likes likes);
+    boolean delete(Likes likes);
+    Likes getLikeByCusId(int productId, int customerId);
+    List<Object[]> getProductLikeALot(int num);
+    long checkExistReport(int productId, int customerId);
 }

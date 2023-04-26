@@ -20,4 +20,5 @@ public interface SellerRepository {
     Object[] getSeller(int idOrder);
     List<Seller> getSelByEmail(String email);
     List<Seller> getSelByPhone(String phone);
+    int updateSellerBan(Seller s);
 }

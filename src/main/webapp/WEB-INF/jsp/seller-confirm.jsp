@@ -31,8 +31,10 @@
                         <td>${ac.username}</td>
                         <td>${ac.role}</td>
                         <td>
+                            <a title="<spring:message code="label.confirm"/>" href="<c:url value="/admin/seller-confirm/see"/>?id=${ac.id}"
+                               data-toggle="tooltip"><i style="font-size: 24px" class="fa-solid fa-eye p-1"></i></a>
                             <a title="<spring:message code="label.confirm"/>" href="<c:url value="/admin/seller-confirm/1"/>?id=${ac.id}"
-                               data-toggle="tooltip"><i style="font-size:24px" class="fa">&#xf00c;</i></a>
+                               data-toggle="tooltip"><i style="font-size:24px" class="fa p-1">&#xf00c;</i></a>
                         </td>
                     </tr>
                 </c:forEach>

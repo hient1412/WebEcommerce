@@ -5,6 +5,7 @@
 package com.tmdt.repository;
 
 import com.tmdt.pojos.OrderDetail;
+import com.tmdt.pojos.SellerOrder;
 import java.util.List;
 import java.util.Map;
 
@@ -14,4 +15,7 @@ import java.util.Map;
  */
 public interface OrderDetailRepository {
     List<OrderDetail> getOrderDetail(int idOrder);
+    boolean addOrderD(OrderDetail od);
+    boolean addSellerOrder(SellerOrder so);
+    boolean addOrderD(List<OrderDetail> od);
 }

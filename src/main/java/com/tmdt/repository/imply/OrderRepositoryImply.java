@@ -546,4 +546,16 @@ public class OrderRepositoryImply implements OrderRepository {
         query.setParameter("id", o.getId());
         return query.executeUpdate();
     }
+
+    @Override
+    public boolean addOrder(Orders o) {
+        Session s = this.sessionFactoryBean.getObject().getCurrentSession();
+        try {
+            s.save(o);
+            return true;
+        } catch(HibernateException ex){
+            System.err.println(ex.getMessage());
+        }
+        return false;
+    }
 }

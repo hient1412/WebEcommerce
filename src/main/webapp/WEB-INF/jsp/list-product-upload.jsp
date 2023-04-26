@@ -72,7 +72,16 @@
                                         </c:if></div>
                                     <div><h6><spring:message code="label.product.type"/>: ${p.idCategory.name}</h6></div>
                                     <div class="price">
-                                        <span style="text-decoration: underline">đ</span><fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${p.price}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(p.price)}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
                                     </div>
                                     <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>"><spring:message code="label.product.see.detail"/></a>
                                 </div>

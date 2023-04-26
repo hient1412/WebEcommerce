@@ -20,6 +20,8 @@
                     <li class="nav-item p-1"><a href="<c:url value="/admin/dashboard"/>" class="link-dark"><strong><i class="fa fa-tachometer" aria-hidden="true"></i> <spring:message code="label.overview"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/account"/>" class="link-dark" ><strong><i class="fa fa-users" aria-hidden="true"></i> <spring:message code="label.account.management"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/product-cate"/>" class="link-dark"><strong><i class="fa fa-cubes" aria-hidden="true"></i> <spring:message code="label.product.type.management"/></strong></a></li>
+                    <li class="nav-item p-1"><a href="<c:url value="/admin/report"/>" class="link-dark"><strong><i class="fa-regular fa-flag"></i> <spring:message code="label.report.management"/></strong></a></li>
+                    <li class="nav-item p-1"><a href="<c:url value="/admin/report/seller"/>" class="link-dark"><strong><i class="fas fa-store"></i> <spring:message code="label.seller.management"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/seller-confirm"/>" class="link-dark" ><strong><i class="fa fa-credit-card" aria-hidden="true"></i> <spring:message code="label.confirm.seller"/></strong></a></li>
                     <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#stats-collapse" aria-expanded="false">
                         <li class="nav-item p-1"><strong><i class="fa fa-line-chart" aria-hidden="true"></i> <spring:message code="label.statistical"/></strong></li>
