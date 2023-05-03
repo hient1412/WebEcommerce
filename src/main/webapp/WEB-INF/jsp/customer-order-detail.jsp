@@ -197,16 +197,188 @@
     <c:if test="${order.active == 1 || order.active == 2}">  <!-- Đặt hàng hoặc chờ lấy hàng -->
         <div class="p-4">
             <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonCancel"><spring:message code="label.cancel.order"/></a>
+            <div class="modal fade" id="reasonCancel" tabindex="-1" aria-labelledby="reasonCancel" aria-hidden="true">
+                <div class="modal-dialog  modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel"><spring:message code="label.give.reason.order.cancellation"/></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form:form action="" modelAttribute="cancel" method="post">
+                            <div class="modal-body">
+                                <form:select path="cancelDescription" >
+                                    <c:if test="${order.active == 1}">
+                                        <form:option value="Đổi ý, không muốn mua nữa" label="Đổi ý, không muốn mua nữa"/>
+                                    </c:if>
+                                    <c:if test="${order.active == 2}">
+                                        <form:option value="Người bán gửi hàng lâu" label="Người bán gửi hàng lâu"/>
+                                    </c:if>
+                                    <form:option value="Muốn thay đổi sản phẩm" label="Muốn thay đổi sản phẩm"/>
+                                    <form:option value="Muốn thay đổi phương thức thanh toán" label="Muốn thay đổi phương thức thanh toán"/>
+                                    <form:option value="Khác" label="Khác"/>
+                                </form:select>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary"><spring:message code="label.done"/></button>
+                            </div>
+                        </form:form>
+                    </div>
+                </div>
+            </div>
         </div>
     </c:if>
     <c:if test="${order.active == 5}">  <!-- Đặt hàng thành công -->
         <div class="p-4">
             <a data-bs-toggle="modal" data-bs-target="#reviewModal" class="btn btn-outline-success" ><spring:message code="label.review"/></a>
+
+            <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
+                <div class="modal-dialog  modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="reviewModal"><spring:message code="label.review"/></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <c:forEach items="${orderDetail.getOrderDetail(order.id)}" var="od">
+                                <div class="row align-items-center">
+                                    <div class="col text-center">
+                                        <div class="product-img-4">
+                                            <div class="mb-2">
+                                                <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="mb-3">
+                                            <label>${od.idProduct.name}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="mb-3">
+                                            <a href="<c:url value="/product-detail/${od.idProduct.id}#review"/>"><spring:message code="label.review"/></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </c:if>
     <c:if test="${order.active == 5}">  <!-- Đặt hàng thành công -->
         <div class="py-4">
             <a data-bs-toggle="modal" data-bs-target="#buyAgainModal" class="btn btn-outline-success" ><spring:message code="label.buy.again"/></a>
+            <div class="modal fade p-0" id="buyAgainModal" tabindex="-1" aria-labelledby="buyAgainModal" aria-hidden="true">
+                <div class="modal-dialog  modal-dialog-centered" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="buyAgainModal"><spring:message code="label.confirm.information"/></h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5><spring:message code="label.customer.information"/></h5>
+                            <p for="fname"><i class="fa fa-user"></i> <spring:message code="label.customer.firstname"/></p>
+                            <input type="text" class="w-100" id="fname" name="firstname" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getName()}" disabled>
+
+                            <p for="email"><i class="fa fa-phone"></i> <spring:message code="label.phone"/></p>
+                            <input type="text" class="w-100" id="phone" name="phone" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getPhone()}" disabled>
+
+                            <p for="email"><i class="fa fa-envelope"></i> <spring:message code="label.email"/></p>
+                            <input type="text" class="w-100" id="email" name="email" value="${pageContext.session.getAttribute('currentCustomer').getEmail()}" disabled>
+
+                            <p for="adr"><i class="fa fa-address-card-o"></i> <spring:message code="label.address"/></p>
+
+                            <input type="text" class="w-100" id="adr" name="address" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getAddress()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getWard()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getDistrict()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getCity().getName()} " disabled >
+                            <h5 class="py-2"><spring:message code="label.product.information"/></h5>
+                            <c:forEach items="${orderDetail.getOrderDetail(order.id)}" var="od">
+                                <div class="row align-items-center">
+                                    <div class="col text-center">
+                                        <div class="product-img-4">
+                                            <div class="mb-2">
+                                                <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="mb-3">
+                                            <label>${od.idProduct.name}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col center">
+                                        <div class="mb-3">
+                                            <label>x ${od.quantity}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col text-right">
+                                        <div class="mb-3">
+                                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                                <span id="vndPrice" name="vndPrice">
+                                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                                <span id="usdPrice" name="usdPrice" >
+                                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(od.idProduct.price)}" maxFractionDigits="3" type="number"/>
+                                                </span>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <div class="row">
+                                <div class="col-md-9 text-right">
+                                    <p><strong class="px-4"><spring:message code="label.total.amount"/></strong></p>
+                                    <p><strong class="px-4"><spring:message code="label.trans.fee"/></strong></p>
+                                    <p><strong class="px-4"><spring:message code="label.order.total"/></strong></p>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <div class="mb-3">
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
+                                    </div>
+                                    <div class="mb-3">
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> 0
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> 0
+                                            </span>
+                                        </c:if>
+                                    </div>
+                                    <div class="mb-3">
+                                        <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                            <span id="vndPrice" name="vndPrice">
+                                                <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${pageContext.response.locale.language == 'en'}">
+                                            <span id="usdPrice" name="usdPrice" >
+                                                <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
+                                            </span>
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="<c:url value="/customer/order-detail/${order.id}/buyAgain"/>" class="btn btn-primary"><spring:message code="label.done"/></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </c:if>
     <c:if test="${order.active == 4}">
@@ -214,175 +386,4 @@
             <a class="btn btn-success" href="<c:url value="/customer/order-detail/${order.id}/confirm"/>"><spring:message code="label.order.finish"/></a>
         </div>
     </c:if>
-</div>
-<div class="modal fade" id="reasonCancel" tabindex="-1" aria-labelledby="reasonCancel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel"><spring:message code="label.give.reason.order.cancellation"/></h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form:form action="" modelAttribute="cancel" method="post">
-                <div class="modal-body">
-                    <form:select path="cancelDescription" >
-                        <c:if test="${order.active == 1}">
-                            <form:option value="Đổi ý, không muốn mua nữa" label="Đổi ý, không muốn mua nữa"/>
-                        </c:if>
-                        <c:if test="${order.active == 2}">
-                            <form:option value="Người bán gửi hàng lâu" label="Người bán gửi hàng lâu"/>
-                        </c:if>
-                        <form:option value="Muốn thay đổi sản phẩm" label="Muốn thay đổi sản phẩm"/>
-                        <form:option value="Muốn thay đổi phương thức thanh toán" label="Muốn thay đổi phương thức thanh toán"/>
-                        <form:option value="Khác" label="Khác"/>
-                    </form:select>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary"><spring:message code="label.done"/></button>
-                </div>
-            </form:form>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModal" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="reviewModal"><spring:message code="label.review"/></h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <c:forEach items="${orderDetail.getOrderDetail(order.id)}" var="od">
-                    <div class="row align-items-center">
-                        <div class="col text-center">
-                            <div class="product-img-4">
-                                <div class="mb-2">
-                                    <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col center">
-                            <div class="mb-3">
-                                <label>${od.idProduct.name}</label>
-                            </div>
-                        </div>
-                        <div class="col center">
-                            <div class="mb-3">
-                                <a href="<c:url value="/product-detail/${od.idProduct.id}#review"/>"><spring:message code="label.review"/></a>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade p-0" id="buyAgainModal" tabindex="-1" aria-labelledby="buyAgainModal" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="buyAgainModal"><spring:message code="label.confirm.information"/></h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h5><spring:message code="label.customer.information"/></h5>
-                <p for="fname"><i class="fa fa-user"></i> <spring:message code="label.customer.firstname"/></p>
-                <input type="text" class="w-100" id="fname" name="firstname" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getName()}" disabled>
-
-                <p for="email"><i class="fa fa-phone"></i> <spring:message code="label.phone"/></p>
-                <input type="text" class="w-100" id="phone" name="phone" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getPhone()}" disabled>
-
-                <p for="email"><i class="fa fa-envelope"></i> <spring:message code="label.email"/></p>
-                <input type="text" class="w-100" id="email" name="email" value="${pageContext.session.getAttribute('currentCustomer').getEmail()}" disabled>
-
-                <p for="adr"><i class="fa fa-address-card-o"></i> <spring:message code="label.address"/></p>
-
-                <input type="text" class="w-100" id="adr" name="address" value="${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getAddress()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getWard()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getDistrict()}, ${shipAddress.findShipPriority(pageContext.session.getAttribute('currentCustomer')).getCity().getName()} " disabled >
-                <h5 class="py-2"><spring:message code="label.product.information"/></h5>
-                <c:forEach items="${orderDetail.getOrderDetail(order.id)}" var="od">
-                    <div class="row align-items-center">
-                        <div class="col text-center">
-                            <div class="product-img-4">
-                                <div class="mb-2">
-                                    <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col center">
-                            <div class="mb-3">
-                                <label>${od.idProduct.name}</label>
-                            </div>
-                        </div>
-                        <div class="col center">
-                            <div class="mb-3">
-                                <label>x ${od.quantity}</label>
-                            </div>
-                        </div>
-                        <div class="col text-right">
-                            <div class="mb-3">
-                                <c:if test="${pageContext.response.locale.language == 'vi'}">
-                                    <span id="vndPrice" name="vndPrice">
-                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${od.idProduct.price}" maxFractionDigits="3" type="number"/>
-                                    </span>
-                                </c:if>
-                                <c:if test="${pageContext.response.locale.language == 'en'}">
-                                    <span id="usdPrice" name="usdPrice" >
-                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(od.idProduct.price)}" maxFractionDigits="3" type="number"/>
-                                    </span>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-                <div class="row">
-                    <div class="col-md-9 text-right">
-                        <p><strong class="px-4"><spring:message code="label.total.amount"/></strong></p>
-                        <p><strong class="px-4"><spring:message code="label.trans.fee"/></strong></p>
-                        <p><strong class="px-4"><spring:message code="label.order.total"/></strong></p>
-                    </div>
-                    <div class="col-md-3 text-right">
-                        <div class="mb-3">
-                            <c:if test="${pageContext.response.locale.language == 'vi'}">
-                                <span id="vndPrice" name="vndPrice">
-                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
-                                </span>
-                            </c:if>
-                            <c:if test="${pageContext.response.locale.language == 'en'}">
-                                <span id="usdPrice" name="usdPrice" >
-                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
-                                </span>
-                            </c:if>
-                        </div>
-                        <div class="mb-3">
-                            <c:if test="${pageContext.response.locale.language == 'vi'}">
-                                <span id="vndPrice" name="vndPrice">
-                                    <span style="text-decoration: underline">đ</span> 0
-                                </span>
-                            </c:if>
-                            <c:if test="${pageContext.response.locale.language == 'en'}">
-                                <span id="usdPrice" name="usdPrice" >
-                                    <span>$</span> 0
-                                </span>
-                            </c:if>
-                        </div>
-                        <div class="mb-3">
-                            <c:if test="${pageContext.response.locale.language == 'vi'}">
-                                <span id="vndPrice" name="vndPrice">
-                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${order.amount}" maxFractionDigits="3" type="number"/>
-                                </span>
-                            </c:if>
-                            <c:if test="${pageContext.response.locale.language == 'en'}">
-                                <span id="usdPrice" name="usdPrice" >
-                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(order.amount)}" maxFractionDigits="3" type="number"/>
-                                </span>
-                            </c:if>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="<c:url value="/customer/order-detail/${order.id}/buyAgain"/>" class="btn btn-primary"><spring:message code="label.done"/></a>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

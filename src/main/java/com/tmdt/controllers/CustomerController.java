@@ -143,17 +143,21 @@ public class CustomerController {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getCustomer().getId();
-        Map<String, String> pre = new HashMap<>();
-        pre.put("idOrder", params.getOrDefault("idOrder", ""));
-        pre.put("namePro", params.getOrDefault("namePro", ""));
-        pre.put("nameSel", params.getOrDefault("nameSel", ""));
-        pre.put("active", params.getOrDefault("active", ""));
-        model.addAttribute("orderDetail", this.orderDetailService);
-        model.addAttribute("seller", this.sellerService);
-        model.addAttribute("orders", this.orderService.getOrderByCusId(pre, id, page));
-        model.addAttribute("counterS", this.orderService.getOrderByCusId(pre, id, 0).size());
-        model.addAttribute("count", env.getProperty("page.size"));
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
+        try {
+            Map<String, String> pre = new HashMap<>();
+            pre.put("idOrder", params.getOrDefault("idOrder", ""));
+            pre.put("namePro", params.getOrDefault("namePro", ""));
+            pre.put("nameSel", params.getOrDefault("nameSel", ""));
+            pre.put("active", params.getOrDefault("active", ""));
+            model.addAttribute("orderDetail", this.orderDetailService);
+            model.addAttribute("seller", this.sellerService);
+            model.addAttribute("orders", this.orderService.getOrderByCusId(pre, id, page));
+            model.addAttribute("counterS", this.orderService.getOrderByCusId(pre, id, 0).size());
+            model.addAttribute("count", env.getProperty("page.size"));
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        } catch (NumberFormatException e) {
+            model.addAttribute("errMessage", "Không có đơn hàng");
+        }
         return "list-cus-order";
     }
 
@@ -269,12 +273,16 @@ public class CustomerController {
 
     @GetMapping("/order-detail/{orderId}")
     public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId, HttpSession s) {
-        model.addAttribute("order", this.orderService.getOrderById(orderId));
-        model.addAttribute("orderDetail", this.orderDetailService);
-        model.addAttribute("seller", this.sellerService);
-        model.addAttribute("cancel", new Cancel());
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
-        model.addAttribute("shipAddress", this.customerService);
+        if (this.orderService.getOrderId(orderId).size() > 0) {
+            model.addAttribute("order", this.orderService.getOrderById(orderId));
+            model.addAttribute("orderDetail", this.orderDetailService);
+            model.addAttribute("seller", this.sellerService);
+            model.addAttribute("cancel", new Cancel());
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+            model.addAttribute("shipAddress", this.customerService);
+        } else {
+            return "redirect:/customer/list-cus-order";
+        }
         return "customer-order-detail";
     }
 
@@ -382,6 +390,7 @@ public class CustomerController {
         } else {
             model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể hủy đơn hàng"));
         }
+
         return "customer-order-detail";
     }
 
@@ -601,6 +610,8 @@ public class CustomerController {
             model.addAttribute("listLike", this.customerService.getLikeByCusId(ac.getCustomer().getId()));
             model.addAttribute("productService", this.productService);
             model.addAttribute("pUsdPriceOfProduct", new Utils());
+            model.addAttribute("counterS", this.customerService.getLikeByCusId(ac.getCustomer().getId()).size());
+            model.addAttribute("count", env.getProperty("page.size"));
         }
         return "liked";
     }

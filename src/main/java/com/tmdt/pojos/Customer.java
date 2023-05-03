@@ -80,23 +80,23 @@ public class Customer implements Serializable {
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 4, max = 25)
+    @Size(min = 4, max = 50)
     @Column(name = "first_name")
     private String firstName;
     @JsonIgnore
     @Basic(optional = false)
     @NotNull
-    @Size(min = 4, max = 25)
+    @Size(min = 4, max = 50)
     @Column(name = "last_name")
     private String lastName;
     @JsonIgnore
     @Basic(optional = false)
-    @Size(max = 20)
+    @Size(max = 100)
     @Column(name = "email")
     private String email;
     @JsonIgnore
     @Basic(optional = false)
-    @Size(max = 15)
+    @Size(max = 30)
     @Column(name = "phone")
     private String phone;
     @JsonIgnore

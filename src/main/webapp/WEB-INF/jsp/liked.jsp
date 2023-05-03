@@ -20,7 +20,7 @@
                 </div>
             </c:if>
             <div class="product-list">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
                     <c:forEach items="${listLike}" var="p">
                         <div class="col">
                             <div class="white-box-3 mt-3">
@@ -57,7 +57,7 @@
                     <ul class="pagination">
                         <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
                             <li onclick="paginationClick('page', ${i})" class="page-item"><a class="page-link">${i}</a></li>
-                            </c:forEach>
+                        </c:forEach>
                     </ul>
                 </div>
             </div>    

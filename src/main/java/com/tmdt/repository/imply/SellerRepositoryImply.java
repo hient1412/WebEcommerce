@@ -190,4 +190,17 @@ public class SellerRepositoryImply implements SellerRepository {
         query.setParameter("id", s.getId());
         return query.executeUpdate();
     }
+
+    @Override
+    public List<Seller> getSelId(int sellerId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Seller> q = builder.createQuery(Seller.class);
+        Root root = q.from(Seller.class);
+        
+        q.where(builder.equal(root.get("id"), sellerId));
+        Query query = session.createQuery(q);
+        
+        return query.getResultList();
+    }
 }

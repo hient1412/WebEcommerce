@@ -29,9 +29,11 @@ public class AdminValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Admin admin = (Admin) target;
         int nameMinLength = 4;
-        int nameMaxLength = 25;
-        int emailMaxLength = 20;
-        int phoneMaxLength = 15;
+        int nameMaxLength = 30;
+        int emailMaxLength = 40;
+        int emailMinLength = 16;
+        int phoneMinLength = 10;
+        int phoneMaxLength = 11;
 
         if (admin.getName().length() < nameMinLength) {
             errors.rejectValue("name", "", "Họ và tên không được ít hơn " + nameMinLength + " kí tự!!");
@@ -39,12 +41,16 @@ public class AdminValidator implements Validator {
             errors.rejectValue("name", "", "Họ và tên không quá " + nameMaxLength + " kí tự!!");
         }
         
-        if (admin.getEmail().length() > emailMaxLength) {
-            errors.rejectValue("email", "", "Email không quá " + emailMaxLength + " kí tự!!");
+        if (admin.getEmail().length() < emailMinLength) {
+            errors.rejectValue("name", "", "Email không được ít hơn " + 6 + " kí tự!!");
+        } else if (admin.getEmail().length() > emailMaxLength) {
+            errors.rejectValue("email", "", "Email không quá " + 30 + " kí tự!!");
         }
         
-        if (admin.getPhone().length() > phoneMaxLength) {
-            errors.rejectValue("phone", "", "Số điện thoại không quá " + nameMaxLength + " kí tự!!");
+        if (admin.getPhone().length() < phoneMinLength) {
+            errors.rejectValue("phone", "", "Số điện thoại được ít hơn " + phoneMinLength + " kí tự!!");
+        } else if (admin.getPhone().length() > phoneMaxLength) {
+            errors.rejectValue("phone", "", "Số điện thoại không quá " + phoneMaxLength + " kí tự!!");
         }
     }
 

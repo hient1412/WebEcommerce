@@ -115,23 +115,25 @@ public class HomeController {
 
     @GetMapping("/seller-detail/{sellerId}")
     public String sellerDetail(Model model, @PathVariable(value = "sellerId") int sellerId,
-            @RequestParam(required = false) Map<String, String> params, HttpSession s, Authentication a) {
-        Account ac = this.userDetailsService.getAcByUsername(a.getName());
-        int page = Integer.parseInt(params.getOrDefault("page", "1"));
-        Map<String, String> pre = new HashMap<>();
-        pre.put("sort", params.getOrDefault("sort", ""));
-        pre.put("cateId", params.getOrDefault("cateId", ""));
-        pre.put("kw", params.getOrDefault("kw", ""));
-        model.addAttribute("general", this.sellerService.getgeneral(sellerId));
-        model.addAttribute("seller", this.sellerService.getSellerById(sellerId));
-        model.addAttribute("sellerAuthentication", ac.getSeller());
-        model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(sellerId));
-        model.addAttribute("productBySeller", this.productService.getProductBySeller(pre, sellerId, page));
-        model.addAttribute("counterS", this.productService.getProductBySeller(pre, sellerId, 0).size());
-        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
-        model.addAttribute("count", env.getProperty("page.size"));
-        model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(sellerId)));
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
+            @RequestParam(required = false) Map<String, String> params, HttpSession s) {
+        if (this.sellerService.getSelId(sellerId).size() > 0) {
+            int page = Integer.parseInt(params.getOrDefault("page", "1"));
+            Map<String, String> pre = new HashMap<>();
+            pre.put("sort", params.getOrDefault("sort", ""));
+            pre.put("cateId", params.getOrDefault("cateId", ""));
+            pre.put("kw", params.getOrDefault("kw", ""));
+            model.addAttribute("general", this.sellerService.getgeneral(sellerId));
+            model.addAttribute("seller", this.sellerService.getSellerById(sellerId));
+            model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(sellerId));
+            model.addAttribute("productBySeller", this.productService.getProductBySeller(pre, sellerId, page));
+            model.addAttribute("counterS", this.productService.getProductBySeller(pre, sellerId, 0).size());
+            model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+            model.addAttribute("count", env.getProperty("page.size"));
+            model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(sellerId)));
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        } else {
+            return "redirect:/sellers";
+        }
         return "seller-detail";
     }
 
@@ -196,21 +198,25 @@ public class HomeController {
     }
 
     @GetMapping("/product-detail/{productId}")
-    public String productDetail(Model model, @PathVariable(value = "productId") int productId, HttpSession s, Authentication a) {
-        model.addAttribute("product", this.productService.getProductById(productId));
-        model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
-        model.addAttribute("general", this.sellerService.getgeneral(this.productService.getProductById(productId).getIdSeller().getId()));
-        model.addAttribute("image", this.imageService.getImageByProductId(productId));
-        model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
-        model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")), this.productService.getProductById(productId).getIdSeller().getId()));
-        model.addAttribute("avgRating", Utils.avgRating(this.productService.getRating(productId)));
-        model.addAttribute("countRating", this.productService.getRating(productId).size());
-        model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(this.productService.getProductById(productId).getIdSeller().getId())));
-        model.addAttribute("likes", this.productService.getLikesOfProduct(productId));
-        model.addAttribute("productService", this.productService);
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
-        model.addAttribute("report", new Report());
-        model.addAttribute("shipAddress", this.customerService);
+    public String productDetail(Model model, @PathVariable(value = "productId") int productId, HttpSession s) {
+        if (this.productService.getProductId(productId).size() > 0) {
+            model.addAttribute("product", this.productService.getProductById(productId));
+            model.addAttribute("seller", this.productService.getProductById(productId).getIdSeller());
+            model.addAttribute("general", this.sellerService.getgeneral(this.productService.getProductById(productId).getIdSeller().getId()));
+            model.addAttribute("image", this.imageService.getImageByProductId(productId));
+            model.addAttribute("cartCounter", Utils.countCart((Map<Integer, Cart>) s.getAttribute("cartProduct")));
+            model.addAttribute("buyALotSeller", this.productService.getProductBuyALotInSeller(Integer.parseInt(env.getProperty("buyALot.size")), this.productService.getProductById(productId).getIdSeller().getId()));
+            model.addAttribute("avgRating", Utils.avgRating(this.productService.getRating(productId)));
+            model.addAttribute("countRating", this.productService.getRating(productId).size());
+            model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(this.productService.getProductById(productId).getIdSeller().getId())));
+            model.addAttribute("likes", this.productService.getLikesOfProduct(productId));
+            model.addAttribute("productService", this.productService);
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+            model.addAttribute("report", new Report());
+            model.addAttribute("shipAddress", this.customerService);
+        } else {
+            return "redirect:/";
+        }
         return "product-detail";
     }
 
@@ -513,15 +519,39 @@ public class HomeController {
 
     @PostMapping("/registry/cus")
     public String cus(Model model, @ModelAttribute(value = "customer") Customer cus, HttpSession s) {
+        model.addAttribute("locations", this.locationService.getLos());
+        model.addAttribute("id", cus.getId());
         cus.setIdAccount(cus.getIdAccount());
-        if (this.customerService.addCus(cus) == true) {
-            if (s.getAttribute("currentAdmin") == null) {
-                return "redirect:/login";
-            } else {
-                return "redirect:/admin/account";
-            }
+        if (cus.getLastName().length() < 4) {
+            model.addAttribute("errMessage", "Họ không được ít hơn 4 kí tự!!");
+        } else if (cus.getLastName().length() > 30) {
+            model.addAttribute("errMessage", "Họ không quá 30 kí tự!!");
+        } else if (cus.getFirstName().length() < 4) {
+            model.addAttribute("errMessage", "Tên không được ít hơn 4 kí tự!!");
+        } else if (cus.getFirstName().length() > 30) {
+            model.addAttribute("errMessage", "Tên không quá 30 kí tự!!");
+        } else if (this.customerService.getCusEmail(cus.getEmail()).size() > 0) {
+            model.addAttribute("errMessage", "Email này đã tồn tại!!");
+        } else if (cus.getEmail().length() < 16) {
+            model.addAttribute("errMessage", "Email không được ít hơn " + 6 + " kí tự!!");
+        } else if (cus.getEmail().length() > 40) {
+            model.addAttribute("errMessage", "Email không quá " + 30 + " kí tự!!");
+        } else if (cus.getPhone().length() < 10) {
+            model.addAttribute("errMessage", "Số điện thoại được ít hơn " + 10 + " kí tự!!");
+        } else if (cus.getPhone().length() > 11) {
+            model.addAttribute("errMessage", "Số điện thoại không quá " + 11 + " kí tự!!");
+        } else if (cus.getDescription().length() > 150) {
+            model.addAttribute("errMessage", "Mô tả không quá " + 150 + " kí tự!!");
         } else {
-            model.addAttribute("errMessage", "Có lỗi xảy ra đăng ký không thành công!!");
+            if (this.customerService.addCus(cus) == true) {
+                if (s.getAttribute("currentAdmin") == null) {
+                    return "redirect:/login";
+                } else {
+                    return "redirect:/admin/account";
+                }
+            } else {
+                model.addAttribute("errMessage", "Có lỗi xảy ra đăng ký không thành công!!");
+            }
         }
         model.addAttribute("action", "/registry/cus");
         return "registry-cus";
@@ -536,9 +566,26 @@ public class HomeController {
 
     @PostMapping("/registry/admin")
     public String admin(Model model, @ModelAttribute(value = "admin") Admin ad) {
+        model.addAttribute("id", ad.getId());
         ad.setIdAccount(ad.getIdAccount());
-        if (this.adminService.addAdmin(ad) == true) {
-            return "redirect:/admin/account";
+        if (ad.getName().length() < 4) {
+            model.addAttribute("errMessage", "Họ và tên không được ít hơn 4 kí tự!!");
+        } else if (ad.getName().length() > 30) {
+            model.addAttribute("errMessage", "Họ và tên không quá 30 kí tự!!");
+        } else if (this.adminService.getAdEmail(ad.getEmail()).size() > 0) {
+            model.addAttribute("errMessage", "Email này đã tồn tại!!");
+        } else if (ad.getEmail().length() < 16) {
+            model.addAttribute("errMessage", "Email không được ít hơn " + 6 + " kí tự!!");
+        } else if (ad.getEmail().length() > 40) {
+            model.addAttribute("errMessage", "Email không quá " + 30 + " kí tự!!");
+        } else if (ad.getPhone().length() < 10) {
+            model.addAttribute("errMessage", "Số điện thoại được ít hơn " + 10 + " kí tự!!");
+        } else if (ad.getPhone().length() > 11) {
+            model.addAttribute("errMessage", "Số điện thoại không quá " + 11 + " kí tự!!");
+        } else {
+            if (this.adminService.addAdmin(ad) == true) {
+                return "redirect:/admin/account";
+            }
         }
         return "registry-admin";
     }
@@ -554,12 +601,36 @@ public class HomeController {
 
     @PostMapping("/registry/sel")
     public String sel(Model model, @ModelAttribute(value = "seller") Seller sel, HttpSession s) {
+        model.addAttribute("locations", this.locationService.getLos());
+        model.addAttribute("id", sel.getId());
         sel.setIdAccount(sel.getIdAccount());
-        if (this.sellerService.addSel(sel) == true) {
-            if (s.getAttribute("currentAdmin") == null) {
-                return "redirect:/login";
-            } else {
-                return "redirect:/admin/account";
+        if (sel.getName().length() < 4) {
+            model.addAttribute("errMessage", "Tên cửa hàng không được ít hơn 4 kí tự!!");
+        } else if (sel.getName().length() > 50) {
+            model.addAttribute("errMessage", "Tên cửa hàng không quá 50 kí tự!!");
+        } else if (sel.getAddress().length() > 50) {
+            model.addAttribute("errMessage", "Địa chỉ không quá " + 50 + " kí tự!!");
+        } else if (sel.getAddress().length() < 8) {
+            model.addAttribute("errMessage", "Địa chỉ kkhông được ít hơn " + 8 + " kí tự!!");
+        } else if (this.sellerService.getSelByEmail(sel.getEmail()).size() > 0) {
+            model.addAttribute("errMessage", "Email này đã tồn tại!!");
+        } else if (sel.getEmail().length() < 16) {
+            model.addAttribute("errMessage", "Email không được ít hơn " + 6 + " kí tự!!");
+        } else if (sel.getEmail().length() > 40) {
+            model.addAttribute("errMessage", "Email không quá " + 30 + " kí tự!!");
+        } else if (sel.getPhone().length() < 10) {
+            model.addAttribute("errMessage", "Số điện thoại được ít hơn " + 10 + " kí tự!!");
+        } else if (sel.getPhone().length() > 11) {
+            model.addAttribute("errMessage", "Số điện thoại không quá " + 11 + " kí tự!!");
+        } else if (sel.getDescription().length() > 150) {
+            model.addAttribute("errMessage", "Mô tả không quá " + 150 + " kí tự!!");
+        } else {
+            if (this.sellerService.addSel(sel) == true) {
+                if (s.getAttribute("currentAdmin") == null) {
+                    return "redirect:/login";
+                } else {
+                    return "redirect:/admin/account";
+                }
             }
         }
         model.addAttribute("action", "/registry/sel");

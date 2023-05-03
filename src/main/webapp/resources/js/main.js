@@ -42,7 +42,7 @@ function loadReview(endpoint) {
                             </div> 
                         </div>
                         <div class="mt-2">
-                            <p class="comment-text">${d.content}</p>
+                            <p class="comment-text" style="word-break: break-all;">${d.content}</p>
                         </div>
                     </div>
                 </div>`;

@@ -81,4 +81,9 @@ public class OrderServiceImply implements OrderService{
         return this.orderRepository.addOrder(o);
     }
 
+    @Override
+    public List<Orders> getOrderId(int orderId) {
+        return this.orderRepository.getOrderId(orderId);
+    }
+
 }

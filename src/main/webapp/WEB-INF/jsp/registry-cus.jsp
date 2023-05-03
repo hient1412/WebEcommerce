@@ -51,13 +51,14 @@
                     </div>
                 </li>
             </ul>
-                        <h1 class="p-4 center text-uppercase"><spring:message code="label.add.information"/><br><spring:message code="label.role.customer"/></h1>
-            <c:if test="${errMessage != null}">
+            <h1 class="p-4 center text-uppercase"><spring:message code="label.add.information"/><br><spring:message code="label.role.customer"/></h1>
+                <c:if test="${errMessage != null}">
                 <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
                     ${errMessage}
                 </div>
             </c:if>
-                <form:input hidden="true" path="idAccount" value="${ac.id}"/>
+            <form:input hidden="true" path="idAccount" value="${ac.id}"/>
+            <form:input hidden="true" path="id" value="${id}"/>
             <div class="form-group row">
                 <div class="col">
                     <label for="inputLastName"><spring:message code="label.lastname"/></label>

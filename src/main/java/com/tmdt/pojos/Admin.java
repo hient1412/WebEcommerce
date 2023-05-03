@@ -45,17 +45,17 @@ public class Admin implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 4, max = 45)
+    @Size(min = 4, max = 100)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(max = 20)
+    @Size(max = 100)
     @Column(name = "email")
     private String email;
     @Basic(optional = false)
     @NotNull
-    @Size(max = 15)
+    @Size(max = 30)
     @Column(name = "phone")
     private String phone;
     @Basic(optional = false)

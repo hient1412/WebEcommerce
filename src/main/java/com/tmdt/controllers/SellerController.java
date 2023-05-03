@@ -91,7 +91,7 @@ public class SellerController {
     private MailService mailService;
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model,Authentication authentication) {
+    public String dashboard(Model model, Authentication authentication) {
         Account ac = this.accountService.getAcByUsername(authentication.getName());
         model.addAttribute("seller", ac.getSeller());
         return "dashboard-seller";
@@ -156,43 +156,52 @@ public class SellerController {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
-        model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(id));
-        Map<String, String> pre = new HashMap<>();
-        pre.put("kw", params.getOrDefault("kw", ""));
-        pre.put("quantityMin", params.getOrDefault("quantityMin", ""));
-        pre.put("quantityMax", params.getOrDefault("quantityMax", ""));
-        pre.put("cat", params.getOrDefault("cat", ""));
-        pre.put("active", params.getOrDefault("active", ""));
-        model.addAttribute("seller", ac.getSeller());
-        model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
-        model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
-        model.addAttribute("count", env.getProperty("listProduct.size"));
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
+        try {
+            model.addAttribute("cateBySeller", this.categoryService.getCateBySellerId(id));
+            Map<String, String> pre = new HashMap<>();
+            pre.put("kw", params.getOrDefault("kw", ""));
+            pre.put("quantityMin", params.getOrDefault("quantityMin", ""));
+            pre.put("quantityMax", params.getOrDefault("quantityMax", ""));
+            pre.put("cat", params.getOrDefault("cat", ""));
+            pre.put("active", params.getOrDefault("active", ""));
+            pre.put("adminBan", params.getOrDefault("adminBan", ""));
+            model.addAttribute("seller", ac.getSeller());
+            model.addAttribute("product", this.productService.getProductBySellerId(pre, id, page));
+            model.addAttribute("counterS", this.productService.getProductBySellerId(pre, id, 0).size());
+            model.addAttribute("count", env.getProperty("listProduct.size"));
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        } catch (NumberFormatException e) {
+            model.addAttribute("errMessage", "Chưa có sản phẩm");
+        }
         return "list-product-upload";
     }
 
     @GetMapping("/list-order")
     public String listView(Model model,
-            @RequestParam(required = false) Map<String, String> params, Authentication a ) {
+            @RequestParam(required = false) Map<String, String> params, Authentication a) {
         int page = Integer.parseInt(params.getOrDefault("page", "1"));
         Account ac = this.accountService.getAcByUsername(a.getName());
         int id = ac.getSeller().getId();
-        Map<String, String> pre = new HashMap<>();
-        pre.put("idOrder", params.getOrDefault("idOrder", ""));
-        pre.put("nameCus", params.getOrDefault("nameCus", ""));
-        pre.put("namePro", params.getOrDefault("namePro", ""));
-        pre.put("active", params.getOrDefault("active", ""));
-        model.addAttribute("seller", ac.getSeller());
-        model.addAttribute("orderDetail", this.orderDetailService);
-        model.addAttribute("orders", this.orderService.getOrderBySellerId(pre, id, page));
-        model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre, id, 0).size());
-        model.addAttribute("count", env.getProperty("page.size"));
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
+        try {
+            Map<String, String> pre = new HashMap<>();
+            pre.put("idOrder", params.getOrDefault("idOrder", ""));
+            pre.put("nameCus", params.getOrDefault("nameCus", ""));
+            pre.put("namePro", params.getOrDefault("namePro", ""));
+            pre.put("active", params.getOrDefault("active", ""));
+            model.addAttribute("seller", ac.getSeller());
+            model.addAttribute("orderDetail", this.orderDetailService);
+            model.addAttribute("orders", this.orderService.getOrderBySellerId(pre, id, page));
+            model.addAttribute("counterS", this.orderService.getOrderBySellerId(pre, id, 0).size());
+            model.addAttribute("count", env.getProperty("page.size"));
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        } catch (NumberFormatException e) {
+            model.addAttribute("errMessage", "Không có đơn hàng");
+        }
         return "list-order";
     }
 
     @GetMapping("/product")
-    public String productView(Model model,Authentication a) {
+    public String productView(Model model, Authentication a) {
         Account ac = this.accountService.getAcByUsername(a.getName());
         model.addAttribute("seller", ac.getSeller());
         model.addAttribute("categories", this.categoryService.getCates());
@@ -201,14 +210,15 @@ public class SellerController {
     }
 
     @PostMapping("/product")
-    public String product(Model model,@ModelAttribute(value = "product") Product product,
-            RedirectAttributes r,Authentication a ) {
+    public String product(Model model, @ModelAttribute(value = "product") Product product,
+            RedirectAttributes r, Authentication a) {
         Account ac = this.accountService.getAcByUsername(a.getName());
         if (ac.getRole().equals(Account.SELLER)) {
             if (ac.getActive() == 1) {
                 product.setIdSeller(ac.getSeller());
                 product.setIsDelete(0);
                 product.setActive(1);
+                product.setAdminBan(0);
                 Image img = new Image();
                 img.setIdProduct(product);
                 if (this.productService.addProduct(product) == true) {
@@ -232,7 +242,7 @@ public class SellerController {
     }
 
     @GetMapping("/product-edit")
-    public String productEditView(Model model,@RequestParam(name = "id") int id,Authentication a) {
+    public String productEditView(Model model, @RequestParam(name = "id") int id, Authentication a) {
         Account ac = this.accountService.getAcByUsername(a.getName());
         model.addAttribute("seller", ac.getSeller());
         model.addAttribute("categories", this.categoryService.getCates());
@@ -243,11 +253,12 @@ public class SellerController {
     @PostMapping("/product-edit")
     public String productEdit(Model model,
             @ModelAttribute(value = "product") Product pd,
-            @RequestParam(name = "id") int id, RedirectAttributes r,Authentication a) {
+            @RequestParam(name = "id") int id, RedirectAttributes r, Authentication a) {
         Product productOld = this.productService.getProductById(id);
         Account ac = this.accountService.getAcByUsername(a.getName());
         pd.setIdSeller(ac.getSeller());
         String errMessage = "";
+        pd.setAdminBan(productOld.getAdminBan());
         pd.setIsDelete(0);
         int size = this.productService.getProductById(id).getImageCollection().size();
         Image img = new Image();
@@ -267,9 +278,9 @@ public class SellerController {
             errMessage = String.format("Tên thương hiệu không được ít hơn " + manufacturerMinLength + " ký tự!!");
         } else if (pd.getManufacturer().length() > manufacturerMaxLength) {
             errMessage = String.format("Tên thương hiệu không quá " + manufacturerMaxLength + " ký tự!!");
-        } else if (pd.getPrice().toString().length() >  priceMaxLength) {
+        } else if (pd.getPrice().toString().length() > priceMaxLength) {
             errMessage = String.format("Giá tiền không quá " + priceMaxLength + " ký tự!!");
-        }else if (this.productService.updateProduct(pd) == true) {
+        } else if (this.productService.updateProduct(pd) == true) {
             if (pd.getFile()[0].getSize() == 0) {
                 for (int i = 0; i < this.imageService.getImageByProductId(productOld.getId()).size(); i++) {
                     img.setImage(this.imageService.getImageByProductId(productOld.getId()).get(0).getImage());
@@ -314,7 +325,7 @@ public class SellerController {
     }
 
     @GetMapping("/product-hide")
-    public String productHide(Model model, RedirectAttributes r,@RequestParam(name = "id") int id) {
+    public String productHide(Model model, RedirectAttributes r, @RequestParam(name = "id") int id) {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
         pd.setActive(0);
@@ -330,7 +341,7 @@ public class SellerController {
     }
 
     @GetMapping("/product-show")
-    public String productShow(Model model, RedirectAttributes r,@RequestParam(name = "id") int id ) {
+    public String productShow(Model model, RedirectAttributes r, @RequestParam(name = "id") int id) {
         String errMessage = "";
         Product pd = this.productService.getProductById(id);
         pd.setActive(1);
@@ -346,9 +357,9 @@ public class SellerController {
     }
 
     @GetMapping("/stats/categories")
-    public String statsCategories(Model model, Authentication a ) {
+    public String statsCategories(Model model, Authentication a) {
         Account ac = this.accountService.getAcByUsername(a.getName());
-        model.addAttribute("seller",ac.getSeller());
+        model.addAttribute("seller", ac.getSeller());
         model.addAttribute("countcate", this.statsService.countCategories(ac.getSeller().getId()));
         return "stats-categories";
     }
@@ -356,7 +367,7 @@ public class SellerController {
     @GetMapping("/stats/turnover/product")
     public String turnoverProduct(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) throws ParseException {
         Account ac = this.accountService.getAcByUsername(a.getName());
-        model.addAttribute("seller",ac.getSeller());
+        model.addAttribute("seller", ac.getSeller());
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
         String kw = params.getOrDefault("kw", null);
         Date fromDate = null;
@@ -374,22 +385,25 @@ public class SellerController {
             ex.printStackTrace();
         }
         model.addAttribute("pUsdPriceOfProduct", new Utils());
-        model.addAttribute("statsProduct", this.statsService.statsProduct(kw, fromDate, toDate,ac.getSeller().getId()));
+        model.addAttribute("statsProduct", this.statsService.statsProduct(kw, fromDate, toDate, ac.getSeller().getId()));
         return "stats-turnover";
     }
-    
+
     @GetMapping("/order-detail/{orderId}")
-    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId,Authentication a) {
-       Account ac = this.accountService.getAcByUsername(a.getName());
-        model.addAttribute("seller",ac.getSeller());
-        model.addAttribute("order", this.orderService.getOrderById(orderId));
-        model.addAttribute("orderDetail", this.orderDetailService);
-        model.addAttribute("cancel", new Cancel());
-        model.addAttribute("pUsdPriceOfProduct", new Utils());
+    public String orderDetail(Model model, @PathVariable(value = "orderId") int orderId, Authentication a) {
+        if (this.orderService.getOrderId(orderId).size() > 0) {
+            Account ac = this.accountService.getAcByUsername(a.getName());
+            model.addAttribute("seller", ac.getSeller());
+            model.addAttribute("order", this.orderService.getOrderById(orderId));
+            model.addAttribute("orderDetail", this.orderDetailService);
+            model.addAttribute("cancel", new Cancel());
+            model.addAttribute("pUsdPriceOfProduct", new Utils());
+        } else {
+            return "redirect:/seller/list-order";
+        }
         return "sel-order-detail";
     }
-    
-    
+
     @PostMapping("/order-detail/{orderId}")
     public String orderDetailPost(Model model, @PathVariable(value = "orderId") int orderId, Authentication a, @ModelAttribute(value = "cancel") Cancel cancels, RedirectAttributes r) {
         String errMessage = "";
@@ -496,24 +510,23 @@ public class SellerController {
         }
         return "sel-order-detail";
     }
-    
-    
+
     @GetMapping("/cancel/{orderId}")
-    public String cancel(Model model, @PathVariable(value = "orderId") int orderId ) {
+    public String cancel(Model model, @PathVariable(value = "orderId") int orderId) {
         model.addAttribute("orderDetail", this.orderDetailService);
         model.addAttribute("seller", this.sellerService);
-        model.addAttribute("order",this.orderService.getOrderById(orderId));
-        model.addAttribute("cancel",this.orderService.getCancel(this.orderService.getOrderById(orderId)));
+        model.addAttribute("order", this.orderService.getOrderById(orderId));
+        model.addAttribute("cancel", this.orderService.getCancel(this.orderService.getOrderById(orderId)));
         model.addAttribute("pUsdPriceOfProduct", new Utils());
         return "cancel";
     }
-    
+
     @GetMapping("/order-detail/{orderId}/send")
-    public String send(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r, @RequestParam(name = "daySend")@DateTimeFormat(pattern="yyyy-MM-dd") Date day) {
+    public String send(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r, @RequestParam(name = "daySend") @DateTimeFormat(pattern = "yyyy-MM-dd") Date day) {
         Orders o = this.orderService.getOrderById(orderId);
         o.setActive(3);
         o.setDaySend(day);
-        if(this.orderService.updateActiveAndSend(o) == 1){
+        if (this.orderService.updateActiveAndSend(o) == 1) {
             r.addFlashAttribute("errMessage", String.format("Xác nhận ngày gửi hàng thành công"));
             return "redirect:/seller/order-detail/" + o.getId();
         } else {
@@ -521,11 +534,12 @@ public class SellerController {
         }
         return "redirect:/seller/order-detail/" + o.getId();
     }
+
     @GetMapping("/order-detail/{orderId}/confirm")
     public String confirm(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
         Orders o = this.orderService.getOrderById(orderId);
         o.setActive(2);
-        if(this.orderService.updateActive(o) == 1){
+        if (this.orderService.updateActive(o) == 1) {
             r.addFlashAttribute("errMessage", String.format("Xác nhận đơn hàng thành công"));
             return "redirect:/seller/order-detail/" + o.getId();
         } else {
@@ -533,5 +547,5 @@ public class SellerController {
         }
         return "redirect:/seller/order-detail/" + o.getId();
     }
-    
+
 }

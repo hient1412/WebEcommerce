@@ -117,10 +117,10 @@
     </div>
 </c:if>
 <c:if test="${general[2] == 0}">
-    <c:if test="${sellerAuthentication.id == seller.id}">
+    <c:if test="${pageContext.session.getAttribute('currentSeller').getId() == seller.id}">
         <h3 class="py-5 text-uppercase text-center text-danger"><spring:message code="label.post.first"/>!!!!</h3>
     </c:if>
-    <c:if test="${sellerAuthentication.id != seller.id}">
+    <c:if test="${pageContext.session.getAttribute('currentSeller').getId() != seller.id}">
         <h3 class="py-5 text-uppercase text-center text-danger"><spring:message code="label.seller.no.open"/>!!!!</h3>
     </c:if>
 </c:if>

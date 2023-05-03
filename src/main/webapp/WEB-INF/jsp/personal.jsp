@@ -20,17 +20,17 @@
                     </div>
                     <div>
                         <c:if test="${!ad.email.isEmpty() == true}">
-                            <p><spring:message code="label.email"/>: ${ad.email} </p>
+                            <p><spring:message code="label.email"/>: ${ad.email}</p>
                         </c:if>
                     </div>
                     <div>
                         <c:if test="${!ad.phone.isEmpty() == true}">
-                            <p><spring:message code="label.phone"/>: ${ad.phone} </p>
+                            <p><spring:message code="label.phone"/>: ${ad.phone}</p>
                         </c:if>
                     </div>
                     <div>
                         <div >
-                            <p><spring:message code="label.gender"/>: ${ad.gender} </p>
+                            <p><spring:message code="label.gender"/>: ${ad.gender}</p>
                         </div>
                     </div>
                 </div>
@@ -46,26 +46,26 @@
                             </div>
                             <div >
                                 <c:if test="${!cus.email.isEmpty() == true}">
-                                    <p><h5><spring:message code="label.email"/></h5> ${cus.email} </p>
+                                    <h5><spring:message code="label.email"/></h5><p>${cus.email}</p>
                                 </c:if>
                             </div>
                             <div >
                                 <c:if test="${!cus.phone.isEmpty() == true}">
-                                    <p><h5><spring:message code="label.phone"/></h5> ${cus.phone} </p>
+                                    <h5><spring:message code="label.phone"/></h5><p>${cus.phone}</p>
                                 </c:if>
                             </div>
                             <div >
-                                <p><h5><spring:message code="label.hometown"/></h5> ${cus.location.name} </p>
+                                <h5><spring:message code="label.hometown"/></h5><p>${cus.location.name}</p>
                             </div>
                             <div>
-                                <p><h5><spring:message code="label.dob"/></h5> <fmt:formatDate value="${cus.dob}" type="date" pattern="dd-MM-yyyy"/> </p>
+                                <h5><spring:message code="label.dob"/></h5><p><fmt:formatDate value="${cus.dob}" type="date" pattern="dd-MM-yyyy"/></p>
                             </div>
                             <div >
-                                <p><h5><spring:message code="label.gender"/></h5> ${cus.gender} </p>
+                                <h5><spring:message code="label.gender"/></h5><p>${cus.gender}</p>
                             </div>
                             <div>
                                 <c:if test="${!cus.description.isEmpty() == true}">
-                                    <p><h5><spring:message code="label.description"/></h5> ${cus.description} </p>
+                                    <h5><spring:message code="label.description"/></h5><p style="word-break: break-all;"> ${cus.description}</p>
                                 </c:if>
                             </div>
                         </c:when>
@@ -77,24 +77,24 @@
                                             <h4>${sel.name}</h4>
                                         </div>
                                         <div>
-                                            <p><h5><spring:message code="label.address"/>:</h5> ${sel.address}</p>
+                                            <h5><spring:message code="label.address"/>:</h5><p>${sel.address}</p>
                                         </div>
                                         <div>
-                                            <p><h5><spring:message code="label.location"/>:</h5>${sel.idLocation.name}</p>
+                                            <h5><spring:message code="label.location"/>:</h5><p>${sel.idLocation.name}</p>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.email.isEmpty() == true}">
-                                                <p><h5><spring:message code="label.email"/></h5> ${sel.email} </p>
+                                                <h5><spring:message code="label.email"/></h5><p>${sel.email}</p>
                                             </c:if>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.phone.isEmpty() == true}">
-                                                <p><h5><spring:message code="label.phone"/></h5> ${sel.phone} </p>
+                                                <h5><spring:message code="label.phone"/></h5><p>${sel.phone}</p>
                                             </c:if>
                                         </div>
                                         <div>
                                             <c:if test="${!sel.description.isEmpty() == true}">
-                                                <p><h5><spring:message code="label.description"/></h5> ${sel.description} </p>
+                                                <h5><spring:message code="label.description"/></h5><p style="word-break: break-all;">${sel.description}</p>
                                             </c:if>
                                         </div>
                                     </c:when>

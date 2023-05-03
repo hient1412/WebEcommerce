@@ -13,6 +13,11 @@
 <body style="background-image: url('https://static.tapchitaichinh.vn/images/upload/hoangthuviet/09092021/e-commerce-770x385.jpg')">
     <div class="login-form">
         <form method="post" action="${action}">
+            <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if>
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="dropdown nav-item active">
                     <div data-toggle="dropdown" class="dropdown-toggle nav-link">
@@ -61,11 +66,11 @@
                     <label for="inputPassword"><spring:message code="label.password"/></label>
                     <input autocomplete="off" type="password" class="form-control" id="inputPassword" name="password">
                 </div>
-<!--                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"/> Nhớ mật khẩu
-                    </label>
-                </div>-->
+                <!--                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"/> Nhớ mật khẩu
+                                    </label>
+                                </div>-->
                 <input type="submit" class="btn btn-primary btn-lg btn-block login-btn" value='<spring:message code="label.sign.in"/>'/>
 
         </form>

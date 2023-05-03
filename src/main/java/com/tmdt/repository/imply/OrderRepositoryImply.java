@@ -558,4 +558,19 @@ public class OrderRepositoryImply implements OrderRepository {
         }
         return false;
     }
+
+    @Override
+    public List<Orders> getOrderId(int orderId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Orders> q = builder.createQuery(Orders.class);
+        Root root = q.from(Orders.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("id"), orderId));
+        
+        Query query = session.createQuery(q);
+
+        return query.getResultList();
+    }
 }

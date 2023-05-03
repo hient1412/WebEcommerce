@@ -53,7 +53,13 @@
                 </li>
             </ul>
             <h1 class="p-4 center text-uppercase"><spring:message code="label.add.information"/><br><spring:message code="label.role.seller"/></h1>
-                <form:input hidden="true" path="idAccount" value="${ac.id}"/>
+                <c:if test="${errMessage != null}">
+                <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                    ${errMessage}
+                </div>
+            </c:if> 
+            <form:input hidden="true" path="idAccount" value="${ac.id}"/>
+            <form:input hidden="true" path="id" value="${id}"/>
             <div class="form-group">
                 <label for="inputName"><spring:message code="label.shop.name"/></label>
                 <form:input autocomplete="off" type="text" class="form-control" path="name" required="required"/>
@@ -70,11 +76,11 @@
             </form:select>
             <div class="form-group">
                 <label for="inputEmail"><spring:message code="label.email"/></label>
-                <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email"/>
+                <form:input type="email" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
             </div>
             <div class="form-group">
                 <label for="inputPhone"><spring:message code="label.phone"/></label>
-                <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone"/>
+                <form:input type="number" autocomplete="off" class="form-control" id="inputPhone" path="phone" required="required"/>
             </div>
             <div class="form-group">
                 <label for="avatar"><spring:message code="label.avatar"/></label>
@@ -88,10 +94,5 @@
                 <button type="submit" class="btn btn-primary btn-lg btn-block login-btn"><spring:message code="label.done"/></button>
             </div>
         </form:form>
-        <c:if test="${errMessage != null}">
-            <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
-                ${errMessage}
-            </div>
-        </c:if>
     </div>
 </body>

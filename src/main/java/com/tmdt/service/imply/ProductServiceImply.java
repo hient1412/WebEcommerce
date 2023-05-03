@@ -153,5 +153,10 @@ public class ProductServiceImply implements ProductService{
     public long checkExistReport(int productId, int customerId) {
         return this.productRepository.checkExistReport(productId,customerId);
     }
+
+    @Override
+    public List<Product> getProductId(int productId) {
+        return this.productRepository.getProductId(productId);
+    }
     
 }

@@ -220,13 +220,16 @@ public class ProductRepositoryImply implements ProductRepository {
             Predicate p = builder.equal(root.get("active"), active);
             predicates.add(p);
         }
+        String adminBan = params.get("adminBan");
+        if (!adminBan.isEmpty()) {
+            Predicate p = builder.equal(root.get("adminBan"), adminBan);
+            predicates.add(p);
+        }
         
         Predicate p1 = builder.equal(root.get("idSeller"), sellerId);
         predicates.add(p1);
         Predicate p2 = builder.equal(root.get("isDelete"), 0);
         predicates.add(p2);
-        Predicate p3 = builder.equal(root.get("adminBan"), 0);
-        predicates.add(p3);
         q = q.where(predicates.toArray(new Predicate[]{}));
         
         q.orderBy(builder.desc(root.get("id")));
@@ -556,6 +559,21 @@ public class ProductRepositoryImply implements ProductRepository {
         Query query = session.createQuery(q);
        
         query.setMaxResults(num);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Product> getProductId(int productId) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Product> q = builder.createQuery(Product.class);
+        Root root = q.from(Product.class);
+        q.select(root);
+        
+        q.where(builder.equal(root.get("id"), productId));
+        
+        Query query = session.createQuery(q);
 
         return query.getResultList();
     }

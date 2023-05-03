@@ -26,8 +26,8 @@ public class ShipAddressValidator implements Validator {
         ShipAdress s = (ShipAdress) target;
         int nameMinLength = 4;
         int nameMaxLength = 25;
-        int phoneMinlength = 8;
-        int phoneMaxlength = 15;
+        int phoneMinlength = 10;
+        int phoneMaxlength = 11;
         int addressMinLength = 6;
         int addressMaxLength = 50;
         int wardMinLength = 4;

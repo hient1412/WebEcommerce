@@ -29,4 +29,5 @@ public interface OrderRepository {
     int updateActiveAndSend(Orders o);
     int updateActiveAndReceived(Orders o);
     boolean addOrder(Orders o);
+    List<Orders> getOrderId(int orderId);
 }

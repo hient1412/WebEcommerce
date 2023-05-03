@@ -28,7 +28,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
+        <script src="<c:url value="/js/cart.js"/>"></script>
+        <script src="<c:url value="/js/main.js"/>"></script>
+        <script src="<c:url value="/js/stats.js"/>"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
     </head>
     <body>
         <!-- HEADER -->
@@ -41,10 +45,6 @@
         </div>
         <tiles:insertAttribute name="footer"/>
 
-        <script src="<c:url value="/js/cart.js"/>"></script>
-        <script src="<c:url value="/js/main.js"/>"></script>
-        <script src="<c:url value="/js/stats.js"/>"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script>
+
     </body>
 </html>

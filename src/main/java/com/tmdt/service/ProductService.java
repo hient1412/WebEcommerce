@@ -42,4 +42,5 @@ public interface ProductService {
     Likes getLikeByCusId(int productId, int customerId);
     List<Object[]> getProductLikeALot(int num);
     long checkExistReport(int productId, int customerId);
+    List<Product> getProductId(int productId);
 }

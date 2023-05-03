@@ -10,33 +10,39 @@
 <div class="center p-4">
     <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.stats.product"/></h2></div>
 </div>
-<div class="row pb-4">
-    <div class="col-md-5"> 
-        <br>
-        <table class="table table-bordered center">
-            <thead>
-                <tr>
-                    <th><spring:message code="label.type.id"/></th>
-                    <th><spring:message code="label.product.type"/></th>
-                    <th><spring:message code="label.quantity"/></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${countcate}" var="c">
+<c:if test="${countcate.size() == 0}">
+    <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+        <spring:message code="label.no.data"/>
+    </div>
+</c:if>
+<c:if test="${countcate.size() != 0}">
+    <div class="row pb-4">
+        <div class="col-md-5"> 
+            <br>
+            <table class="table table-bordered center">
+                <thead>
                     <tr>
-                        <td>${c[0]}</td>
-                        <td>${c[1]}</td>
-                        <td>${c[2]}</td>
+                        <th><spring:message code="label.type.id"/></th>
+                        <th><spring:message code="label.product.type"/></th>
+                        <th><spring:message code="label.quantity"/></th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table> 
+                </thead>
+                <tbody>
+                    <c:forEach items="${countcate}" var="c">
+                        <tr>
+                            <td>${c[0]}</td>
+                            <td>${c[1]}</td>
+                            <td>${c[2]}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table> 
+        </div>
+        <div class="col-md-7">
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
-    <div class="col-md-7">
-        <canvas id="myChart"></canvas>
-    </div>
-</div>
-
+</c:if>
 <c:if test="${seller.idAccount.active == 0}">
     <a id="aclick" href="<c:url value="/access-denied"/>"></a>
 </c:if>

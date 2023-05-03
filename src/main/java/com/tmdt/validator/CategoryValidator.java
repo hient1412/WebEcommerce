@@ -26,9 +26,9 @@ public class CategoryValidator implements Validator{
     @Override
     public void validate(Object target, Errors errors) {
         Category category = (Category) target;
-        int nameMinLength = 2;
-        int nameMaxLength = 20;
-        int descriptionMaxLength = 20;
+        int nameMinLength = 4;
+        int nameMaxLength = 25;
+        int descriptionMaxLength = 30;
         
         if(category.getName().length() < nameMinLength)
             errors.rejectValue("name", "", "Tên loại sản phẩm không được ít hơn " + nameMinLength + " ký tự!!");

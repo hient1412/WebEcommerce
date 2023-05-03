@@ -48,7 +48,7 @@ public class Category implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 2, max = 20)
+    @Size(min = 4, max = 25)
     @Column(name = "name")
     private String name;
     @Basic(optional = false)

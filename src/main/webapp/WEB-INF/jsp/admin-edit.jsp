@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputEmail"><spring:message code="label.email"/></label>
-                    <form:input type="text" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
+                    <form:input type="email" autocomplete="off" class="form-control" id="inputEmail" path="email" required="required"/>
                 </div> 
                 <div class="form-group">
                     <label for="inputPhone"><spring:message code="label.phone"/></label>

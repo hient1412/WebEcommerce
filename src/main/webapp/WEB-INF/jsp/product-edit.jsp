@@ -20,21 +20,21 @@
                 <div class="form-group row">
                     <div class="col">
                         <label><spring:message code="label.product.name"/></label>
-                        <form:input type="text" path="name" class="form-control" autocomplete="off"/>
+                        <form:input type="text" path="name" required="required" class="form-control" autocomplete="off"/>
                     </div>
                     <div class="col">
                         <label><spring:message code="label.price"/></label>
-                        <form:input type="number" path="price" class="form-control" autocomplete="off"/>
+                        <form:input type="text" pattern="\d*" path="price" class="form-control" required="required" maxlength="10" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-6 col-lg-3">
                         <label><spring:message code="label.quantity"/></label>
-                        <form:input type="number" path="quantity" class="form-control" autocomplete="off" required="required"/>
+                        <form:input type="text" pattern="\d*" path="quantity" class="form-control" maxlength="8" autocomplete="off" required="required"/>
                     </div>
                     <div class="col-6 col-lg-3">
                         <label><spring:message code="label.brand"/></label>
-                        <form:input type="text" path="manufacturer" class="form-control" autocomplete="off"/>
+                        <form:input type="text" path="manufacturer" class="form-control" required="required" autocomplete="off"/>
                     </div>
                     <div class="col-6 col-lg-3">
                         <label><spring:message code="label.product.type"/></label>

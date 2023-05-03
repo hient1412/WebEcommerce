@@ -45,6 +45,7 @@
             </ul>
             <h1 class="p-4 center text-uppercase"><spring:message code="label.add.information"/><br><spring:message code="label.role.admin"/></h1>
                 <form:input hidden="true" path="idAccount" value="${ac.id}"/>
+                <form:input hidden="true" path="id" value="${id}"/>
             <div class="form-group">
                 <label><spring:message code="label.fullname"/>:</label>
                 <form:input autocomplete="off" type="text" class="form-control" path="name" required="required"/>

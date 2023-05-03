@@ -110,12 +110,12 @@
                                             <h5>
                                                 <c:if test="${pageContext.response.locale.language == 'vi'}">
                                                     <span id="vndPrice" name="vndPrice">
-                                                        <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${cartAmount.amount}" maxFractionDigits="3" type="number"/>
+                                                        <span style="text-decoration: underline">đ</span> <span id="cartAmount"><fmt:formatNumber value="${cartAmount.amount}" maxFractionDigits="3" type="number"/></span>
                                                     </span>
                                                 </c:if>
                                                 <c:if test="${pageContext.response.locale.language == 'en'}">
                                                     <span id="usdPrice" name="usdPrice" >
-                                                        <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(cartAmount.amount)}" maxFractionDigits="3" type="number"/>
+                                                        <span>$</span> <span id="cartAmount"><fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(cartAmount.amount)}" maxFractionDigits="3" type="number"/></span>
                                                     </span>
                                                 </c:if>
                                             </h5>
