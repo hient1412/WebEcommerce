@@ -274,9 +274,4 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/report-seller-see.jsp" />
     </definition>
-    <definition name="admin-list-review" extends="base2">
-        <put-attribute name="title" value="Quản lý đánh giá" />
-        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
-        <put-attribute name="content" value="/WEB-INF/jsp/admin-list-review.jsp" />
-    </definition>
 </tiles-definitions>

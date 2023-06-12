@@ -17,7 +17,6 @@
             </div>
             <div class="collapse show center" id="home-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
-                    <li class="nav-item p-1"><a href="<c:url value="/admin/dashboard"/>" class="link-dark"><strong><i class="fa fa-tachometer" aria-hidden="true"></i> <spring:message code="label.overview"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/account"/>" class="link-dark" ><strong><i class="fa fa-users" aria-hidden="true"></i> <spring:message code="label.account.management"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/product-cate"/>" class="link-dark"><strong><i class="fa fa-cubes" aria-hidden="true"></i> <spring:message code="label.product.type.management"/></strong></a></li>
                     <li class="nav-item p-1"><a href="<c:url value="/admin/report"/>" class="link-dark"><strong><i class="fa-regular fa-flag"></i> <spring:message code="label.report.management"/></strong></a></li>

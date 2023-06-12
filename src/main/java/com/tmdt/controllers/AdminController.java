@@ -629,14 +629,6 @@ public class AdminController {
         return "redirect:/admin/report/seller";
     }
     
-    @GetMapping("/list-review")
-    public String listReview(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
-        int page = Integer.parseInt(params.getOrDefault("page", "1"));
-        Account ac = this.userDetailsService.getAcByUsername(a.getName());
-        int id = ac.getAdmin().getId();
-        return "admin-list-review";
-    }
-    
     @GetMapping("/report/seller/unban")
     public String unBanSeller(Model model, RedirectAttributes r,
             @RequestParam(name = "id") int id, @RequestParam(required = false) Map<String, String> params) {
