@@ -53,9 +53,56 @@
         </c:if>
         <ul class="pagination d-flex justify-content-center mt-4">
             <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
+                <c:if test="${(Math.ceil(counterS/count)) != 1}" >
                 <li class="page-item">
                     <a class="page-link" href="<c:url value="/admin/report/seller"/>?page=${i}">${i}</a>
                 </li>
+                </c:if>
+            </c:forEach>
+        </ul>
+    </div>
+</c:if>
+<c:if test="${selSize > 0}">
+    <div class="p-1 my-5">
+        <div class="center">
+            <div class="row">
+                <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.shop.been.ban"/></h2></div>
+            </div>
+        </div>
+        <table class="table table-bordered center">
+            <thead>
+                <tr>
+                    <th><spring:message code="label.shop.name"/></th>
+                    <th><spring:message code="label.action"/></th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="s" items="${sellerList}">
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>
+                            <a title='<spring:message code="label.see"/>' href="<c:url value="/admin/report/seller/see"/>?id=${s.id}"
+                               data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-eye p-1"></i></a>
+                            <a title='<spring:message code="label.unban.seller"/>' href="<c:url value="/admin/report/seller/unban"/>?id=${s.id}"
+                               data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-check p-1"></i></a>
+
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+        <c:if test="${message != null}">
+            <div class="text-danger" style="text-align: center; font-size: 20px; padding: 10px;">
+                ${message}
+            </div>
+        </c:if>
+        <ul class="pagination d-flex justify-content-center mt-4">
+            <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
+                <c:if test="${(Math.ceil(counterS/count)) != 1}" >
+                <li class="page-item">
+                    <a class="page-link" href="<c:url value="/admin/report/seller"/>?page=${i}">${i}</a>
+                </li>
+                </c:if>
             </c:forEach>
         </ul>
     </div>

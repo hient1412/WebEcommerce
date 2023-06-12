@@ -158,5 +158,15 @@ public class ProductServiceImply implements ProductService{
     public List<Product> getProductId(int productId) {
         return this.productRepository.getProductId(productId);
     }
+
+    @Override
+    public List<Review> getReviewBySel(Map<String,String> params, int sellerId,int page) {
+        return this.productRepository.getReviewBySel(params,sellerId,page);
+    }
+
+    @Override
+    public List<Object[]> getRatingGeneral(int sellerId,int rating) {
+        return this.productRepository.getRatingGeneral(sellerId,rating);
+    }
     
 }

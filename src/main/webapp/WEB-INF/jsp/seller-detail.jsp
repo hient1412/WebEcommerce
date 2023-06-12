@@ -27,8 +27,10 @@
                     <a href="#" class="btn btn-dark"><spring:message code="label.chat"/></a>
                 </div>
                 <div class="col-12 col-lg-4 my-2">
+                     <c:if test="${!seller.description.isEmpty() == true}">
                     <h4 class="text-uppercase"><spring:message code="label.description"/></h4>
                     <span class="center">${seller.description}</span>
+                    </c:if>
                 </div>
                 <div class="col-12 col-lg-4 my-2">
                     <h4 class="text-uppercase"><spring:message code="label.product"/>: <span class="text-danger">${general[2]}</span> </h4>

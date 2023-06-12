@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="center p-4">
     <div class="col-md-12"><h2 class="text-uppercase"><spring:message code="label.stats.product"/></h2></div>
 </div>
@@ -16,31 +17,44 @@
     </div>
 </c:if>
 <c:if test="${countcate.size() != 0}">
-    <div class="row pb-4">
-        <div class="col-md-5"> 
-            <br>
-            <table class="table table-bordered center">
-                <thead>
-                    <tr>
-                        <th><spring:message code="label.type.id"/></th>
-                        <th><spring:message code="label.product.type"/></th>
-                        <th><spring:message code="label.quantity"/></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach items="${countcate}" var="c">
-                        <tr>
-                            <td>${c[0]}</td>
-                            <td>${c[1]}</td>
-                            <td>${c[2]}</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table> 
-        </div>
-        <div class="col-md-7">
+    <div class="row pb-4 justify-content-center">
+        <div class="col-md-8">
             <canvas id="myChart"></canvas>
         </div>
+    </div>
+    <div class="col-md-12"> 
+        <br>
+        <table class="table table-bordered center">
+            <thead>
+                <tr>
+                    <th><spring:message code="label.type.id"/></th>
+                    <th><spring:message code="label.product.type"/></th>
+                    <th><spring:message code="label.quantity"/></th>
+                    <th><spring:message code="label.price"/></th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${countcate}" var="c">
+                    <tr>
+                        <td>${c[0]}</td>
+                        <td>${c[1]}</td>
+                        <td>${c[2]}</td>
+                        <td>
+                            <c:if test="${pageContext.response.locale.language == 'vi'}">
+                                <span id="vndPrice" name="vndPrice">
+                                    <span style="text-decoration: underline">đ</span> <fmt:formatNumber value="${c[3]}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                            <c:if test="${pageContext.response.locale.language == 'en'}">
+                                <span id="usdPrice" name="usdPrice" >
+                                    <span>$</span> <fmt:formatNumber value="${pUsdPriceOfProduct.convertCurrency(c[3])}" maxFractionDigits="3" type="number"/>
+                                </span>
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table> 
     </div>
 </c:if>
 <c:if test="${seller.idAccount.active == 0}">

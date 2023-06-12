@@ -21,26 +21,30 @@
                 </div>
                 <div class="collapse show center" id="home-collapse">
                     <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
-                        <li class="nav-item p-1"><a href="<c:url value="/seller/dashboard"/>" class="link-dark"><strong><i class="fa fa-tachometer" aria-hidden="true"></i> <spring:message code="label.overview"/></strong></a></li>
-                        <li class="nav-item p-1"><a href="<c:url value="/seller/list-order"/>" class="link-dark"><strong><i class="fa-regular fa-file"></i> <spring:message code="label.order.management"/></strong></a></li>
-                        <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#product-collapse" aria-expanded="false">
-                            <li class="nav-item p-1"><strong><i class="fa fa-shopping-bag" aria-hidden="true"></i> <spring:message code="label.product.management"/></strong></li>
+                        <li class="nav-item p-1 d-flex justify-content-center"><a href="<c:url value="/seller/list-order"/>" class="link-dark"><strong><i class="fas fa-file" aria-hidden="true"></i> <spring:message code="label.order.management"/></strong></a></li>
+                        <li>
+                        <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#product-collapse" aria-expanded="true">
+                            <li class="nav-item"><strong><i class="fa fa-shopping-bag" aria-hidden="true"></i> <spring:message code="label.product.management"/></strong></li>
                         </button>
-                        <div class="center collapse" id="product-collapse">
+                        <div class="center collapse show" id="product-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
                                 <li class="nav-item p-1"><a href="<c:url value="/seller/list-product-upload"/>" class="link-dark"><spring:message code="label.all.product"/></a></li>
                                 <li class="nav-item p-1"><a href="<c:url value="/seller/product"/>" class="link-dark"><spring:message code="label.add.product"/></a></li>
                             </ul>
                         </div>
+                        </li>
+                        <li class="nav-item p-1 d-flex justify-content-center"><a href="<c:url value="/seller/list-review"/>" class="link-dark"><strong><i class="fas fa-star" aria-hidden="true"></i> <spring:message code="label.review.management"/></strong></a></li>
+                        <li>
                         <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#stats-collapse" aria-expanded="false">
-                            <li class="nav-item p-1"><strong><i class="fa fa-line-chart" aria-hidden="true"></i> <spring:message code="label.statistical"/></strong></li>
+                            <li class="nav-item"><strong><i class="fa fa-line-chart" aria-hidden="true"></i> <spring:message code="label.statistical"/></strong></li>
                         </button>
                         <div class="center collapse" id="stats-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal p-1">
-                                <li class="nav-item p-1"><a href="<c:url value="/seller/stats/categories"/>" class="link-dark"><spring:message code="label.product.type"/></a></li>
+                                <li class="nav-item p-1"><a href="<c:url value="/seller/stats/categories"/>" class="link-dark"><spring:message code="label.stats.product"/></a></li>
                                 <li class="nav-item p-1"><a href="<c:url value="/seller/stats/turnover/product"/>" class="link-dark"><spring:message code="label.revenue"/></a></li>
                             </ul>
                         </div>
+                        </li>
                     </ul>
                 </div>
             </li>

@@ -241,24 +241,49 @@
                         </div>
                         <div class="modal-body">
                             <c:forEach items="${orderDetail.getOrderDetail(order.id)}" var="od">
+
                                 <div class="row align-items-center">
-                                    <div class="col text-center">
+                                    <div class="col-md-3">
                                         <div class="product-img-4">
                                             <div class="mb-2">
                                                 <a href="<c:url value="/product-detail/${od.idProduct.id}"/>"><img src="${od.idProduct.imageCollection.get(0).image}"></a>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col center">
+                                    <div class="col-md-5">
                                         <div class="mb-3">
                                             <label>${od.idProduct.name}</label>
                                         </div>
                                     </div>
-                                    <div class="col center">
-                                        <div class="mb-3">
-                                            <a href="<c:url value="/product-detail/${od.idProduct.id}#review"/>"><spring:message code="label.review"/></a>
+                                    <c:if test="${productService.checkExistReview(od.idProduct.id, pageContext.session.getAttribute('current').getId()) != 1}">
+                                        <div id="rating">
+                                            <input type="radio" id="rate1" name="rating" value="1" />
+                                            <label for="rate1" >&#9733;</label>
+
+                                            <input type="radio" id="rate2" name="rating" value="2" />
+                                            <label for="rate2" >&#9733;</label>
+
+                                            <input type="radio" id="rate3" name="rating" value="3" />
+                                            <label for="rate3" >&#9733;</label>
+
+                                            <input type="radio" id="rate4" name="rating" value="4" />
+                                            <label for="rate4" >&#9733;</label>
+
+                                            <input type="radio" id="rate5" name="rating" value="5" />
+                                            <label for="rate5" >&#9733;</label>
+
                                         </div>
-                                    </div>
+                                        <c:url value="/api/product/${od.idProduct.id}/review" var="endpoint"/>
+                                        <div class="d-flex flex-row mb-4">
+                                            <textarea type="text" maxlength="200" id="inputReview${od.idProduct.id}" class="form-control mr-3" placeholder='<spring:message code="label.enter.review"/>!!!'></textarea>
+                                            <input onclick="addReviews('${endpoint}',${od.idProduct.id})" class="btn btn-primary text-light" type="submit" value="<spring:message code="label.done"/>"/>
+                                        </div>
+                                    </c:if> 
+                                    <c:if test="${productService.checkExistReview(od.idProduct.id, pageContext.session.getAttribute('current').getId()) == 1}">
+                                        <div class="col-md-4 text-center">
+                                            <a href="<c:url value="/product-detail/${od.idProduct.id}#review"/>"><spring:message code="label.see.review"/></a>
+                                        </div>
+                                    </c:if> 
                                 </div>
                             </c:forEach>
                         </div>

@@ -43,4 +43,6 @@ public interface ProductRepository {
     List<Object[]> getProductLikeALot(int num);
     long checkExistReport(int productId, int customerId);
     List<Product> getProductId(int productId);
+    List<Review> getReviewBySel(Map<String,String> params,int sellerId,int page);
+    List<Object[]> getRatingGeneral(int sellerId,int rating);
 }

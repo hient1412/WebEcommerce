@@ -67,7 +67,7 @@ public class CategoryRepositoryImply implements CategoryRepository{
         
         q.where(builder.and(builder.and(builder.equal(rootp.get("idCategory"), root.get("id")),
                 builder.equal(rootp.get("idSeller"), roots.get("id")),
-                builder.equal(roots.get("id"),sellerId)),builder.equal(root.get("isDelete"), 0)));
+                builder.equal(roots.get("id"),sellerId)),builder.equal(root.get("isDelete"), 0),builder.equal(rootp.get("adminBan"), 0)));
         q.groupBy(root.get("id"));
         Query query = session.createQuery(q);
         return query.getResultList();

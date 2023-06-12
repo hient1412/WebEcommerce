@@ -148,7 +148,7 @@ public class SellerRepositoryImply implements SellerRepository {
         
         q = q.where(builder.and(builder.equal(root.get("id"), rootSO.get("idSeller")),
                 builder.and(builder.equal(rootO.get("id"), rootSO.get("idOrder")),
-                        builder.equal(rootO.get("id"), idOrder))),builder.equal(root.get("adminBan"),0));
+                        builder.equal(rootO.get("id"), idOrder))));
         q.multiselect(root.get("name"), root.get("avatar"),root.get("id"));
 
         Query query = session.createQuery(q);
@@ -199,6 +199,19 @@ public class SellerRepositoryImply implements SellerRepository {
         Root root = q.from(Seller.class);
         
         q.where(builder.equal(root.get("id"), sellerId));
+        Query query = session.createQuery(q);
+        
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Seller> getSellerBan() {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Seller> q = builder.createQuery(Seller.class);
+        Root root = q.from(Seller.class);
+        
+        q.where(builder.equal(root.get("adminBan"), 1));
         Query query = session.createQuery(q);
         
         return query.getResultList();

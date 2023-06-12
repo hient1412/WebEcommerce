@@ -38,6 +38,7 @@
                     <tr>
                         <th><spring:message code="label.product.id"/></th>
                         <th><spring:message code="label.product.name"/></th>
+                        <th><spring:message code="label.action"/></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,15 +46,23 @@
                         <tr>
                             <td>${r.id}</td>
                             <td>${r.name}</td>
+                            <td>
+                                <a title='<spring:message code="label.see"/>' href="<c:url value="/product-detail/"/>${r.id}"
+                                   data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-eye p-1"></i></a>
+                                <a title='<spring:message code="label.unban.seller"/>' href="<c:url value="/admin/report/unban"/>?id=${r.id}"
+                                   data-toggle="tooltip"><i style="font-size: 22px" class="fa-solid fa-ban p-1"></i></a>
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
             <ul class="pagination d-flex justify-content-center mt-4">
                 <c:forEach begin="1" end="${Math.ceil(counterS/count)}" var="i">
-                    <li class="page-item">
-                        <a class="page-link" href="<c:url value="/admin/report/seller/see?id=${id}"/>&page=${i}">${i}</a>
-                    </li>
+                    <c:if test="${(Math.ceil(counterS/count)) != 1}" >
+                        <li class="page-item">
+                            <a class="page-link" href="<c:url value="/admin/report/seller/see?id=${seller.id}"/>&page=${i}">${i}</a>
+                        </li>
+                    </c:if>
                 </c:forEach>
             </ul>
         </div>

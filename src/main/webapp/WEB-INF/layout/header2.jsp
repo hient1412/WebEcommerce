@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row row2">
                 <div class="col-12 col-md-5 col-lg-3">
-                    <a class="navbar-brand" style="font-size: 25px; color: white;" href="<c:url value="/" />">&copy; WebEcommerce &copy;</a>
+                    <a class="navbar-brand" style="font-size: 25px; color: white;" href="<c:url value="/" />">&copy; Ecommerce &copy;</a>
                 </div>
                 <div class="col-8 col-md-6 col-lg-6">
                     <form action="<c:url value="/search" />" class="d-flex">

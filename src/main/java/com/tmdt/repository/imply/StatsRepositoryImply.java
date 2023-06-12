@@ -62,13 +62,16 @@ public class StatsRepositoryImply implements StatsRepository {
 
         Root root = query.from(Product.class);
         Root rootCate = query.from(Category.class);
+        Root rootO = query.from(Orders.class);
+        Root rootOd = query.from(OrderDetail.class);
 
         query.where(builder.and(builder.equal(root.get("idCategory"), rootCate.get("id")),
-                builder.equal(root.get("idSeller"), idSeller)),builder.equal(root.get("isDelete"), 0));
+                builder.equal(root.get("idSeller"), idSeller)),builder.equal(root.get("isDelete"), 0),builder.equal(rootOd.get("idOrder"), rootO.get("id")),builder.equal(rootOd.get("idProduct"), root.get("id")),
+                builder.equal(rootO.get("active"), 5));
 
-        query.multiselect(rootCate.get("id"), rootCate.get("name"), builder.count(root.get("id")));
+        query.multiselect(rootCate.get("id"), rootCate.get("name"), builder.count(root.get("id")),builder.sum(builder.diff(builder.prod(rootOd.get("unitPrice"), rootOd.get("quantity")),builder.prod(rootOd.get("unitPrice"),builder.prod(rootOd.get("quantity"), rootOd.get("discount"))))).as(BigDecimal.class));
         query.orderBy(builder.desc(builder.count(root.get("id"))));
-        query.groupBy(rootCate.get("id"));
+        query.groupBy(rootCate.get("id"),rootCate.get("name"));
 
         Query q = session.createQuery(query);
         return q.getResultList();

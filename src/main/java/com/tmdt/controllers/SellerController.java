@@ -8,10 +8,12 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.tmdt.pojos.Account;
 import com.tmdt.pojos.Cancel;
+import com.tmdt.pojos.Cart;
 import com.tmdt.pojos.Image;
 import com.tmdt.pojos.OrderDetail;
 import com.tmdt.pojos.Orders;
 import com.tmdt.pojos.Product;
+import com.tmdt.pojos.Review;
 import com.tmdt.pojos.Seller;
 import com.tmdt.service.AccountService;
 import com.tmdt.service.CategoryService;
@@ -34,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpSession;
 import net.bytebuddy.utility.RandomString;
 import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -548,4 +551,37 @@ public class SellerController {
         return "redirect:/seller/order-detail/" + o.getId();
     }
 
+    @GetMapping("/order-detail/{orderId}/shipping")
+    public String shipping(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
+        Orders o = this.orderService.getOrderById(orderId);
+        o.setActive(4);
+        if (this.orderService.updateActive(o) == 1) {
+            r.addFlashAttribute("errMessage", String.format("Xác nhận đơn hàng đang giao thành công"));
+            return "redirect:/seller/order-detail/" + o.getId();
+        } else {
+            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể xác nhận đơn hàng đang giao"));
+        }
+        return "redirect:/seller/order-detail/" + o.getId();
+    }
+
+    @GetMapping("/list-review")
+    public String listReview(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        Account ac = this.accountService.getAcByUsername(a.getName());
+        int id = ac.getSeller().getId();
+        Map<String, String> pre = new HashMap<>();
+        pre.put("rating", params.getOrDefault("rating", ""));
+        model.addAttribute("seller", ac.getSeller());
+        model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(id)));
+        model.addAttribute("listReview", this.productService.getReviewBySel(pre,id,page));
+        model.addAttribute("counterS", this.productService.getReviewBySel(pre,id, 0).size());
+        model.addAttribute("count", env.getProperty("page.size"));
+        model.addAttribute("generalRatingAll",this.productService.getRatingGeneral(id,0));
+        model.addAttribute("generalRating1",this.productService.getRatingGeneral(id,1));
+        model.addAttribute("generalRating2",this.productService.getRatingGeneral(id,2));
+        model.addAttribute("generalRating3",this.productService.getRatingGeneral(id,3));
+        model.addAttribute("generalRating4",this.productService.getRatingGeneral(id,4));
+        model.addAttribute("generalRating5",this.productService.getRatingGeneral(id,5));
+        return "list-review";
+    }
 }

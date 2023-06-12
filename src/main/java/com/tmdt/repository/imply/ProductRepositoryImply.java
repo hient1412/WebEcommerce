@@ -577,4 +577,63 @@ public class ProductRepositoryImply implements ProductRepository {
 
         return query.getResultList();
     }
+
+    @Override
+    public List<Review> getReviewBySel(Map<String,String> params,int sellerId,int page) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Review> q = builder.createQuery(Review.class);
+        Root root = q.from(Review.class);
+        q.select(root);
+        List<Predicate> predicates = new ArrayList<>();
+        String rating = params.get("rating");
+        if (!rating.isEmpty()) {
+            if (rating.equals("1")) {
+                Predicate p = builder.equal(root.get("rating"), 1);
+                predicates.add(p);
+            }
+            if (rating.equals("2")) {
+                Predicate p = builder.equal(root.get("rating"), 2);
+                predicates.add(p);
+            }
+            if (rating.equals("3")) {
+                Predicate p = builder.equal(root.get("rating"), 3);
+                predicates.add(p);
+            }
+            if (rating.equals("4")) {
+                Predicate p = builder.equal(root.get("rating"), 4);
+                predicates.add(p);
+            }
+            if (rating.equals("5")) {
+                Predicate p = builder.equal(root.get("rating"), 5);
+                predicates.add(p);
+            }
+        }
+        Predicate p1 = builder.equal(root.get("idProduct").get("idSeller"), sellerId);
+        predicates.add(p1);
+        q = q.where(predicates.toArray(new Predicate[]{}));
+        Query query = session.createQuery(q);
+        if (page > 0) {
+            int size = Integer.parseInt(env.getProperty("page.size").toString());
+            query.setMaxResults(size);
+            query.setFirstResult((page - 1) * size);
+        }
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Object[]> getRatingGeneral(int sellerId,int rating) {
+        Session session = this.sessionFactoryBean.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = builder.createQuery(Object[].class);
+        Root root = q.from(Review.class);
+        if(rating != 0){
+        q.where(builder.and(builder.equal(root.get("idProduct").get("idSeller"), sellerId)),builder.equal(root.get("rating"), rating));
+        } else{
+            q.where(builder.equal(root.get("idProduct").get("idSeller"), sellerId));
+        }
+        q.multiselect(builder.count(root.get("rating")));
+        Query query = session.createQuery(q);
+        return query.getResultList();
+    }
 }

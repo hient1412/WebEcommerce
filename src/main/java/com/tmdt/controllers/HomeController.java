@@ -241,6 +241,7 @@ public class HomeController {
             od.setIdProduct(p);
             od.setUnitPrice(Long.parseLong(p.getPrice().toString().replace(".0", "")));
             od.setQuantity(1);
+            od.getIdProduct().setQuantity(od.getIdProduct().getQuantity() - od.getQuantity());
             od.setDiscount(0);
             od.setIdOrder(o);
             if (this.orderDetailService.addOrderD(od) == true) {
@@ -253,8 +254,8 @@ public class HomeController {
                     SimpleDateFormat dk = new SimpleDateFormat("dd/MM/yyyy");
                     DecimalFormat df = new DecimalFormat("###,###,###,###");
 
-                    String sendTo = o.getIdCustomer().getEmail();
-                    String subject = "WEBECOMMERCE THÔNG BÁO - ĐẶT HÀNG THÀNH CÔNG " + RandomString.make(4);
+                    String sendTo = this.sellerService.getSellerById(p.getIdSeller().getId()).getEmail();
+                    String subject = "WEBECOMMERCE THÔNG BÁO - ĐƠN HÀNG MỚI " + RandomString.make(4);
                     String content = "<div style=\"border:1px solid black;margin-bottom:10px\">\n"
                             + "<div style=\"text-align:center; padding: 0.5rem\">\n"
                             + "    <span style=\"font-size:22px\"><b>CHI TIẾT ĐƠN HÀNG </b></span><br>\n"

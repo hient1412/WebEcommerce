@@ -148,3 +148,28 @@ const changeLang = (link,lang) => {
       console.error(err);
     });
 };
+function addReviews(endpoint, productId) {
+    var rates = document.getElementsByName("rating");
+    var rate = 5;
+    var s = "inputReview";
+    s += productId;
+    for (var i = 0; i < rates.length; i++) {
+        if (rates[i].checked) {
+            rate = i + 1;
+        }
+    };
+    fetch(endpoint, {
+        method: "post",
+        body: JSON.stringify({
+            "content": document.getElementById(s).value,
+            "idProduct": productId,
+            "rating": rate
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(function (res) {
+        return res.json();
+    });
+    window.location.reload();
+}

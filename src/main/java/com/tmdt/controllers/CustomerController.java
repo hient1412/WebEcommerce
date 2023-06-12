@@ -276,6 +276,7 @@ public class CustomerController {
         if (this.orderService.getOrderId(orderId).size() > 0) {
             model.addAttribute("order", this.orderService.getOrderById(orderId));
             model.addAttribute("orderDetail", this.orderDetailService);
+            model.addAttribute("productService", this.productService);
             model.addAttribute("seller", this.sellerService);
             model.addAttribute("cancel", new Cancel());
             model.addAttribute("pUsdPriceOfProduct", new Utils());

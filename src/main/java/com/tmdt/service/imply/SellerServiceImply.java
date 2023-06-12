@@ -97,4 +97,9 @@ public class SellerServiceImply implements SellerService{
         return this.sellerRepository.getSelId(sellerId);
     }
 
+    @Override
+    public List<Seller> getSellerBan() {
+        return this.sellerRepository.getSellerBan();
+    }
+
 }

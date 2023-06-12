@@ -211,6 +211,11 @@
             <a class="btn btn-success" href="<c:url value="/seller/order-detail/${order.id}/confirm"/>"><spring:message code="label.confirm.order"/></a>
         </div>
     </c:if>
+    <c:if test="${order.active == 3}">
+        <div class="py-4 px-2">
+            <a class="btn btn-success" href="<c:url value="/seller/order-detail/${order.id}/shipping"/>"><spring:message code="label.confirm.shipping"/></a>
+        </div>
+    </c:if>    
     <c:if test="${order.active == 2}">  <!-- chờ vận chuyển -->
         <div class="py-4 px-2">
             <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#setDaySend"><spring:message code="label.pick.day.send"/></a>

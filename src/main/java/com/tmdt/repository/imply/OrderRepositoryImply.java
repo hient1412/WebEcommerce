@@ -211,16 +211,17 @@ public class OrderRepositoryImply implements OrderRepository {
                             detail.setIdProduct(this.productRepository.getProductById(c.getProductId()));
                             detail.setUnitPrice(c.getPrice());
                             detail.setQuantity(c.getCount());
+                            detail.getIdProduct().setQuantity(detail.getIdProduct().getQuantity() - detail.getQuantity());
                             detail.setDiscount(0);
                             session.save(detail);
                         }
                     }
+                    long am = order.getAmount();
                     SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 SimpleDateFormat dk = new SimpleDateFormat("dd/MM/yyyy");
                 DecimalFormat df = new DecimalFormat("###,###,###,###");
-
-                String sendTo = order.getIdCustomer().getEmail();
-                String subject = "WEBECOMMERCE THÔNG BÁO - ĐẶT HÀNG THÀNH CÔNG " + RandomString.make(4);
+                
+                String subject = "WEBECOMMERCE THÔNG BÁO - ĐƠN HÀNG MỚI " + RandomString.make(4);
                 String content = "<div style=\"border:1px solid black;margin-bottom:10px\">\n"
                         + "<div style=\"text-align:center; padding: 0.5rem\">\n"
                         + "    <span style=\"font-size:22px\"><b>CHI TIẾT ĐƠN HÀNG </b></span><br>\n"
@@ -301,7 +302,7 @@ public class OrderRepositoryImply implements OrderRepository {
                         + "            <tbody style=\"background-color: #f8f9fa;\">\n"
                         + "               <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tổng tiền hàng</b></td>\n"
-                        + "                    <td style=\"border: 1px solid #dee2e6\"><span style='text-decoration:underline'>đ</span> " + dk.format(order.getAmount()) + "</td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"><span style='text-decoration:underline'>đ</span> " + df.format(am) + "</td>\n"
                         + "                </tr>\n"
                         + "                <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Phí ship</b></td>\n"
@@ -309,7 +310,7 @@ public class OrderRepositoryImply implements OrderRepository {
                         + "                </tr>\n"
                         + "                <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Thành tiền</b></td>\n"
-                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span style='text-decoration:underline'>đ</span> " + dk.format(order.getAmount()) + "</td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span style='text-decoration:underline'>đ</span> " + df.format(am) + "</td>\n"
                         + "                </tr>\n"
                         + "            </tbody>\n"
                         + "        </table>\n"
@@ -325,7 +326,7 @@ public class OrderRepositoryImply implements OrderRepository {
                 content += "</span>\n"
                         + "        </div>\n"
                         + "    </div>\n";
-                mailService.sendMail(sendTo, subject, content);
+                mailService.sendMail(this.sellerService.getSellerById(s.getId()).getEmail(), subject, content);
                 }
             } else {
                 Orders order = new Orders();
@@ -355,23 +356,19 @@ public class OrderRepositoryImply implements OrderRepository {
                     detail.setIdProduct(this.productRepository.getProductById(c.getProductId()));
                     detail.setUnitPrice(c.getPrice());
                     detail.setQuantity(c.getCount());
+                    detail.getIdProduct().setQuantity(detail.getIdProduct().getQuantity() - detail.getQuantity());
                     detail.setDiscount(0);
                     session.save(detail);
                     sellerOrder.setIdOrder(order);
                     sellerOrder.setIdSeller(c.getSeller());
                     session.save(sellerOrder);
-
-                    Product p = this.productRepository.getProductById(c.getProductId());
-                    p.setQuantity(p.getQuantity() - c.getCount());
-                    this.updateQuantityProduct(p);
-
                 }
                 SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
                 SimpleDateFormat dk = new SimpleDateFormat("dd/MM/yyyy");
                 DecimalFormat df = new DecimalFormat("###,###,###,###");
-
-                String sendTo = order.getIdCustomer().getEmail();
-                String subject = "WEBECOMMERCE THÔNG BÁO - ĐẶT HÀNG THÀNH CÔNG "+ RandomString.make(4);
+                
+                Seller sellSend = this.sellerService.getSellerById(sellerOrder.getIdSeller().getId());
+                String subject = "WEBECOMMERCE THÔNG BÁO - ĐƠN HÀNG MỚI "+ RandomString.make(4);
                 String content = "<div style=\"border:1px solid black;margin-bottom:10px\">\n"
                         + "<div style=\"text-align:center; padding: 0.5rem\">\n"
                         + "    <span style=\"font-size:22px\"><b>CHI TIẾT ĐƠN HÀNG </b></span><br>\n"
@@ -460,7 +457,7 @@ public class OrderRepositoryImply implements OrderRepository {
                         + "                </tr>\n"
                         + "                <tr style=\"text-align: right;\">\n"
                         + "                    <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Thành tiền</b></td>\n"
-                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span style='text-decoration:underline'>đ</span> " + order.getAmount() + "</td>\n"
+                        + "                    <td style=\"border: 1px solid #dee2e6\"> <span style='text-decoration:underline'>đ</span> " + df.format(order.getAmount()) + "</td>\n"
                         + "                </tr>\n"
                         + "            </tbody>\n"
                         + "        </table>\n"
@@ -476,7 +473,7 @@ public class OrderRepositoryImply implements OrderRepository {
                 content += "</span>\n"
                         + "        </div>\n"
                         + "    </div>\n";
-                mailService.sendMail(sendTo, subject, content);
+                mailService.sendMail(sellSend.getEmail(), subject, content);
             }
             return true;
         } catch (HibernateException ex) {

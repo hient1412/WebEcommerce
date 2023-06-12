@@ -22,4 +22,5 @@ public interface SellerService {
     List<Seller> getSelByPhone(String phone);
     int updateSellerBan(Seller s);
     List<Seller> getSelId(int sellerId);
+    List<Seller> getSellerBan();
 }

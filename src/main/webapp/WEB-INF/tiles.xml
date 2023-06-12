@@ -183,6 +183,11 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/product-cate.jsp" />
     </definition>
+    <definition name="list-review" extends="base2">
+        <put-attribute name="title" value="Đánh giá cửa hàng" />
+        <put-attribute name="left" value="/WEB-INF/jsp/seller-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/list-review.jsp" />
+    </definition>
     <definition name="product-cate-add" extends="base2">
         <put-attribute name="title" value="Thêm loại sản phẩm" />
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
@@ -268,5 +273,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Chi tiết sản phẩm bị cấm" />
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/report-seller-see.jsp" />
+    </definition>
+    <definition name="admin-list-review" extends="base2">
+        <put-attribute name="title" value="Quản lý đánh giá" />
+        <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
+        <put-attribute name="content" value="/WEB-INF/jsp/admin-list-review.jsp" />
     </definition>
 </tiles-definitions>

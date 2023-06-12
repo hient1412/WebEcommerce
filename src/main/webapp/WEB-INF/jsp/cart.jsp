@@ -75,11 +75,11 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="p-5 bg-grey">
+                                    <div class="p-5 bg-grey h-100">
                                         <h4 class="fw-bold mb-5 mt-2 pt-1 text-uppercase"><spring:message code="label.bill"/></h4>
                                         <hr class="my-4">
 
-                                        <div class="d-flex justify-content-between mb-4">
+<!--                                        <div class="d-flex justify-content-between mb-4">
                                             <h6 class="text-uppercase"><spring:message code="label.product.money"/>: </h6>
                                             <h5>
                                                 <c:if test="${pageContext.response.locale.language == 'vi'}">
@@ -93,17 +93,18 @@
                                                     </span>
                                                 </c:if>
                                             </h5>
-                                        </div>
-                                        <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
+                                        </div>-->
+                                        <!--
+                                    <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
 
-                                        <div class="mb-5">
-                                            <div class="form-outline">
-                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
-                                                <label class="form-label" for="form3Examplea2"><spring:message code="label.promo.code"/></label>
-                                            </div>
+                                    <div class="mb-5">
+                                        <div class="form-outline">
+                                            <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2"><spring:message code="label.promo.code"/></label>
                                         </div>
+                                    </div>-->
 
-                                        <hr class="my-4">
+                                    <br class="my-4">
 
                                         <div class="d-flex justify-content-between mb-5">
                                             <h5 class="text-uppercase"><spring:message code="label.total.amount"/>: </h5>
@@ -169,11 +170,11 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 ">
-                                    <div class="p-5 bg-grey">
+                                    <div class="p-5 bg-grey h-100">
                                         <h3 class="fw-bold mb-5 mt-2 pt-1 text-uppercase"><spring:message code="label.bill"/></h3>
                                         <hr class="my-4">
 
-                                        <div class="d-flex justify-content-between mb-4">
+<!--                                        <div class="d-flex justify-content-between mb-4">
                                             <h5 class="text-uppercase"><spring:message code="label.product.money"/>: </h5>
                                             <c:if test="${pageContext.response.locale.language == 'vi'}">
                                                 <span id="vndPrice" name="vndPrice">
@@ -185,19 +186,18 @@
                                                     <span>$</span> 0
                                                 </span>
                                             </c:if>
+                                        </div>-->
+<!--
+                                    <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
+
+                                    <div class="mb-5">
+                                        <div class="form-outline">
+                                            <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Examplea2"><spring:message code="label.promo.code"/></label>
                                         </div>
+                                    </div>-->
 
-
-                                        <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
-
-                                        <div class="mb-5">
-                                            <div class="form-outline">
-                                                <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
-                                                <label class="form-label" for="form3Examplea2"><spring:message code="label.promo.code"/></label>
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-4">
+                                    <br class="my-4">
 
                                         <div class="d-flex justify-content-between mb-5">
                                             <h5 class="text-uppercase"><spring:message code="label.total.amount"/>:</h5>
@@ -213,9 +213,6 @@
                                             </c:if>
                                         </div>
 
-                                        <button type="button" class="btn btn-dark btn-block btn-lg"
-                                                data-mdb-ripple-color="dark"><spring:message code="label.pay"/>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -251,11 +248,11 @@
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <div class="p-5 bg-grey">
+                                <div class="p-5 bg-grey h-100">
                                     <h3 class="fw-bold mb-5 mt-2 pt-1 text-uppercase"><spring:message code="label.bill"/></h3>
                                     <hr class="my-4">
 
-                                    <div class="d-flex justify-content-between mb-4">
+<!--                                    <div class="d-flex justify-content-between mb-4">
                                         <h5 class="text-uppercase"><spring:message code="label.product.money"/>: </h5>
                                         <c:if test="${pageContext.response.locale.language == 'vi'}">
                                             <span id="vndPrice" name="vndPrice">
@@ -267,8 +264,8 @@
                                                 <span>$</span> 0
                                             </span>
                                         </c:if>
-                                    </div>
-
+                                    </div>-->
+<!--
                                     <h5 class="text-uppercase mb-3"><spring:message code="label.promotion"/></h5>
 
                                     <div class="mb-5">
@@ -276,9 +273,9 @@
                                             <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
                                             <label class="form-label" for="form3Examplea2"><spring:message code="label.promo.code"/></label>
                                         </div>
-                                    </div>
+                                    </div>-->
 
-                                    <hr class="my-4">
+                                    <br class="my-4">
 
                                     <div class="d-flex justify-content-between mb-5">
                                         <h5 class="text-uppercase"><spring:message code="label.total.amount"/>: </h5>
@@ -293,10 +290,6 @@
                                             </span>
                                         </c:if>
                                     </div>
-
-                                    <button type="button" class="btn btn-dark btn-block btn-lg"
-                                            data-mdb-ripple-color="dark"><spring:message code="label.pay"/>
-                                    </button>
                                 </div>
                             </div>
                         </div>

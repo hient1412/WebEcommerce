@@ -100,16 +100,14 @@
                                                 </span>
                                             </c:if>
                                         </div>
-                                        <a class="blue-btn"" href="<c:url value="/product-detail/${p.id}"/>"><spring:message code="label.product.see.detail"/></a>
+                                        <a class="blue-btn" href="<c:url value="/product-detail/${p.id}"/>"><spring:message code="label.product.see.detail"/></a>
                                     </div>
-                                    <div class="row mt-3 center">
-                                        <c:if test="${p.adminBan == 0}">
-                                            <p><br></p>
-                                            </c:if>
-                                            <c:if test="${p.adminBan == 1}">
+
+                                    <c:if test="${p.adminBan == 1}">
+                                        <div class="row mt-3 center" style="position: absolute;top: -10px;">
                                             <p  class="text-white bg-danger"><spring:message code="label.product.violated"/></p>
-                                        </c:if>
-                                    </div>
+                                        </div>
+                                    </c:if>
                                     <div class="row mt-3 center">
                                         <div class="col">
                                             <a title='<spring:message code="label.edit"/>' href="<c:url value="/seller/product-edit"/>?id=${p.id}" data-toggle="tooltip" class="text-primary"><i class="fa-regular fa-pen-to-square"></i><br><spring:message code="label.edit"/> </a>

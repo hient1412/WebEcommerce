@@ -20,10 +20,12 @@ import com.tmdt.service.MailService;
 import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
+import com.tmdt.utils.Utils;
 import com.tmdt.validator.AccountValidator;
 import com.tmdt.validator.AdminValidator;
 import com.tmdt.validator.CategoryValidator;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -488,6 +490,8 @@ public class AdminController {
         List<Object[]> size = this.adminService.getReportProductSeller(0);
         model.addAttribute("report", report);
         model.addAttribute("counterS", size.size());
+        model.addAttribute("sellerList", this.sellerService.getSellerBan());
+        model.addAttribute("selSize", this.sellerService.getSellerBan().size());
         model.addAttribute("count", env.getProperty("page.size"));
         return "report-seller";
     }
@@ -536,84 +540,24 @@ public class AdminController {
         r.addFlashAttribute("errMessage", errMessage);
         return "redirect:/admin/report";
     }
+    
 
-    @GetMapping("/report/ban")
+    @GetMapping("/report/unban")
     public String ban(Model model, RedirectAttributes r,
             @RequestParam(name = "id") int id) {
         String errMessage = "";
         this.skip(model, r, id);
         Product p = this.productService.getProductById(id);
-        p.setAdminBan(1);
+        p.setAdminBan(0);
         if (this.productService.updateProductBan(p) == 1) {
-            if (p.getAdminBan() == 1) {
-                errMessage = String.format("Đã cấm thành công sản phẩm: '%s'", p.getName());
-                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-                String sendTo = p.getIdSeller().getEmail();
-                String subject = "WEBECOMMERCE THÔNG BÁO CẤM SẢN PHẨM '" + p.getName() + "' DO VI PHẠM CHÍNH SÁCH CỘNG ĐỒNG";
-                String content
-                        = "<div style=\"text-align:center;\">\n"
-                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px\">\n"
-                        + "        <h3 style=\"color:red;text-transform: uppercase\">Tố cáo chi tiết</h3>\n"
-                        + "    </div>\n"
-                        + "</div>\n"
-                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
-                        + "        <div style=\"padding:10px\">\n"
-                        + "            <div style=\"display: flex;\">"
-                        + "                <div style=\"display:flex;\">\n"
-                        + "                    <div>\n"
-                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + p.getIdSeller().getAvatar() + "\"></a>\n"
-                        + "                    </div>\n"
-                        + "                    <div style=\"font-size: 24px;\">\n"
-                        + "                        <label>" + p.getIdSeller().getName() + "</label></a>\n"
-                        + "                    </div>\n"
-                        + "                </div>\n"
-                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
-                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + p.getIdSeller().getId() + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
-                        + "                 </div>\n"
-                        + "            </div>"
-                        + "       </div>"
-                        + "   </div>"
-                        + "<div style=\"display: flex;align-items: center;justify-content: center\">\n"
-                        + "    <div style=\"text-align: center;width:100%\">\n"
-                        + "        <div >\n"
-                        + "            <div style=\"margin-bottom: 10px\">\n"
-                        + "                <a href=\"http://localhost:8080/WebEcommerce/product-detail/" + p.getId() + "\" style=\"text-decoration: none\"><img style=\"width:50%;height:50%\" src=\"" + this.imageService.getImageByProductId(id).get(0).getImage() + "\"></a>\n"
-                        + "            </div>\n"
-                        + "        </div>\n"
-                        + "        <div style=\"margin-top 15px\">\n"
-                        + "            <div style=\"margin-bottom: 15px\">\n"
-                        + "                <label>" + p.getName() + "</label>\n"
-                        + "            </div>\n"
-                        + "        </div>\n"
-                        + "    </div>\n"
-                        + "</div>"
-                        + "<div style=\"margin-bottom:10px\">\n"
-                        + "    <div style=\"border: 1px solid;margin: 10px;\" >\n"
-                        + "        <table style=\"width: 100%;\">\n"
-                        + "            <tbody style=\"background-color: #f8f9fa;\">\n"
-                        + " <tr style=\"text-align: right;\">\n"
-                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Mã tố cáo</b></td>\n"
-                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Vào lúc</b></td>\n"
-                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tố cáo</b></td>\n"
-                        + "           </tr>\n";
-                for (Report i : this.adminService.getReport(id, 0)) {
-                    content += "<tr style=\"text-align: right;\">\n"
-                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + i.getId() + "</td>\n"
-                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + dt.format(i.getReportDate()) + "</td>\n"
-                            + "                <td style=\"border: 1px solid #dee2e6\"> <span>" + i.getReportDescription() + "</span> </td>\n"
-                            + "           </tr>\n";
-                }
-                content += "            </tbody>\n"
-                        + "        </table>\n"
-                        + "    </div>\n"
-                        + "</div>";
-                mailService.sendMail(sendTo, subject, content);
+            if (p.getAdminBan() == 0) {
+                errMessage = String.format("Đã bỏ cấm thành công sản phẩm: '%s'", p.getName());
             } else {
-                errMessage = String.format("Có lỗi xảy ra khi cấm sản phẩm: '%s'", p.getName());
+                errMessage = String.format("Có lỗi xảy ra khi bỏ cấm sản phẩm: '%s'", p.getName());
             }
         }
         r.addFlashAttribute("errMessage", errMessage);
-        return "redirect:/admin/report";
+        return "redirect:/admin/report/seller";
     }
 
     @GetMapping("/report/seller/ban")
@@ -684,73 +628,30 @@ public class AdminController {
 
         return "redirect:/admin/report/seller";
     }
-//@GetMapping("/report/seller/unban")
-//    public String unBanSeller(Model model, RedirectAttributes r,
-//            @RequestParam(name = "id") int id, @RequestParam(required = false) Map<String, String> params) {
-//        String errMessage = "";
-//        Seller s = this.sellerService.getSellerById(id);
-//        s.setAdminBan(0);
-//        if (this.sellerService.updateSellerBan(s) == 1) {
-//            if (s.getAdminBan() == 1) {
-//                errMessage = String.format("Đã hiển thị thành công cửa hàng: '%s'", s.getName());
-//                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-//                String sendTo = s.getEmail();
-//                String subject = "WEBECOMMERCE THÔNG BÁO CẤM CỬA HÀNG '" + s.getName() + "' DO VI PHẠM CHÍNH SÁCH CỘNG ĐỒNG";
-//                String content
-//                        = "<div style=\"text-align:center;\">\n"
-//                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px;padding:10px\">\n"
-//                        + "        <h3 style=\"color:red;text-transform: uppercase\">Cấm shop hoạt động</h3>\n"
-//                        + "         <p><strong>Lý do: Bán nhiều sản phẩm bị vi phạm</strong></p>"
-//                        + "    </div>\n"
-//                        + "</div>\n"
-//                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
-//                        + "        <div style=\"padding:10px\">\n"
-//                        + "            <div style=\"display: flex;\">"
-//                        + "                <div style=\"display:flex;\">\n"
-//                        + "                    <div>\n"
-//                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + s.getAvatar() + "\"></a>\n"
-//                        + "                    </div>\n"
-//                        + "                    <div style=\"font-size: 24px;\">\n"
-//                        + "                        <label>" + s.getName() + "</label></a>\n"
-//                        + "                    </div>\n"
-//                        + "                </div>\n"
-//                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
-//                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + s.getId() + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
-//                        + "                 </div>\n"
-//                        + "            </div>"
-//                        + "       </div>"
-//                        + "   </div>"
-//                        + "<div style=\"border: 1px solid;margin: 10px\">\n"
-//                        + "        <div style=\"padding:10px\">\n"
-//                        + "<table style=\"width:100%;text-align:center;\">"
-//                        + "     <thead>"
-//                        + "         <tr>"
-//                        + "             <th>Mã sản phẩm</th>"
-//                        + "             <th>Tên sản phẩm</th>"
-//                        + "             <th>Hình ảnh</th>"
-//                        + "         </tr>"
-//                        + "     </thead>"
-//                        + "     <tbody>";
-//                for (Product i : this.adminService.getReportSeller(s.getId(), 0)) {
-//                    content += "         <tr>"
-//                            + "             <td>" + i.getId() + "</td>"
-//                            + "             <td>" + i.getName() + "</td>"
-//                            + "             <td><a href=\"http://localhost:8080/WebEcommerce/product-detail/" + i.getId() + "\" style=\"text-decoration: none\"><img style=\"width:100px;height:100px\" src=\"" + this.imageService.getImageByProductId(i.getId()).get(0).getImage() + "\"></a>\n</td>"
-//                            + "         </tr>";
-//                }
-//                content += "     </tbody>"
-//                        + "</table>"
-//                        + "       </div>"
-//                        + "   </div>";
-//                mailService.sendMail(sendTo, subject, content);
-//            }
-//        } else {
-//            errMessage = String.format("Có lỗi xảy ra khi cấm cửa hàng: '%s'", s.getName());
-//        }
-//
-//        r.addFlashAttribute("errMessage", errMessage);
-//
-//        return "redirect:/admin/report/seller";
-//    }
+    
+    @GetMapping("/list-review")
+    public String listReview(Model model, @RequestParam(required = false) Map<String, String> params, Authentication a) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
+        Account ac = this.userDetailsService.getAcByUsername(a.getName());
+        int id = ac.getAdmin().getId();
+        return "admin-list-review";
+    }
+    
+    @GetMapping("/report/seller/unban")
+    public String unBanSeller(Model model, RedirectAttributes r,
+            @RequestParam(name = "id") int id, @RequestParam(required = false) Map<String, String> params) {
+        String message = "";
+        Seller s = this.sellerService.getSellerById(id);
+        s.setAdminBan(0);
+        if (this.sellerService.updateSellerBan(s) == 1) {
+            if (s.getAdminBan() == 1) {
+                message = String.format("Đã cho phép cửa hàng '%s' hoạt động", s.getName());
+            }
+        } else {
+            message = String.format("Có lỗi xảy ra khi cho phép cửa hàng '%s' hoạt động", s.getName());
+        }
+        r.addFlashAttribute("errMessage", message);
 
+        return "redirect:/admin/report/seller";
+    }
 }
