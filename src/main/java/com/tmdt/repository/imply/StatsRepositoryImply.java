@@ -117,7 +117,7 @@ public class StatsRepositoryImply implements StatsRepository {
         Root root = query.from(Product.class);
         Root rootCate = query.from(Category.class);
 
-        query.where(builder.equal(root.get("idCategory"), rootCate.get("id")));
+        query.where(builder.equal(root.get("idCategory"), rootCate.get("id")),builder.equal(rootCate.get("isDelete"),0),builder.equal(root.get("isDelete"),0),builder.equal(root.get("adminBan"),0));
 
         query.multiselect(rootCate.get("id"), rootCate.get("name"), builder.count(root.get("id")));
         query.orderBy(builder.desc(builder.count(root.get("id"))));

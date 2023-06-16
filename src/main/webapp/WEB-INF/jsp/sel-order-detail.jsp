@@ -221,6 +221,11 @@
             <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#setDaySend"><spring:message code="label.pick.day.send"/></a>
         </div>
     </c:if>
+    <c:if test="${order.active == 4}">
+        <div class="py-4 px-2">
+            <a class="btn btn-success" href="<c:url value="/seller/order-detail/${order.id}/confirm/order"/>"><spring:message code="label.order.finish"/></a>
+        </div>
+    </c:if>
 </div>
 <div class="modal fade" id="reasonCancel" tabindex="-1" aria-labelledby="reasonCancel" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">

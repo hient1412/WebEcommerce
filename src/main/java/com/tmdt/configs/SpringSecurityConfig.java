@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     "com.tmdt.validator"
 })
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-    
+
     @Autowired
     private LoginHandler loginHandler;
 
@@ -46,7 +46,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private LogoutHandler logoutHandler;
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -87,7 +87,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         ));
         return cloudinary;
     }
-    
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
@@ -110,7 +110,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/seller/**").access("hasRole('ROLE_SELLER')")
                 .antMatchers("/**/buyNow").access("hasRole('ROLE_CUSTOMER')")
                 .antMatchers("/**/report").access("hasRole('ROLE_CUSTOMER')");
-                
+
         http.csrf().disable();
     }
 }

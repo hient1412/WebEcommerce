@@ -49,14 +49,6 @@
                 </li>
             </ul>
             <h1 class="p-4 center"><spring:message code="label.sign.in"/></h1>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <a href="#" class="btn btn-lg btn-primary btn-block">Facebook</a>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <a href="#" class="btn btn-lg btn-info btn-block">Google</a>
-                </div>
-            </div>
             <div class="m-3">
                 <div class="form-group">
                     <label for="inputUsername"><spring:message code="label.username"/></label>

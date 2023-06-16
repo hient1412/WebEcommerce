@@ -49,7 +49,7 @@
                         <c:url value="/" var="cate">
                             <c:param name="cateId" value="${i.id}"></c:param>
                         </c:url>
-                        <a href="${cate}" class="nav-link a-login" >${i.name}</a>
+                        <a href="${cate}" class="nav-link a-login px-4" >${i.name}</a>
                     </li>
                 </c:forEach>
             </ul>

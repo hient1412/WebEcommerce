@@ -410,18 +410,6 @@ public class CustomerController {
         return "cancel";
     }
 
-    @GetMapping("/order-detail/{orderId}/confirm")
-    public String confirm(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
-        Orders o = this.orderService.getOrderById(orderId);
-        o.setActive(5);
-        if (this.orderService.updateActiveAndReceived(o) == 1) {
-            r.addFlashAttribute("errMessage", String.format("Xác nhận đã nhận hàng thành công"));
-            return "redirect:/customer/order-detail/" + o.getId();
-        } else {
-            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể xác nhận đã nhận hàng"));
-        }
-        return "redirect:/customer/order-detail/" + o.getId();
-    }
 
     @GetMapping("/order-detail/{orderId}/buyAgain")
     public String buyAgain(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {

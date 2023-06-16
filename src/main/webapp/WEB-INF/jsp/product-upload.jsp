@@ -14,6 +14,7 @@
         <div class="card-body">
             <h1 class="center text-uppercase"><spring:message code="label.upload.product"/></h1>
             <form:form action="" method="post" modelAttribute="product" enctype="multipart/form-data">
+                <form:errors path="*" element="div" cssClass="text-danger" cssStyle="text-align: center; font-size: 20px; padding: 10px;"/>
                 <div class="form-group row">
                     <div class="col">
                         <label><spring:message code="label.product.name"/></label>

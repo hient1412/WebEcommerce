@@ -26,6 +26,7 @@ import com.tmdt.service.ProductService;
 import com.tmdt.service.SellerService;
 import com.tmdt.service.StatsService;
 import com.tmdt.utils.Utils;
+import com.tmdt.validator.ProductValidator;
 import com.tmdt.validator.SellerValidator;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -82,6 +83,8 @@ public class SellerController {
     private SellerService sellerService;
     @Autowired
     private SellerValidator sellerValidator;
+    @Autowired
+    private ProductValidator productValidator;
     @Autowired
     private OrderDetailService orderDetailService;
     @Autowired
@@ -214,31 +217,36 @@ public class SellerController {
 
     @PostMapping("/product")
     public String product(Model model, @ModelAttribute(value = "product") Product product,
-            RedirectAttributes r, Authentication a) {
-        Account ac = this.accountService.getAcByUsername(a.getName());
-        if (ac.getRole().equals(Account.SELLER)) {
-            if (ac.getActive() == 1) {
-                product.setIdSeller(ac.getSeller());
-                product.setIsDelete(0);
-                product.setActive(1);
-                product.setAdminBan(0);
-                Image img = new Image();
-                img.setIdProduct(product);
-                if (this.productService.addProduct(product) == true) {
-                    for (int j = 0; j < product.getFile().length; j++) {
-                        try {
-                            Map map = this.cloudinary.uploader().upload(product.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                            img.setImage((String) map.get("secure_url"));
-                            this.imageService.addImage(img);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
+            RedirectAttributes r, Authentication a, BindingResult br) {
+        productValidator.validate(product, br);
+        if (br.hasErrors()) {
+            return "product-upload";
+        } else {
+            Account ac = this.accountService.getAcByUsername(a.getName());
+            if (ac.getRole().equals(Account.SELLER)) {
+                if (ac.getActive() == 1) {
+                    product.setIdSeller(ac.getSeller());
+                    product.setIsDelete(0);
+                    product.setActive(1);
+                    product.setAdminBan(0);
+                    Image img = new Image();
+                    img.setIdProduct(product);
+                    if (this.productService.addProduct(product) == true) {
+                        for (int j = 0; j < product.getFile().length; j++) {
+                            try {
+                                Map map = this.cloudinary.uploader().upload(product.getFile()[j].getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                                img.setImage((String) map.get("secure_url"));
+                                this.imageService.addImage(img);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                         }
+                        r.addFlashAttribute("errMessage", String.format("Đăng thành công sản phẩm '%s'", product.getName()));
+                        return "redirect:/seller/list-product-upload?id=" + ac.getSeller().getId();
                     }
-                    r.addFlashAttribute("errMessage", String.format("Đăng thành công sản phẩm '%s'", product.getName()));
-                    return "redirect:/seller/list-product-upload?id=" + ac.getSeller().getId();
+                } else {
+                    model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể đăng tin '%s'", product.getName()));
                 }
-            } else {
-                model.addAttribute("errMessage", String.format("Có lỗi xảy ra không thể đăng tin '%s'", product.getName()));
             }
         }
         return "product-upload";
@@ -266,9 +274,10 @@ public class SellerController {
         int size = this.productService.getProductById(id).getImageCollection().size();
         Image img = new Image();
         int nameMinLength = 4;
-        int nameMaxLength = 50;
+        int nameMaxLength = 255;
         int descriptionMaxLength = 255;
-        int priceMaxLength = 45;
+        int priceMinLength = 4;
+        int priceMaxLength = 12;
         int manufacturerMinLength = 4;
         int manufacturerMaxLength = 50;
         if (pd.getName().length() < nameMinLength) {
@@ -281,8 +290,10 @@ public class SellerController {
             errMessage = String.format("Tên thương hiệu không được ít hơn " + manufacturerMinLength + " ký tự!!");
         } else if (pd.getManufacturer().length() > manufacturerMaxLength) {
             errMessage = String.format("Tên thương hiệu không quá " + manufacturerMaxLength + " ký tự!!");
+        } else if (pd.getPrice().toString().length() < priceMinLength) {
+            errMessage = String.format("Giá sản phẩm không được ít hơn 1000đ !!");
         } else if (pd.getPrice().toString().length() > priceMaxLength) {
-            errMessage = String.format("Giá tiền không quá " + priceMaxLength + " ký tự!!");
+            errMessage = String.format("Giá sản phẩm không quá 999.999.999.999đ !!");
         } else if (this.productService.updateProduct(pd) == true) {
             if (pd.getFile()[0].getSize() == 0) {
                 for (int i = 0; i < this.imageService.getImageByProductId(productOld.getId()).size(); i++) {
@@ -573,15 +584,29 @@ public class SellerController {
         pre.put("rating", params.getOrDefault("rating", ""));
         model.addAttribute("seller", ac.getSeller());
         model.addAttribute("sellerRating", Utils.avgRating(this.productService.getRatingSeller(id)));
-        model.addAttribute("listReview", this.productService.getReviewBySel(pre,id,page));
-        model.addAttribute("counterS", this.productService.getReviewBySel(pre,id, 0).size());
+        model.addAttribute("listReview", this.productService.getReviewBySel(pre, id, page));
+        model.addAttribute("counterS", this.productService.getReviewBySel(pre, id, 0).size());
         model.addAttribute("count", env.getProperty("page.size"));
-        model.addAttribute("generalRatingAll",this.productService.getRatingGeneral(id,0));
-        model.addAttribute("generalRating1",this.productService.getRatingGeneral(id,1));
-        model.addAttribute("generalRating2",this.productService.getRatingGeneral(id,2));
-        model.addAttribute("generalRating3",this.productService.getRatingGeneral(id,3));
-        model.addAttribute("generalRating4",this.productService.getRatingGeneral(id,4));
-        model.addAttribute("generalRating5",this.productService.getRatingGeneral(id,5));
+        model.addAttribute("generalRatingAll", this.productService.getRatingGeneral(id, 0));
+        model.addAttribute("generalRating1", this.productService.getRatingGeneral(id, 1));
+        model.addAttribute("generalRating2", this.productService.getRatingGeneral(id, 2));
+        model.addAttribute("generalRating3", this.productService.getRatingGeneral(id, 3));
+        model.addAttribute("generalRating4", this.productService.getRatingGeneral(id, 4));
+        model.addAttribute("generalRating5", this.productService.getRatingGeneral(id, 5));
         return "list-review";
     }
+    
+    @GetMapping("/order-detail/{orderId}/confirm/order")
+    public String confirmOrder(Model model, @PathVariable(value = "orderId") int orderId, RedirectAttributes r) {
+        Orders o = this.orderService.getOrderById(orderId);
+        o.setActive(5);
+        if (this.orderService.updateActiveAndReceived(o) == 1) {
+            r.addFlashAttribute("errMessage", String.format("Xác nhận đã nhận hàng thành công"));
+            return "redirect:/seller/order-detail/" + o.getId();
+        } else {
+            r.addFlashAttribute("errMessage", String.format("Có lỗi xảy ra không thể xác nhận đã nhận hàng"));
+        }
+        return "redirect:/seller/order-detail/" + o.getId();
+    }
+    
 }

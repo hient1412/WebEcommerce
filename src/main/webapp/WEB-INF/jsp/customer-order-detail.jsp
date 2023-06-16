@@ -406,9 +406,4 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${order.active == 4}">
-        <div class="py-4 px-2">
-            <a class="btn btn-success" href="<c:url value="/customer/order-detail/${order.id}/confirm"/>"><spring:message code="label.order.finish"/></a>
-        </div>
-    </c:if>
 </div>

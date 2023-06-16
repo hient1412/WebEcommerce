@@ -54,7 +54,7 @@
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                         <li class="dropdown nav-item active">
                             <c:if test="${pageContext.session.getAttribute('current').role == ('ROLE_SELLER')}">
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link"><img src="${pageContext.session.getAttribute('currentSeller').getAvatar()}">${pageContext.request.userPrincipal.name}</a>
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle nav-link"><img src="${pageContext.session.getAttribute('currentSeller').getAvatar()}">${pageContext.session.getAttribute('currentSeller').getName()}</a>
                                 <ul class="dropdown-menu">
                                     <c:if test="${pageContext.session.getAttribute('current').active == 1}">
                                         <li><a href="<c:url value="/seller/dashboard"/>"><i class="fa fa-briefcase"></i> <spring:message code="label.job.management"/></a></li>
