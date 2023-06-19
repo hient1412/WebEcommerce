@@ -92,7 +92,12 @@
                                             <img class="rounded-circle img-fluid" src="${o.idCustomer.avatar}">
                                         </div>
                                         <div class="d-inline">
-                                            <label>${o.idCustomer.idAccount.username}</label> <i class="fa fa-comments" aria-hidden="true"></i>
+                                            <label>${o.idCustomer.idAccount.username}</label> 
+                                            <c:if test="${pageContext.session.getAttribute('current').role == 'ROLE_SELLER'}">
+                                                <a href="<c:url value="/chat"/>" class="link-dark">
+                                                    <i class="fa fa-comments" aria-hidden="true"></i>
+                                                </a>
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="col-6 col-lg-4" style="text-align: right">

@@ -247,7 +247,9 @@
                 <c:if test="${sellerRating == 0}">
                     <span><i>(<spring:message code="label.not.rating"/>)</i></span> <br>
                 </c:if>
-                <a href="#" class="btn btn-dark"><spring:message code="label.chat"/></a>
+                <c:if test="${pageContext.session.getAttribute('current').role == 'ROLE_CUSTOMER'}">
+                    <a href="<c:url value="/chat"/>" class="btn btn-dark"><spring:message code="label.chat"/></a>
+                </c:if>
                 <a class="btn btn-info" href="<c:url value="/seller-detail/${seller.id}"/>"><spring:message code="label.see.shop"/></a>
             </div>
             <div class="col-6 col-lg-4 center">
@@ -273,37 +275,39 @@
     </c:if>
     <sec:authorize access="isAuthenticated()">
         <sec:authorize access="hasRole('ROLE_CUSTOMER')">
-            <div class="row mt-4 mb-4">
-                <h4><spring:message code="label.write.review"/></h4>
-                <div class="row mt-4"> 
-                    <div class="user d-flex">
-                        <img class="rounded-circle img-fluid" src="${pageContext.session.getAttribute('currentCustomer').getAvatar()}"><h6 class="mx-2">${pageContext.request.userPrincipal.name}</h6>
-                        <span class="mx-2"><i class="fa fa-clock-o" aria-hidden="true"></i><span class="mx-2" id="clock"></span></span>
-                        <span class="mx-2"><i class="fa fa-calendar-o" aria-hidden="true"></i><span class="mx-2" id="calendar"></span></span>
+            <c:if test="${productService.checkExistReview(product.id, pageContext.session.getAttribute('current').getId()) == 0 && productService.checkPermissionAddReview(product.id) == 1}">
+                <div class="row mt-4 mb-4">
+                    <h4><spring:message code="label.write.review"/></h4>
+                    <div class="row mt-4"> 
+                        <div class="user d-flex">
+                            <img class="rounded-circle img-fluid" src="${pageContext.session.getAttribute('currentCustomer').getAvatar()}"><h6 class="mx-2">${pageContext.request.userPrincipal.name}</h6>
+                            <span class="mx-2"><i class="fa fa-clock-o" aria-hidden="true"></i><span class="mx-2" id="clock"></span></span>
+                            <span class="mx-2"><i class="fa fa-calendar-o" aria-hidden="true"></i><span class="mx-2" id="calendar"></span></span>
+                        </div>
+                    </div>
+                    <div id="rating">
+                        <input type="radio" id="rate1" name="rating" value="1" />
+                        <label for="rate1" >&#9733;</label>
+
+                        <input type="radio" id="rate2" name="rating" value="2" />
+                        <label for="rate2" >&#9733;</label>
+
+                        <input type="radio" id="rate3" name="rating" value="3" />
+                        <label for="rate3" >&#9733;</label>
+
+                        <input type="radio" id="rate4" name="rating" value="4" />
+                        <label for="rate4" >&#9733;</label>
+
+                        <input type="radio" id="rate5" name="rating" value="5" />
+                        <label for="rate5" >&#9733;</label>
+
+                    </div>
+                    <div class="d-flex flex-row">
+                        <textarea type="text" maxlength="200" id="inputReview" class="form-control mr-3" placeholder='<spring:message code="label.enter.review"/>!!!'></textarea>
+                        <input onclick="chkAndAddReview(${productService.checkPermissionAddReview(product.id)}, ${productService.checkExistReview(product.id, pageContext.session.getAttribute('current').getId())})" class="btn btn-primary text-light" type="submit" value="<spring:message code="label.done"/>"/>
                     </div>
                 </div>
-                <div id="rating">
-                    <input type="radio" id="rate1" name="rating" value="1" />
-                    <label for="rate1" >&#9733;</label>
-
-                    <input type="radio" id="rate2" name="rating" value="2" />
-                    <label for="rate2" >&#9733;</label>
-
-                    <input type="radio" id="rate3" name="rating" value="3" />
-                    <label for="rate3" >&#9733;</label>
-
-                    <input type="radio" id="rate4" name="rating" value="4" />
-                    <label for="rate4" >&#9733;</label>
-
-                    <input type="radio" id="rate5" name="rating" value="5" />
-                    <label for="rate5" >&#9733;</label>
-
-                </div>
-                <div class="d-flex flex-row">
-                    <textarea type="text" maxlength="200" id="inputReview" class="form-control mr-3" placeholder='<spring:message code="label.enter.review"/>!!!'></textarea>
-                    <input onclick="chkAndAddReview(${productService.checkPermissionAddReview(product.id)}, ${productService.checkExistReview(product.id, pageContext.session.getAttribute('current').getId())})" class="btn btn-primary text-light" type="submit" value="<spring:message code="label.done"/>"/>
-                </div>
-            </div>
+            </c:if>
         </sec:authorize>
         <sec:authorize access="!hasRole('ROLE_CUSTOMER')">
             <div  class="center text-danger">

@@ -72,7 +72,14 @@
     <div class="py-4 pe-2">
         <a class="btn btn-dark" href="<c:url value="/admin/report/seller"/>"><i class="fa-solid fa-arrow-left"></i> <spring:message code="label.back"/></a>
     </div>
+    <c:if test="${seller.adminBan == 0}">
+        <div class="py-4 pe-2">
+            <a class="btn btn-danger" href="<c:url value="/admin/report/seller/ban"/>?id=${seller.id}"><spring:message code="label.ban.seller"/></a>
+        </div>
+    </c:if>
+    <c:if test="${seller.adminBan == 1}">
     <div class="py-4 pe-2">
-        <a class="btn btn-danger" href="<c:url value="/admin/report/seller/ban"/>?id=${seller.id}"><spring:message code="label.ban.seller"/></a>
+        <a class="btn btn-danger" href="<c:url value="/admin/report/seller/unban"/>?id=${seller.id}"><spring:message code="label.unban.seller"/></a>
     </div>
+    </c:if>
 </div>

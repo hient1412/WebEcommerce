@@ -274,4 +274,8 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="left" value="/WEB-INF/jsp/admin-view.jsp" />
         <put-attribute name="content" value="/WEB-INF/jsp/report-seller-see.jsp" />
     </definition>
+    <definition name="chat" extends="baseLayout">
+        <put-attribute name="title" value="Chat" />
+        <put-attribute name="content" value="/WEB-INF/jsp/chat.jsp" />
+    </definition>
 </tiles-definitions>

@@ -12,9 +12,9 @@
 <%@taglib  prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="container">
     <c:if test="${ac.role == 'ROLE_ADMIN'}">
-        <div class="row">
+        <div class="row py-5">
             <div class="container">
-                <div class="center">
+                <div class="center border border-dark py-2">
                     <div class="mt-4 text-primary">
                         <h4>${ad.name}</h4>
                     </div>

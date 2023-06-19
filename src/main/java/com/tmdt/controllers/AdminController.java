@@ -541,9 +541,88 @@ public class AdminController {
         return "redirect:/admin/report";
     }
     
+    @GetMapping("/report/ban")
+    public String ban(Model model, RedirectAttributes r,
+            @RequestParam(name = "id") int id) {
+        String errMessage = "";
+        this.skip(model, r, id);
+        Product p = this.productService.getProductById(id);
+        p.setAdminBan(1);
+        if (this.productService.updateProductBan(p) == 1) {
+            if (p.getAdminBan() == 1) {
+                errMessage = String.format("Đã cấm thành công sản phẩm: '%s'", p.getName());
+                SimpleDateFormat dt = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                String sendTo = p.getIdSeller().getEmail();
+                String subject = "WEBECOMMERCE THÔNG BÁO CẤM SẢN PHẨM '" + p.getName() + "' DO VI PHẠM CHÍNH SÁCH CỘNG ĐỒNG";
+                String content
+                        = "<div style=\"text-align:center;\">\n"
+                        + "    <div style=\"border: 1px solid;padding: 10px;margin: 10px\">\n"
+                        + "        <h3 style=\"color:red;text-transform: uppercase\">Tố cáo chi tiết</h3>\n"
+                        + "    </div>\n"
+                        + "</div>\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px\">\n"
+                        + "        <div style=\"padding:10px\">\n"
+                        + "            <div style=\"display: flex;\">"
+                        + "                <div style=\"display:flex;\">\n"
+                        + "                    <div>\n"
+                        + "                        <img style=\"border-radius:50%;width:60px;height:50px\" src=\"" + p.getIdSeller().getAvatar() + "\"></a>\n"
+                        + "                    </div>\n"
+                        + "                    <div style=\"font-size: 24px;\">\n"
+                        + "                        <label>" + p.getIdSeller().getName() + "</label></a>\n"
+                        + "                    </div>\n"
+                        + "                </div>\n"
+                        + "                <div style=\"margin-left:auto;display: flex;\">\n"
+                        + "                    <a href=\"http://localhost:8080/WebEcommerce/seller-detail/" + p.getIdSeller().getId() + "\" style=\"text-decoration: none\"><button>Xem shop</button></a>\n"
+                        + "                 </div>\n"
+                        + "            </div>"
+                        + "       </div>"
+                        + "   </div>"
+                        + "<div style=\"display: flex;align-items: center;justify-content: center\">\n"
+                        + "    <div style=\"text-align: center;width:100%\">\n"
+                        + "        <div >\n"
+                        + "            <div style=\"margin-bottom: 10px\">\n"
+                        + "                <a href=\"http://localhost:8080/WebEcommerce/product-detail/" + p.getId() + "\" style=\"text-decoration: none\"><img style=\"width:50%;height:50%\" src=\"" + this.imageService.getImageByProductId(id).get(0).getImage() + "\"></a>\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "        <div style=\"margin-top 15px\">\n"
+                        + "            <div style=\"margin-bottom: 15px\">\n"
+                        + "                <label>" + p.getName() + "</label>\n"
+                        + "            </div>\n"
+                        + "        </div>\n"
+                        + "    </div>\n"
+                        + "</div>"
+                        + "<div style=\"margin-bottom:10px\">\n"
+                        + "    <div style=\"border: 1px solid;margin: 10px;\" >\n"
+                        + "        <table style=\"width: 100%;\">\n"
+                        + "            <tbody style=\"background-color: #f8f9fa;\">\n"
+                        + " <tr style=\"text-align: right;\">\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Mã tố cáo</b></td>\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Vào lúc</b></td>\n"
+                        + "               <td style=\"border: 1px solid #dee2e6; padding: 10px\"><b>Tố cáo</b></td>\n"
+                        + "           </tr>\n";
+                for (Report i : this.adminService.getReport(id, 0)) {
+                    content += "<tr style=\"text-align: right;\">\n"
+                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + i.getId() + "</td>\n"
+                            + "                <td style=\"border: 1px solid #dee2e6; padding: 10px\">" + dt.format(i.getReportDate()) + "</td>\n"
+                            + "                <td style=\"border: 1px solid #dee2e6\"> <span>" + i.getReportDescription() + "</span> </td>\n"
+                            + "           </tr>\n";
+                }
+                content += "            </tbody>\n"
+                        + "        </table>\n"
+                        + "    </div>\n"
+                        + "</div>";
+                mailService.sendMail(sendTo, subject, content);
+            } else {
+                errMessage = String.format("Có lỗi xảy ra khi cấm sản phẩm: '%s'", p.getName());
+            }
+        }
+        r.addFlashAttribute("errMessage", errMessage);
+        return "redirect:/admin/report";
+    }
+
 
     @GetMapping("/report/unban")
-    public String ban(Model model, RedirectAttributes r,
+    public String unban(Model model, RedirectAttributes r,
             @RequestParam(name = "id") int id) {
         String errMessage = "";
         this.skip(model, r, id);

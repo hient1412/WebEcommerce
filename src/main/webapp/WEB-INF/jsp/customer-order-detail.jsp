@@ -80,8 +80,8 @@
                         <a class="link-dark" href="http://localhost:8080/WebEcommerce/seller-detail/${seller.getSeller(order.id)[2]}"><label>${seller.getSeller(order.id)[0]}</label></a>
                     </div>
                 </div>
-                <div class="ml-auto">
-                    <button class="border-dark p-2"> <spring:message code="label.see.shop"/></button>
+                <div class="ml-auto mt-3">
+                    <a href="http://localhost:8080/WebEcommerce/seller-detail/${seller.getSeller(order.id)[2]}" class="bg-secondary a-link p-2"> <spring:message code="label.see.shop"/></a>
                 </div>
             </div>
             <hr>

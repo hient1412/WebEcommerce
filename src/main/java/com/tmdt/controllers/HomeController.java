@@ -749,4 +749,11 @@ public class HomeController {
         return "renew-password";
     }
 
+    @GetMapping("/chat")
+    public String chat(Model model, Authentication a) {
+        model.addAttribute("seller", this.userDetailsService.getAcByUsername(a.getName()).getUsername());
+        SimpleDateFormat dk = new SimpleDateFormat("hh:mm:ss");
+        model.addAttribute("createdAt", dk.format((new Date())));
+        return "chat";
+    }
 }

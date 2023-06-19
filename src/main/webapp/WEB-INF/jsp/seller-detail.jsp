@@ -24,7 +24,9 @@
                     <c:if test="${sellerRating == 0}">
                         <span><i>(<spring:message code="label.not.rating"/>)</i></span> <br>
                     </c:if>
-                    <a href="#" class="btn btn-dark"><spring:message code="label.chat"/></a>
+                    <c:if test="${pageContext.session.getAttribute('current').role == 'ROLE_CUSTOMER'}">
+                    <a href="<c:url value="/chat"/>" class="btn btn-dark"><spring:message code="label.chat"/></a>
+                    </c:if>
                 </div>
                 <div class="col-12 col-lg-4 my-2">
                      <c:if test="${!seller.description.isEmpty() == true}">

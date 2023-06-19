@@ -612,6 +612,7 @@ public class ProductRepositoryImply implements ProductRepository {
         Predicate p1 = builder.equal(root.get("idProduct").get("idSeller"), sellerId);
         predicates.add(p1);
         q = q.where(predicates.toArray(new Predicate[]{}));
+        q.orderBy(builder.desc(root.get("id")));
         Query query = session.createQuery(q);
         if (page > 0) {
             int size = Integer.parseInt(env.getProperty("page.size").toString());
